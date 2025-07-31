@@ -1,0 +1,1822 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>מערכת הזמנות - דף ראשי</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            /* Light theme */
+            --bg-primary: #f8fafc;
+            --bg-secondary: #ffffff;
+            --bg-tertiary: #f1f5f9;
+            --text-primary: #1e293b;
+            --text-secondary: #64748b;
+            --accent-primary: #3b82f6;
+            --accent-hover: #2563eb;
+            --border-color: #e2e8f0;
+            --shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+            --gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            --success: #10b981;
+            --warning: #f59e0b;
+            --error: #ef4444;
+            --pending: #6b7280;
+        }
+
+        [data-theme="dark"] {
+            /* Dark theme */
+            --bg-primary: #0f172a;
+            --bg-secondary: #1e293b;
+            --bg-tertiary: #334155;
+            --text-primary: #f1f5f9;
+            --text-secondary: #94a3b8;
+            --accent-primary: #60a5fa;
+            --accent-hover: #3b82f6;
+            --border-color: #334155;
+            --shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.3);
+            --gradient: linear-gradient(135deg, #1e3a8a 0%, #3730a3 100%);
+            --success: #059669;
+            --warning: #d97706;
+            --error: #dc2626;
+            --pending: #6b7280;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            transition: all 0.3s ease;
+        }
+
+        /* Header */
+        .header {
+            background: var(--bg-secondary);
+            padding: 1rem 2rem;
+            border-bottom: 1px solid var(--border-color);
+            box-shadow: var(--shadow);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .logo-section {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .logo-icon {
+            width: 40px;
+            height: 40px;
+            background: var(--gradient);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.2rem;
+        }
+
+        .logo-text h1 {
+            font-size: 1.5rem;
+            font-weight: 700;
+        }
+
+        .logo-text p {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+
+        .user-section {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .theme-toggle {
+            background: var(--bg-tertiary);
+            border: 2px solid var(--border-color);
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .theme-toggle:hover {
+            border-color: var(--accent-primary);
+            transform: scale(1.1);
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: var(--bg-tertiary);
+            padding: 0.5rem 1rem;
+            border-radius: 50px;
+            border: 1px solid var(--border-color);
+        }
+
+        .user-avatar {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: var(--gradient);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 600;
+        }
+
+        .logout-btn {
+            background: var(--error);
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .logout-btn:hover {
+            background: #dc2626;
+            transform: translateY(-2px);
+        }
+
+        /* Main Content */
+        .main-content {
+            max-width: 1200px;
+            margin: 2rem auto;
+            padding: 0 2rem;
+        }
+
+        .welcome-section {
+            background: var(--bg-secondary);
+            padding: 2rem;
+            border-radius: 16px;
+            box-shadow: var(--shadow);
+            border: 1px solid var(--border-color);
+            margin-bottom: 2rem;
+        }
+
+        .welcome-title {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            background: var(--gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .welcome-subtitle {
+            color: var(--text-secondary);
+            font-size: 1.1rem;
+        }
+
+        /* Action Buttons */
+        .action-buttons {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .action-card {
+            background: var(--bg-secondary);
+            padding: 2rem;
+            border-radius: 16px;
+            box-shadow: var(--shadow);
+            border: 1px solid var(--border-color);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: center;
+        }
+
+        .action-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+            border-color: var(--accent-primary);
+        }
+
+        .action-icon {
+            width: 60px;
+            height: 60px;
+            background: var(--gradient);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1rem;
+            font-size: 1.5rem;
+            color: white;
+        }
+
+        .action-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        .action-description {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+
+        /* Orders Table */
+        .orders-table-container {
+            background: var(--bg-secondary);
+            border-radius: 16px;
+            box-shadow: var(--shadow);
+            border: 1px solid var(--border-color);
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .orders-table-container.collapsed {
+            max-height: 60px;
+            overflow: hidden;
+        }
+
+        .orders-table-container.expanded {
+            max-height: none;
+        }
+
+        .table-header {
+            padding: 1.5rem 2rem;
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .table-title {
+            font-size: 1.3rem;
+            font-weight: 600;
+        }
+
+        .filter-buttons {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .filter-btn {
+            padding: 0.5rem 1rem;
+            border: 1px solid var(--border-color);
+            background: var(--bg-tertiary);
+            border-radius: 20px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 0.9rem;
+        }
+
+        .filter-btn.active {
+            background: var(--accent-primary);
+            color: white;
+            border-color: var(--accent-primary);
+        }
+
+        .filter-btn:hover {
+            border-color: var(--accent-primary);
+        }
+
+        .orders-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .orders-table th,
+        .orders-table td {
+            padding: 1rem;
+            text-align: right;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .orders-table th {
+            background: var(--bg-tertiary);
+            font-weight: 600;
+            color: var(--text-secondary);
+        }
+
+        .order-row {
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .order-row:hover {
+            background: var(--bg-tertiary);
+        }
+
+        .status-badge {
+            padding: 0.3rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            display: inline-block;
+        }
+
+        .status-pending {
+            background: #f3f4f6;
+            color: var(--pending);
+        }
+
+        .status-partial {
+            background: #fef3c7;
+            color: var(--warning);
+        }
+
+        .status-approved {
+            background: #d1fae5;
+            color: var(--success);
+        }
+
+        .status-rejected {
+            background: #fee2e2;
+            color: var(--error);
+        }
+
+        .approval-status {
+            display: flex;
+            flex-direction: column;
+            gap: 0.2rem;
+        }
+
+        .approval-item {
+            font-size: 0.8rem;
+            display: flex;
+            align-items: center;
+            gap: 0.3rem;
+        }
+
+        .approval-icon {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+        }
+
+        .approval-pending {
+            background: var(--pending);
+        }
+
+        .approval-approved {
+            background: var(--success);
+        }
+
+        .approval-rejected {
+            background: var(--error);
+        }
+
+        .expand-btn {
+            background: var(--accent-primary);
+            color: white;
+            border: none;
+            padding: 0.3rem 0.8rem;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 0.8rem;
+            transition: all 0.3s ease;
+        }
+
+        .expand-btn:hover {
+            background: var(--accent-hover);
+        }
+
+        /* Modals */
+        .modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 2000;
+        }
+
+        .modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background: var(--bg-secondary);
+            padding: 2rem;
+            border-radius: 16px;
+            box-shadow: var(--shadow);
+            border: 1px solid var(--border-color);
+            max-width: 600px;
+            width: 90%;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .modal-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+        }
+
+        .modal-close {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: var(--text-secondary);
+        }
+
+        .modal-close:hover {
+            color: var(--text-primary);
+        }
+
+        /* Print Button */
+        .print-btn {
+            background: var(--warning);
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+            margin-left: 1rem;
+        }
+
+        .print-btn:hover {
+            background: #d97706;
+            transform: translateY(-2px);
+        }
+
+        /* Print Styles */
+        .print-order {
+            display: none;
+            direction: rtl;
+            font-family: Arial, sans-serif;
+        }
+
+        .print-order table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+
+        .print-order th,
+        .print-order td {
+            border: 1px solid #000;
+            padding: 8px;
+            text-align: right;
+        }
+
+        .print-order th {
+            background-color: #f0f0f0;
+            font-weight: bold;
+        }
+
+        @media print {
+            body * {
+                visibility: hidden;
+            }
+            .print-order,
+            .print-order * {
+                visibility: visible;
+            }
+            .print-order {
+                position: absolute;
+                left: 0;
+                top: 0;
+                display: block !important;
+            }
+        }
+
+        /* Form Styles */
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .form-input,
+        .form-select,
+        .form-textarea {
+            width: 100%;
+            padding: 0.8rem;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .form-input:focus,
+        .form-select:focus,
+        .form-textarea:focus {
+            outline: none;
+            border-color: var(--accent-primary);
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+        }
+
+        .form-textarea {
+            resize: vertical;
+            min-height: 100px;
+        }
+
+        .btn {
+            padding: 0.8rem 1.5rem;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .btn-primary {
+            background: var(--accent-primary);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: var(--accent-hover);
+            transform: translateY(-2px);
+        }
+
+        .btn-success {
+            background: var(--success);
+            color: white;
+        }
+
+        .btn-success:hover {
+            background: #059669;
+            transform: translateY(-2px);
+        }
+
+        .btn-danger {
+            background: var(--error);
+            color: white;
+        }
+
+        .btn-danger:hover {
+            background: #dc2626;
+            transform: translateY(-2px);
+        }
+
+        .btn-secondary {
+            background: var(--bg-tertiary);
+            color: var(--text-primary);
+            border: 1px solid var(--border-color);
+        }
+
+        .btn-secondary:hover {
+            background: var(--border-color);
+        }
+
+        /* Loading */
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 2px solid var(--border-color);
+            border-top: 2px solid var(--accent-primary);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Empty State */
+        .empty-state {
+            text-align: center;
+            padding: 3rem;
+            color: var(--text-secondary);
+        }
+
+        .empty-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .header-content {
+                flex-direction: column;
+                gap: 1rem;
+            }
+
+            .main-content {
+                padding: 0 1rem;
+            }
+
+            .action-buttons {
+                grid-template-columns: 1fr;
+            }
+
+            .orders-table-container {
+                overflow-x: auto;
+            }
+
+            .filter-buttons {
+                flex-wrap: wrap;
+            }
+        }
+
+        /* Animations */
+        .fade-in {
+            animation: fadeIn 0.3s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="header-content">
+            <div class="logo-section">
+                <div class="logo-icon">📋</div>
+                <div class="logo-text">
+                    <h1>מערכת הזמנות</h1>
+                    <p id="userRole">טוען...</p>
+                </div>
+            </div>
+            <div class="user-section">
+                <button class="theme-toggle" id="themeToggle">
+                    <span id="themeIcon">🌙</span>
+                </button>
+                <div class="user-info">
+                    <div class="user-avatar" id="userAvatar">👤</div>
+                    <span id="userName">טוען...</span>
+                </div>
+                <button class="logout-btn" id="logoutBtn">יציאה</button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <!-- Welcome Section -->
+        <section class="welcome-section fade-in">
+            <h2 class="welcome-title" id="welcomeTitle">טוען...</h2>
+            <p class="welcome-subtitle" id="welcomeSubtitle">ניהול חכם של הזמנות וציוד</p>
+        </section>
+
+        <!-- Action Buttons (Different for each user type) -->
+        <section class="action-buttons fade-in" id="actionButtons">
+            <!-- Dynamic content based on user role -->
+        </section>
+
+        <!-- Orders Table -->
+        <section class="orders-table-container fade-in" id="ordersTableContainer">
+            <div class="table-header">
+                <h3 class="table-title" id="tableTitle">ההזמנות שלי</h3>
+                <div class="filter-buttons" id="filterButtons">
+                    <button class="filter-btn active" data-filter="all">הכל</button>
+                    <button class="filter-btn" data-filter="pending">בהמתנה</button>
+                    <button class="filter-btn" data-filter="approved">מאושר</button>
+                    <button class="filter-btn" data-filter="rejected">נדחה</button>
+                </div>
+            </div>
+            <div id="ordersTableContent">
+                <table class="orders-table">
+                    <thead>
+                        <tr>
+                            <th>תאריך יצירה</th>
+                            <th>מספר הזמנה</th>
+                            <th>תאריך הזמנה</th>
+                            <th>מחלקה</th>
+                            <th>סה"כ</th>
+                            <th>סטטוס</th>
+                            <th>אישורים</th>
+                            <th>פעולות</th>
+                        </tr>
+                    </thead>
+                    <tbody id="ordersTableBody">
+                        <!-- Dynamic content -->
+                    </tbody>
+                </table>
+                <div class="empty-state" id="emptyState" style="display: none;">
+                    <div class="empty-icon">📋</div>
+                    <h3>אין הזמנות להצגה</h3>
+                    <p>התחל ביצירת הזמנה חדשה</p>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- New Order Modal -->
+    <div class="modal" id="newOrderModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title">יצירת הזמנה חדשה</h2>
+                <button class="modal-close" id="closeNewOrderModal">&times;</button>
+            </div>
+            <form id="newOrderForm">
+                <!-- Order Details -->
+                <div class="form-group">
+                    <label class="form-label">שם המזמין</label>
+                    <input type="text" class="form-input" id="requesterName" readonly>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">תאריך הזמנה</label>
+                    <input type="date" class="form-input" id="orderDate" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">מחלקה</label>
+                    <select class="form-select" id="department" required>
+                        <option value="">בחר מחלקה</option>
+                        <option value="תכנית בוקר">תכנית בוקר</option>
+                        <option value="מחוננים">מחוננים</option>
+                        <option value="ניהול">ניהול</option>
+                        <option value="IT">מחלקת מחשבים</option>
+                        <option value="תחזוקה">תחזוקה</option>
+                        <option value="אחר">אחר</option>
+                    </select>
+                </div>
+
+                <!-- Order Items -->
+                <div id="orderItems">
+                    <h3 style="margin-bottom: 1rem;">פריטי ההזמנה</h3>
+                    <div class="order-item" data-item="0">
+                        <div class="form-group">
+                            <label class="form-label">שם המוצר ותיאור</label>
+                            <input type="text" class="form-input" name="productName" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">מטרה - תיאור הצורך</label>
+                            <textarea class="form-textarea" name="purpose" required></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">כמות קיימת במלאי</label>
+                            <input type="number" class="form-input" name="stockQuantity" min="0">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">מועד דרוש לאספקה</label>
+                            <input type="date" class="form-input" name="requiredDate" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">שם הספק</label>
+                            <input type="text" class="form-input" name="supplier" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">עלות בש"ח</label>
+                            <input type="number" class="form-input cost-input" name="cost" step="0.01" min="0" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">מע"מ</label>
+                            <select class="form-select vat-select" name="vatIncluded" required>
+                                <option value="true">כולל מע"מ</option>
+                                <option value="false">לא כולל מע"מ</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <div style="display: flex; gap: 1rem; margin: 1rem 0;">
+                    <button type="button" class="btn btn-secondary" id="addItemBtn">+ הוסף פריט</button>
+                </div>
+
+                <!-- Order Summary -->
+                <div style="background: var(--bg-tertiary); padding: 1rem; border-radius: 8px; margin: 1rem 0;">
+                    <h4>סיכום הזמנה</h4>
+                    <p>סה"כ לא כולל מע"מ: <span id="totalExcludingVat">₪0</span></p>
+                    <p>סה"כ כולל מע"מ: <span id="totalIncludingVat">₪0</span></p>
+                </div>
+
+                <div style="display: flex; gap: 1rem; justify-content: flex-end;">
+                    <button type="button" class="btn btn-secondary" id="cancelOrderBtn">ביטול</button>
+                    <button type="submit" class="btn btn-primary" id="submitOrderBtn">
+                        <span>שלח הזמנה לאישור</span>
+                        <div class="loading" style="display: none;"></div>
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Order Details Modal -->
+    <div class="modal" id="orderDetailsModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title">פרטי הזמנה</h2>
+                <div>
+                    <button class="print-btn" id="printOrderBtn" onclick="printOrder()">🖨️ הדפס</button>
+                    <button class="modal-close" id="closeOrderDetailsModal">&times;</button>
+                </div>
+            </div>
+            <div id="orderDetailsContent">
+                <!-- Dynamic content -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Print Order Content (Hidden) -->
+    <div class="print-order" id="printOrderContent">
+        <!-- Print content will be generated here -->
+    </div>
+
+<!-- Firebase and App Scripts -->
+<script type="module">
+    // Import Firebase modules
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-app.js";
+    import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-auth.js";
+    import { getDatabase, ref, set, get, push, onValue, query, orderByChild } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-database.js";
+
+    // Firebase configuration
+    const firebaseConfig = {
+        apiKey: "AIzaSyDpsIEhz1DExRgvzx3on3RMxtY9stIA4us",
+        authDomain: "oreders-ef40d.firebaseapp.com",
+        databaseURL: "https://oreders-ef40d-default-rtdb.firebaseio.com/",
+        projectId: "oreders-ef40d",
+        storageBucket: "oreders-ef40d.firebasestorage.app",
+        messagingSenderId: "313770368508",
+        appId: "1:313770368508:web:f1445553df848f59a32679"
+    };
+
+    // Initialize Firebase
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const database = getDatabase(app);
+
+    // Global variables
+// Global variables
+    let currentUser = null;
+    let userRole = null;
+    let userData = null;
+    let orders = [];
+    let itemCounter = 0;
+    let ordersTableVisible = true;
+
+    // DOM Elements
+    const themeToggle = document.getElementById('themeToggle');
+    const themeIcon = document.getElementById('themeIcon');
+    const logoutBtn = document.getElementById('logoutBtn');
+    const userName = document.getElementById('userName');
+    const userAvatar = document.getElementById('userAvatar');
+    const userRoleElement = document.getElementById('userRole');
+    const welcomeTitle = document.getElementById('welcomeTitle');
+    const welcomeSubtitle = document.getElementById('welcomeSubtitle');
+    const actionButtons = document.getElementById('actionButtons');
+    const tableTitle = document.getElementById('tableTitle');
+    const ordersTableBody = document.getElementById('ordersTableBody');
+    const emptyState = document.getElementById('emptyState');
+    const filterButtons = document.getElementById('filterButtons');
+    const newOrderModal = document.getElementById('newOrderModal');
+    const orderDetailsModal = document.getElementById('orderDetailsModal');
+    const ordersTableContainer = document.getElementById('ordersTableContainer');
+
+    // Generate random order number
+    function generateOrderNumber() {
+        return Math.floor(100000 + Math.random() * 900000);
+    }
+
+    // Initialize app
+    function initApp() {
+        console.log('Initializing app...');
+        initTheme();
+        setupEventListeners();
+        checkAuthState();
+    }
+
+    // Theme management
+    function initTheme() {
+        const savedTheme = localStorage.getItem('theme') || 'light';
+        document.documentElement.setAttribute('data-theme', savedTheme);
+        updateThemeIcon(savedTheme);
+    }
+
+    function updateThemeIcon(theme) {
+        themeIcon.textContent = theme === 'dark' ? '☀️' : '🌙';
+    }
+
+    function toggleTheme() {
+        const currentTheme = document.documentElement.getAttribute('data-theme');
+        const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+        
+        document.documentElement.setAttribute('data-theme', newTheme);
+        localStorage.setItem('theme', newTheme);
+        updateThemeIcon(newTheme);
+    }
+
+    // Auth state management
+    function checkAuthState() {
+        console.log('Checking auth state...');
+        onAuthStateChanged(auth, async (user) => {
+            console.log('Auth state changed:', user ? user.email : 'No user');
+            if (user) {
+                currentUser = user;
+                await loadUserData();
+                setupUI();
+                loadOrders();
+            } else {
+                console.log('No user found, redirecting to login');
+                window.location.href = 'index.html';
+            }
+        });
+    }
+
+    async function loadUserData() {
+        console.log('Loading user data for:', currentUser.email);
+        try {
+            // רשימת המשתמשים המורשים (מעודכנת)
+            const userRoles = {
+                'papasnir@gmail.com': {
+                    name: 'שניר דואני',
+                    role: 'requester',
+                    department: 'תכנית בוקר'
+                },
+                'snirdoani@gmail.com': {
+                    name: 'אמילי כהן',
+                    role: 'approver',
+                    department: 'ניהול',
+                    approverType: 'emily'
+                },
+                'roeimatid@gmail.com': {
+                    name: 'שולי לוי',
+                    role: 'approver',
+                    department: 'ניהול',
+                    approverType: 'shuli'
+                },
+                'snirdoani2@gmail.com': {
+                    name: 'גדי אברהם',
+                    role: 'approver',
+                    department: 'ניהול',
+                    approverType: 'gadi'
+                }
+            };
+
+            // בדיקה אם המשתמש מורשה
+            if (userRoles[currentUser.email]) {
+                userData = userRoles[currentUser.email];
+                userRole = userData.role;
+                
+                console.log('User data loaded:', userData);
+                
+                // Update UI with user info
+                userName.textContent = userData.name;
+                userAvatar.textContent = userData.name.charAt(0);
+                userRoleElement.textContent = userData.role === 'requester' ? 'מזמין' : 'מאשר הזמנות';
+
+                // שמירת נתוני המשתמש בדאטאבייס לפעמים הבאות
+                try {
+                    const userRef = ref(database, `users/${currentUser.uid}`);
+                    await set(userRef, {
+                        email: currentUser.email,
+                        name: userData.name,
+                        role: userData.role,
+                        department: userData.department,
+                        approverType: userData.approverType || null,
+                        lastLogin: new Date().toISOString(),
+                        photoURL: currentUser.photoURL
+                    });
+                    console.log('User data saved to database');
+                } catch (saveError) {
+                    console.error('Error saving user data:', saveError);
+                    // זה לא קריטי, ממשיכים בכל מקרה
+                }
+            } else {
+                console.error('User not authorized:', currentUser.email);
+                alert('המשתמש אינו מורשה לגשת למערכת');
+                await signOut(auth);
+            }
+        } catch (error) {
+            console.error('Error loading user data:', error);
+            alert('שגיאה בטעינת נתוני משתמש');
+        }
+    }
+
+    function setupUI() {
+        console.log('Setting up UI for role:', userRole);
+        if (userRole === 'requester') {
+            setupRequesterUI();
+        } else if (userRole === 'approver') {
+            setupApproverUI();
+        }
+    }
+
+    function setupRequesterUI() {
+        // שם פרטי בברכה
+        const firstName = userData.name.split(' ')[0];
+        welcomeTitle.textContent = `שלום ${firstName}, ברוך הבא למערכת ההזמנות`;
+        welcomeSubtitle.textContent = 'כאן תוכל ליצור הזמנות חדשות ולעקוב אחר הסטטוס שלהן';
+        tableTitle.textContent = 'ההזמנות שלי';
+
+        actionButtons.innerHTML = `
+            <div class="action-card" id="newOrderCard">
+                <div class="action-icon">➕</div>
+                <h3 class="action-title">יצירת הזמנה חדשה</h3>
+                <p class="action-description">צור הזמנה חדשה לציוד או שירותים</p>
+            </div>
+            <div class="action-card" id="myOrdersCard">
+                <div class="action-icon">📋</div>
+                <h3 class="action-title">בדיקת סטטוס בקשות</h3>
+                <p class="action-description">הצג/הסתר את טבלת ההזמנות שלך</p>
+            </div>
+        `;
+
+        // Add event listeners for requester actions
+        setTimeout(() => {
+            const newOrderCard = document.getElementById('newOrderCard');
+            const myOrdersCard = document.getElementById('myOrdersCard');
+            
+            if (newOrderCard) {
+                newOrderCard.addEventListener('click', openNewOrderModal);
+                console.log('New order card event listener added');
+            }
+            if (myOrdersCard) {
+                myOrdersCard.addEventListener('click', toggleOrdersTable);
+                console.log('My orders card event listener added');
+            }
+        }, 100);
+    }
+
+    function setupApproverUI() {
+        // שם פרטי בברכה
+        const firstName = userData.name.split(' ')[0];
+        welcomeTitle.textContent = `שלום ${firstName}, ברוך הבא למערכת ההזמנות`;
+        welcomeSubtitle.textContent = 'כאן תוכל לאשר הזמנות ולנהל את תהליך האישורים';
+        tableTitle.textContent = 'הזמנות לאישור';
+
+        actionButtons.innerHTML = `
+            <div class="action-card" id="pendingApprovalsCard">
+                <div class="action-icon">⏳</div>
+                <h3 class="action-title">אישורי הזמנות</h3>
+                <p class="action-description">הזמנות הממתינות לאישור שלי</p>
+            </div>
+            <div class="action-card" id="allOrdersCard">
+                <div class="action-icon">📊</div>
+                <h3 class="action-title">היסטוריית הזמנות</h3>
+                <p class="action-description">כל ההזמנות במערכת לפי תאריך</p>
+            </div>
+        `;
+
+        // Add event listeners for approver actions
+        setTimeout(() => {
+            const pendingApprovalsCard = document.getElementById('pendingApprovalsCard');
+            const allOrdersCard = document.getElementById('allOrdersCard');
+            
+            if (pendingApprovalsCard) {
+                pendingApprovalsCard.addEventListener('click', showMyPendingApprovals);
+            }
+            if (allOrdersCard) {
+                allOrdersCard.addEventListener('click', showAllOrdersHistory);
+            }
+        }, 100);
+    }
+
+    // Toggle orders table visibility (for requesters)
+    function toggleOrdersTable() {
+        ordersTableVisible = !ordersTableVisible;
+        
+        if (ordersTableVisible) {
+            ordersTableContainer.classList.remove('collapsed');
+            ordersTableContainer.classList.add('expanded');
+        } else {
+            ordersTableContainer.classList.add('collapsed');
+            ordersTableContainer.classList.remove('expanded');
+        }
+    }
+
+    // Show pending approvals for current approver
+    function showMyPendingApprovals() {
+        const myApproverType = userData.approverType;
+        if (!myApproverType) return;
+
+        const pendingOrders = orders.filter(order => {
+            const approvals = order.approvals || {};
+            
+            // בדיקה אם ההזמנה ממתינה לאישור שלי
+            if (myApproverType === 'emily') {
+                return approvals.emily === 'pending';
+            } else if (myApproverType === 'shuli') {
+                return approvals.emily === 'approved' && approvals.shuli === 'pending';
+            } else if (myApproverType === 'gadi') {
+                return order.totalIncludingVat > 9000 && 
+                       approvals.emily === 'approved' && 
+                       approvals.shuli === 'approved' && 
+                       approvals.gadi === 'pending';
+            }
+            return false;
+        });
+
+        tableTitle.textContent = `הזמנות הממתינות לאישור שלי (${pendingOrders.length})`;
+        renderOrders(pendingOrders);
+        
+        // Scroll to table
+        ordersTableContainer.scrollIntoView({ behavior: 'smooth' });
+    }
+
+    // Show all orders history
+    function showAllOrdersHistory() {
+        tableTitle.textContent = 'היסטוריית כל ההזמנות';
+        renderOrders(orders); // Show all orders
+        
+        // Scroll to table
+        ordersTableContainer.scrollIntoView({ behavior: 'smooth' });
+    }
+
+    // Event listeners setup
+    function setupEventListeners() {
+        console.log('Setting up event listeners...');
+        themeToggle.addEventListener('click', toggleTheme);
+        logoutBtn.addEventListener('click', handleLogout);
+        
+        // Modal event listeners
+        document.getElementById('closeNewOrderModal').addEventListener('click', closeNewOrderModal);
+        document.getElementById('closeOrderDetailsModal').addEventListener('click', closeOrderDetailsModal);
+        document.getElementById('cancelOrderBtn').addEventListener('click', closeNewOrderModal);
+        
+        // Form event listeners
+        document.getElementById('newOrderForm').addEventListener('submit', handleOrderSubmit);
+        document.getElementById('addItemBtn').addEventListener('click', addOrderItem);
+        
+        // Filter buttons
+        filterButtons.addEventListener('click', (e) => {
+            if (e.target.classList.contains('filter-btn')) {
+                document.querySelectorAll('.filter-btn').forEach(btn => btn.classList.remove('active'));
+                e.target.classList.add('active');
+                filterOrders(e.target.dataset.filter);
+            }
+        });
+
+        // Close modals when clicking outside
+        window.addEventListener('click', (e) => {
+            if (e.target === newOrderModal) closeNewOrderModal();
+            if (e.target === orderDetailsModal) closeOrderDetailsModal();
+        });
+    }
+
+    // Order management
+    async function loadOrders() {
+        console.log('Loading orders...');
+        try {
+            const ordersRef = ref(database, 'orders');
+            
+            onValue(ordersRef, (snapshot) => {
+                orders = [];
+                if (snapshot.exists()) {
+                    const data = snapshot.val();
+                    Object.keys(data).forEach(key => {
+                        orders.push({
+                            id: key,
+                            ...data[key]
+                        });
+                    });
+                }
+                
+                // Sort by creation date (newest first)
+                orders.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+                
+                console.log('Orders loaded:', orders.length);
+                renderOrders();
+            });
+        } catch (error) {
+            console.error('Error loading orders:', error);
+        }
+    }
+
+    function renderOrders(filteredOrders = null) {
+        const ordersToShow = filteredOrders || orders;
+        const tbody = ordersTableBody;
+        
+        // Filter orders based on user role
+        let userOrders = ordersToShow;
+        if (userRole === 'requester') {
+            userOrders = ordersToShow.filter(order => order.requesterEmail === currentUser.email);
+        }
+
+        if (userOrders.length === 0) {
+            tbody.innerHTML = '';
+            emptyState.style.display = 'block';
+            return;
+        }
+
+        emptyState.style.display = 'none';
+        
+        tbody.innerHTML = userOrders.map(order => {
+            const status = getOrderStatus(order);
+            const approvals = getApprovalStatus(order);
+            const createdDate = new Date(order.createdAt);
+            const orderDate = new Date(order.orderDate);
+            
+            return `
+                <tr class="order-row" data-order-id="${order.id}">
+                    <td>${createdDate.toLocaleDateString('he-IL')}</td>
+                    <td>${order.orderNumber || generateOrderNumber()}</td>
+                    <td>${orderDate.toLocaleDateString('he-IL')}</td>
+                    <td>${order.department}</td>
+                    <td>₪${order.totalIncludingVat.toFixed(2)}</td>
+                    <td><span class="status-badge status-${status.class}">${status.text}</span></td>
+                    <td>
+                        <div class="approval-status">
+                            ${approvals.map(approval => `
+                                <div class="approval-item">
+                                    <div class="approval-icon approval-${approval.status}"></div>
+                                    <span>${approval.name} - ${approval.statusText}</span>
+                                </div>
+                            `).join('')}
+                        </div>
+                    </td>
+                    <td>
+                        <button class="expand-btn" onclick="openOrderDetails('${order.id}')">פרטים</button>
+                        ${status.canUploadReceipt ? '<button class="btn btn-success" style="margin-right: 0.5rem; font-size: 0.8rem;" onclick="uploadReceipt(\'' + order.id + '\')">העלה קבלה</button>' : ''}
+                    </td>
+                </tr>
+            `;
+        }).join('');
+    }
+
+    function getOrderStatus(order) {
+        const approvals = order.approvals || {};
+        const emily = approvals.emily || 'pending';
+        const shuli = approvals.shuli || 'pending';
+        const gadi = order.totalIncludingVat > 9000 ? (approvals.gadi || 'pending') : 'approved';
+
+        if (emily === 'rejected' || shuli === 'rejected' || gadi === 'rejected') {
+            return { class: 'rejected', text: 'נדחה', canUploadReceipt: false };
+        }
+
+        if (emily === 'approved' && shuli === 'approved' && gadi === 'approved') {
+            return { class: 'approved', text: 'מאושר', canUploadReceipt: !order.receiptUploaded };
+        }
+
+        if (emily === 'approved' || shuli === 'approved') {
+            return { class: 'partial', text: 'אושר חלקית', canUploadReceipt: false };
+        }
+
+        return { class: 'pending', text: 'בהמתנה', canUploadReceipt: false };
+    }
+
+function getApprovalStatus(order) {
+    const approvals = order.approvals || {};
+    const result = [
+        {
+            name: 'אמילי',
+            key: 'emily',  // הוסף מפתח באנגלית
+            status: approvals.emily || 'pending',
+            statusText: getStatusText(approvals.emily || 'pending')
+        },
+        {
+            name: 'שולי', 
+            key: 'shuli',  // הוסף מפתח באנגלית
+            status: approvals.shuli || 'pending',
+            statusText: getStatusText(approvals.shuli || 'pending')
+        }
+    ];
+
+    if (order.totalIncludingVat > 9000) {
+        result.push({
+            name: 'גדי',
+            key: 'gadi',  // הוסף מפתח באנגלית
+            status: approvals.gadi || 'pending',
+            statusText: getStatusText(approvals.gadi || 'pending')
+        });
+    }
+
+    return result;
+}
+
+    function getStatusText(status) {
+        switch (status) {
+            case 'approved': return 'אושר';
+            case 'rejected': return 'נדחה';
+            default: return 'בהמתנה';
+        }
+    }
+
+    function filterOrders(filter) {
+        let filtered = orders;
+        
+        if (filter !== 'all') {
+            filtered = orders.filter(order => {
+                const status = getOrderStatus(order);
+                return status.class === filter;
+            });
+        }
+        
+        renderOrders(filtered);
+    }
+
+    // New Order Modal Functions
+    function openNewOrderModal() {
+        console.log('Opening new order modal...');
+        newOrderModal.classList.add('active');
+        
+        // Set default values
+        document.getElementById('requesterName').value = userData.name;
+        document.getElementById('orderDate').value = new Date().toISOString().split('T')[0];
+        
+        // Reset form but keep the default values
+        const form = document.getElementById('newOrderForm');
+        form.reset();
+        document.getElementById('requesterName').value = userData.name;
+        document.getElementById('orderDate').value = new Date().toISOString().split('T')[0];
+        
+        // Reset item counter and remove extra items
+        itemCounter = 0;
+        const orderItems = document.getElementById('orderItems');
+        const extraItems = orderItems.querySelectorAll('.order-item[data-item]:not([data-item="0"])');
+        extraItems.forEach(item => item.remove());
+        
+        updateOrderSummary();
+    }
+
+    function closeNewOrderModal() {
+        newOrderModal.classList.remove('active');
+    }
+
+    function closeOrderDetailsModal() {
+        orderDetailsModal.classList.remove('active');
+    }
+
+    function addOrderItem() {
+        itemCounter++;
+        const orderItems = document.getElementById('orderItems');
+        
+        const newItem = document.createElement('div');
+        newItem.className = 'order-item';
+        newItem.dataset.item = itemCounter;
+        newItem.innerHTML = `
+            <hr style="margin: 2rem 0;">
+            <div style="display: flex; justify-content: between; align-items: center; margin-bottom: 1rem;">
+                <h4>פריט #${itemCounter + 1}</h4>
+                <button type="button" class="btn btn-danger" style="font-size: 0.8rem; padding: 0.3rem 0.8rem;" onclick="removeOrderItem(${itemCounter})">הסר פריט</button>
+            </div>
+            <div class="form-group">
+                <label class="form-label">שם המוצר ותיאור</label>
+                <input type="text" class="form-input" name="productName" required>
+            </div>
+            <div class="form-group">
+                <label class="form-label">מטרה - תיאור הצורך</label>
+                <textarea class="form-textarea" name="purpose" required></textarea>
+            </div>
+            <div class="form-group">
+                <label class="form-label">כמות קיימת במלאי</label>
+                <input type="number" class="form-input" name="stockQuantity" min="0">
+            </div>
+            <div class="form-group">
+                <label class="form-label">מועד דרוש לאספקה</label>
+                <input type="date" class="form-input" name="requiredDate" required>
+            </div>
+            <div class="form-group">
+                <label class="form-label">שם הספק</label>
+                <input type="text" class="form-input" name="supplier" required>
+            </div>
+            <div class="form-group">
+                <label class="form-label">עלות בש"ח</label>
+                <input type="number" class="form-input cost-input" name="cost" step="0.01" min="0" required>
+            </div>
+            <div class="form-group">
+                <label class="form-label">מע"מ</label>
+                <select class="form-select vat-select" name="vatIncluded" required>
+                    <option value="true">כולל מע"מ</option>
+                    <option value="false">לא כולל מע"מ</option>
+                </select>
+            </div>
+        `;
+        
+        orderItems.appendChild(newItem);
+        
+        // Add event listeners for cost calculation
+        const costInput = newItem.querySelector('.cost-input');
+        const vatSelect = newItem.querySelector('.vat-select');
+        
+        costInput.addEventListener('input', updateOrderSummary);
+        vatSelect.addEventListener('change', updateOrderSummary);
+    }
+
+    function removeOrderItem(itemId) {
+        const item = document.querySelector(`[data-item="${itemId}"]`);
+        if (item) {
+            item.remove();
+            updateOrderSummary();
+        }
+    }
+
+    function updateOrderSummary() {
+        const costInputs = document.querySelectorAll('.cost-input');
+        const vatSelects = document.querySelectorAll('.vat-select');
+        
+        let totalExcludingVat = 0;
+        let totalIncludingVat = 0;
+        
+        costInputs.forEach((input, index) => {
+            const cost = parseFloat(input.value) || 0;
+            const vatSelect = vatSelects[index];
+            const includesVat = vatSelect ? vatSelect.value === 'true' : true;
+            
+            if (includesVat) {
+                totalIncludingVat += cost;
+                totalExcludingVat += cost / 1.17; // Remove 17% VAT
+            } else {
+                totalExcludingVat += cost;
+                totalIncludingVat += cost * 1.17; // Add 17% VAT
+            }
+        });
+        
+        document.getElementById('totalExcludingVat').textContent = `₪${totalExcludingVat.toFixed(2)}`;
+        document.getElementById('totalIncludingVat').textContent = `₪${totalIncludingVat.toFixed(2)}`;
+    }
+
+    async function handleOrderSubmit(e) {
+        e.preventDefault();
+        console.log('Submitting order...');
+        
+        const submitBtn = document.getElementById('submitOrderBtn');
+        const btnText = submitBtn.querySelector('span');
+        const loading = submitBtn.querySelector('.loading');
+        
+        // Show loading
+        btnText.style.display = 'none';
+        loading.style.display = 'block';
+        submitBtn.disabled = true;
+        
+        try {
+            // Collect form data
+            const orderItemsElements = document.querySelectorAll('.order-item');
+            
+            const items = [];
+            orderItemsElements.forEach((item, index) => {
+                const inputs = item.querySelectorAll('input, textarea, select');
+                const itemData = {};
+                
+                inputs.forEach(input => {
+                    if (input.name) {
+                        itemData[input.name] = input.value;
+                    }
+                });
+                
+                if (itemData.productName) {
+                    items.push(itemData);
+                }
+            });
+            
+            if (items.length === 0) {
+                alert('אנא הוסף לפחות פריט אחד להזמנה');
+                return;
+            }
+            
+            // Calculate totals
+            let totalExcludingVat = 0;
+            let totalIncludingVat = 0;
+            
+            items.forEach(item => {
+                const cost = parseFloat(item.cost) || 0;
+                const includesVat = item.vatIncluded === 'true';
+                
+                if (includesVat) {
+                    totalIncludingVat += cost;
+                    totalExcludingVat += cost / 1.17;
+                } else {
+                    totalExcludingVat += cost;
+                    totalIncludingVat += cost * 1.17;
+                }
+            });
+            
+            // Create order object
+            const order = {
+                requesterEmail: currentUser.email,
+                requesterName: userData.name,
+                orderDate: document.getElementById('orderDate').value,
+                department: document.getElementById('department').value,
+                items: items,
+                totalExcludingVat: totalExcludingVat,
+                totalIncludingVat: totalIncludingVat,
+                status: 'pending',
+                approvals: {
+                    emily: 'pending',
+                    shuli: 'pending'
+                },
+                createdAt: new Date().toISOString(),
+                orderNumber: generateOrderNumber(),
+                receiptUploaded: false
+            };
+            
+            // Add Gadi approval if needed
+            if (totalIncludingVat > 9000) {
+                order.approvals.gadi = 'pending';
+            }
+            
+            console.log('Order to save:', order);
+            
+            // Save to Firebase
+            const ordersRef = ref(database, 'orders');
+            await push(ordersRef, order);
+            
+            // Show success message
+            alert('ההזמנה נשלחה בהצלחה לאישור!');
+            
+            closeNewOrderModal();
+            
+        } catch (error) {
+            console.error('Error submitting order:', error);
+            alert('אירעה שגיאה בשליחת ההזמנה. אנא נסה שוב.');
+        } finally {
+            // Hide loading
+            btnText.style.display = 'block';
+            loading.style.display = 'none';
+            submitBtn.disabled = false;
+        }
+    }
+    // Order details modal
+    window.openOrderDetails = async function(orderId) {
+        try {
+            const order = orders.find(o => o.id === orderId);
+            if (!order) return;
+            
+            const approvals = getApprovalStatus(order);
+            const status = getOrderStatus(order);
+            
+            document.getElementById('orderDetailsContent').innerHTML = `
+                <div style="margin-bottom: 2rem;">
+                    <h3>פרטי הזמנה #${order.orderNumber || generateOrderNumber()}</h3>
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; margin: 1rem 0;">
+                        <div><strong>מזמין:</strong> ${order.requesterName}</div>
+                        <div><strong>תאריך יצירה:</strong> ${formatDate(order.createdAt)}</div>
+                        <div><strong>תאריך הזמנה:</strong> ${formatDate(order.orderDate)}</div>
+                        <div><strong>מחלקה:</strong> ${order.department}</div>
+                        <div><strong>סטטוס:</strong> <span class="status-badge status-${status.class}">${status.text}</span></div>
+                    </div>
+                </div>
+                
+                <div style="margin-bottom: 2rem;">
+                    <h4>סטטוס אישורים</h4>
+                    <div style="display: flex; flex-direction: column; gap: 0.5rem; margin: 1rem 0;">
+                        ${approvals.map(approval => `
+                            <div style="display: flex; align-items: center; gap: 0.5rem;">
+                                <div class="approval-icon approval-${approval.status}" style="width: 16px; height: 16px;"></div>
+                                <span><strong>${approval.name}:</strong> ${approval.statusText}</span>
+                                ${userRole === 'approver' && approval.status === 'pending' && isUserApprover(approval.name) ? 
+                                    `<div style="margin-right: auto;">
+                                        <button class="btn btn-success" style="font-size: 0.8rem; padding: 0.3rem 0.8rem; margin-left: 0.5rem;" onclick="approveOrder('${orderId}', '${approval.key}')">אשר</button>
+                                        <button class="btn btn-danger" style="font-size: 0.8rem; padding: 0.3rem 0.8rem;" onclick="rejectOrder('${orderId}', '${approval.key}')">דחה</button>
+                                    </div>` : ''
+                                }
+                            </div>
+                        `).join('')}
+                    </div>
+                </div>
+                
+                <div style="margin-bottom: 2rem;">
+                    <h4>פריטי ההזמנה</h4>
+                    ${order.items.map((item, index) => `
+                        <div style="background: var(--bg-tertiary); padding: 1rem; border-radius: 8px; margin: 1rem 0;">
+                            <h5>פריט #${index + 1}</h5>
+                            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 0.5rem; margin: 0.5rem 0;">
+                                <div><strong>מוצר:</strong> ${item.productName}</div>
+                                <div><strong>ספק:</strong> ${item.supplier}</div>
+                                <div><strong>עלות:</strong> ₪${parseFloat(item.cost).toFixed(2)} ${item.vatIncluded === 'true' ? '(כולל מע"מ)' : '(לא כולל מע"מ)'}</div>
+                                <div><strong>תאריך נדרש:</strong> ${formatDate(item.requiredDate)}</div>
+                            </div>
+                            <div style="margin: 0.5rem 0;">
+                                <strong>מטרה:</strong> ${item.purpose}
+                            </div>
+                            <div>
+                                <strong>כמות במלאי:</strong> ${item.stockQuantity || 0}
+                            </div>
+                        </div>
+                    `).join('')}
+                </div>
+                
+                <div style="background: var(--bg-tertiary); padding: 1rem; border-radius: 8px;">
+                    <h4>סיכום כספי</h4>
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; margin: 1rem 0;">
+                        <div><strong>סה"כ לא כולל מע"מ:</strong> ₪${order.totalExcludingVat.toFixed(2)}</div>
+                        <div><strong>סה"כ כולל מע"מ:</strong> ₪${order.totalIncludingVat.toFixed(2)}</div>
+                    </div>
+                </div>
+            `;
+            
+            // Store current order for printing
+            window.currentOrderForPrint = order;
+            
+            orderDetailsModal.classList.add('active');
+            
+        } catch (error) {
+            console.error('Error loading order details:', error);
+            alert('שגיאה בטעינת פרטי ההזמנה');
+        }
+    };
+
+    // Print order function
+    window.printOrder = function() {
+        const order = window.currentOrderForPrint;
+        if (!order) {
+            alert('אין הזמנה לטיפה');
+            return;
+        }
+
+        const printContent = document.getElementById('printOrderContent');
+        
+        printContent.innerHTML = `
+            <div style="text-align: center; margin-bottom: 30px;">
+                <h2>טופס הזמנת עבודה או ציוד</h2>
+            </div>
+            
+            <table style="width: 100%; border-collapse: collapse; margin-bottom: 20px;">
+                <tr>
+                    <td style="border: 1px solid #000; padding: 8px; background-color: #f0f0f0; width: 150px;"><strong>פרטי המזמין:</strong></td>
+                    <td style="border: 1px solid #000; padding: 8px; width: 150px;">${order.requesterName}</td>
+                    <td style="border: 1px solid #000; padding: 8px; width: 150px;"><strong>שם המזמין</strong></td>
+                    <td style="border: 1px solid #000; padding: 8px;">${order.requesterName.split(' ')[0]}</td>
+                </tr>
+                <tr>
+                    <td style="border: 1px solid #000; padding: 8px;"></td>
+                    <td style="border: 1px solid #000; padding: 8px;"></td>
+                    <td style="border: 1px solid #000; padding: 8px;"><strong>תאריך הזמנה</strong></td>
+                    <td style="border: 1px solid #000; padding: 8px;">${formatDate(order.orderDate)}</td>
+                </tr>
+                <tr>
+                    <td style="border: 1px solid #000; padding: 8px;"></td>
+                    <td style="border: 1px solid #000; padding: 8px;"></td>
+                    <td style="border: 1px solid #000; padding: 8px;"><strong>מחלקה</strong></td>
+                    <td style="border: 1px solid #000; padding: 8px;">${order.department}</td>
+                </tr>
+            </table>
+
+            <table style="width: 100%; border-collapse: collapse; margin-bottom: 20px;">
+                <tr>
+                    <th style="border: 1px solid #000; padding: 8px; background-color: #f0f0f0;">שם המוצר תיאור המוצר או העבודה</th>
+                    <th style="border: 1px solid #000; padding: 8px; background-color: #f0f0f0;">מטרה- תיאור הצורך</th>
+                    <th style="border: 1px solid #000; padding: 8px; background-color: #f0f0f0;">כמות קיימת במלאי</th>
+                    <th style="border: 1px solid #000; padding: 8px; background-color: #f0f0f0;">מועד דרוש לאספקה לטכנודע</th>
+                    <th style="border: 1px solid #000; padding: 8px; background-color: #f0f0f0;">שם הספק</th>
+                    <th style="border: 1px solid #000; padding: 8px; background-color: #f0f0f0;">עלות בש"ח כולל/לא כולל מע"מ</th>
+                </tr>
+                ${order.items.map(item => `
+                    <tr>
+                        <td style="border: 1px solid #000; padding: 8px; min-height: 40px;">${item.productName}</td>
+                        <td style="border: 1px solid #000; padding: 8px;">${item.purpose}</td>
+                        <td style="border: 1px solid #000; padding: 8px;">${item.stockQuantity || 0}</td>
+                        <td style="border: 1px solid #000; padding: 8px;">${formatDate(item.requiredDate)}</td>
+                        <td style="border: 1px solid #000; padding: 8px;">${item.supplier}</td>
+                        <td style="border: 1px solid #000; padding: 8px;">₪${parseFloat(item.cost).toFixed(2)} ${item.vatIncluded === 'true' ? '(כולל מע"מ)' : '(לא כולל מע"מ)'}</td>
+                    </tr>
+                `).join('')}
+            </table>
+
+            <div style="margin-top: 30px;">
+                <p><strong>בסמידה והחתמה כמות גדולה של פריטים ניתן לערוך את זה הבתמנה</strong></p>
+                <br>
+                <p><strong>אישור ההזמנה (חויבות)</strong></p>
+                <br>
+                <table style="width: 100%; border-collapse: collapse;">
+                    <tr>
+                        <th style="border: 1px solid #000; padding: 8px; background-color: #f0f0f0;">שם המאשר</th>
+                        <th style="border: 1px solid #000; padding: 8px; background-color: #f0f0f0;">הערות</th>
+                        <th style="border: 1px solid #000; padding: 8px; background-color: #f0f0f0;">תאריך</th>
+                        <th style="border: 1px solid #000; padding: 8px; background-color: #f0f0f0;">הגבלת הזמנה</th>
+                        <th style="border: 1px solid #000; padding: 8px; background-color: #f0f0f0;">חתימה</th>
+                    </tr>
+                    <tr>
+                        <td style="border: 1px solid #000; padding: 8px; height: 40px;">ח' בכ' נדאו</td>
+                        <td style="border: 1px solid #000; padding: 8px;"></td>
+                        <td style="border: 1px solid #000; padding: 8px;"></td>
+                        <td style="border: 1px solid #000; padding: 8px;"></td>
+                        <td style="border: 1px solid #000; padding: 8px;"></td>
+                    </tr>
+                    <tr>
+                        <td style="border: 1px solid #000; padding: 8px; height: 40px;">אמילי כוס</td>
+                        <td style="border: 1px solid #000; padding: 8px;"></td>
+                        <td style="border: 1px solid #000; padding: 8px;"></td>
+                        <td style="border: 1px solid #000; padding: 8px;"></td>
+                        <td style="border: 1px solid #000; padding: 8px;"></td>
+                    </tr>
+                    <tr>
+                        <td style="border: 1px solid #000; padding: 8px; height: 40px;">שולי שמגון</td>
+                        <td style="border: 1px solid #000; padding: 8px;"></td>
+                        <td style="border: 1px solid #000; padding: 8px;"></td>
+                        <td style="border: 1px solid #000; padding: 8px;"></td>
+                        <td style="border: 1px solid #000; padding: 8px;"></td>
+                    </tr>
+                </table>
+            </div>
+        `;
+
+        window.print();
+    };
+
+    // Upload receipt function
+    window.uploadReceipt = function(orderId) {
+        alert('תכונת העלאת קבלה תהיה זמינה בקרוב');
+    };
+
+    // Approval functions
+    window.approveOrder = async function(orderId, approver) {
+        if (confirm(`האם אתה בטוח שברצונך לאשר הזמנה זו?`)) {
+            try {
+                const orderRef = ref(database, `orders/${orderId}/approvals/${approver}`);
+                await set(orderRef, 'approved');
+                alert('ההזמנה אושרה בהצלחה!');
+                closeOrderDetailsModal();
+            } catch (error) {
+                console.error('Error approving order:', error);
+                alert('שגיאה באישור ההזמנה');
+            }
+        }
+    };
+
+    window.rejectOrder = async function(orderId, approver) {
+        if (confirm(`האם אתה בטוח שברצונך לדחות הזמנה זו?`)) {
+            try {
+                const orderRef = ref(database, `orders/${orderId}/approvals/${approver}`);
+                await set(orderRef, 'rejected');
+                alert('ההזמנה נדחתה');
+                closeOrderDetailsModal();
+            } catch (error) {
+                console.error('Error rejecting order:', error);
+                alert('שגיאה בדحיית ההזמנה');
+            }
+        }
+    };
+
+    function isUserApprover(approverName) {
+        if (!userData.approverType) return false;
+        
+        const approverMap = {
+            'אמילי': 'emily',
+            'שולי': 'shuli',
+            'גדי': 'gadi'
+        };
+        
+        return approverMap[approverName] === userData.approverType;
+    }
+
+    // Utility functions
+    function formatDate(dateString) {
+        const date = new Date(dateString);
+        return date.toLocaleDateString('he-IL');
+    }
+
+    async function handleLogout() {
+        if (confirm('האם אתה בטוח שברצונך להתנתק?')) {
+            try {
+                await signOut(auth);
+                window.location.href = 'index.html';
+            } catch (error) {
+                console.error('Error signing out:', error);
+            }
+        }
+    }
+
+    // Initialize the app
+    initApp();
+
+    // Add event listeners for cost calculation on initial item after DOM loads
+    setTimeout(() => {
+        const initialCostInput = document.querySelector('.cost-input');
+        const initialVatSelect = document.querySelector('.vat-select');
+        
+        if (initialCostInput) {
+            initialCostInput.addEventListener('input', updateOrderSummary);
+            console.log('Initial cost input event listener added');
+        }
+        if (initialVatSelect) {
+            initialVatSelect.addEventListener('change', updateOrderSummary);
+            console.log('Initial VAT select event listener added');
+        }
+    }, 500);
+
+    // Make functions globally available
+    window.removeOrderItem = removeOrderItem;
+</script>
+</body>
+</html>
