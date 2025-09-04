@@ -274,18 +274,36 @@
         const provider = new GoogleAuthProvider();
 
         // User roles configuration
-        const userRoles = {
-            'papasnir@gmail.com': {
-                name: 'שניר דואני',
-                role: 'requester',
-                department: 'תכנית בוקר'
-            },
-            'snirdoani@gmail.com': {
-                name: 'שמשון הגיבור',
-                role: 'approver',
-                department: 'ניהול'
-            }
-        };
+const userRoles = {
+    'papasnir@gmail.com': {
+        name: 'שניר דואני',
+        role: 'requester',
+        department: 'תכנית בוקר'
+    },
+    'pratimo123@gmail.com': {
+        name: 'לירון אהרן',
+        role: 'requester',
+        department: 'תכנית בוקר'
+    },
+    'emilygolan1@gmail.com': {
+        name: 'אמילי גולן',
+        role: 'approver',
+        department: 'ניהול',
+        approverType: 'emily'
+    },
+    'shulisason@gmail.com': {
+        name: 'שולי ששון',
+        role: 'approver',
+        department: 'ניהול',
+        approverType: 'shuli'
+    },
+    'gadimador@gmail.com': {
+        name: 'ד"ר גדי מדור',
+        role: 'approver',
+        department: 'ניהול',
+        approverType: 'gadi'
+    }
+};
 
         // DOM elements
         const googleSignInBtn = document.getElementById('googleSignIn');
