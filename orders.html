@@ -26,6 +26,8 @@
             --warning: #f59e0b;
             --error: #ef4444;
             --pending: #6b7280;
+            --explanation-needed: #f59e0b;
+            --explanation-received: #3b82f6;
         }
 
         [data-theme="dark"] {
@@ -43,6 +45,8 @@
             --warning: #d97706;
             --error: #dc2626;
             --pending: #6b7280;
+            --explanation-needed: #d97706;
+            --explanation-received: #3b82f6;
         }
 
         body {
@@ -339,6 +343,11 @@
             color: var(--error);
         }
 
+        .status-explanation-needed {
+            background: #fef3c7;
+            color: var(--explanation-needed);
+        }
+
         .approval-status {
             display: flex;
             flex-direction: column;
@@ -366,8 +375,20 @@
             background: var(--success);
         }
 
-        .approval-rejected {
-            background: var(--error);
+        .approval-explanation_needed {
+            background: var(--explanation-needed);
+        }
+
+        .approval-explanation_received {
+            background: var(--explanation-received);
+        }
+
+        .approval-explanation-received {
+            background: var(--explanation-received);
+        }
+        
+        .approval-explanation-needed {
+            background: var(--explanation-needed);
         }
 
         .expand-btn {
@@ -551,110 +572,108 @@
             transform: translateY(-2px);
         }
 
-        /* Print styles - Fixed for single page landscape */
-/* Print styles - Fixed for single page landscape */
-.print-order {
-    display: none;
-}
+        .print-order {
+            display: none;
+        }
 
-@media print {
-    @page {
-        size: A4 landscape;
-        margin: 10mm;
-    }
-    
-    * {
-        visibility: hidden;
-        background: transparent !important;
-        color: black !important;
-        box-shadow: none !important;
-        text-shadow: none !important;
-        -webkit-print-color-adjust: exact !important;
-        color-adjust: exact !important;
-    }
-    
-    .print-order,
-    .print-order * {
-        visibility: visible !important;
-    }
-    
-    .print-order {
-        position: absolute !important;
-        left: 0 !important;
-        top: 0 !important;
-        width: 100% !important;
-        height: fit-content !important;
-        max-height: calc(297mm - 20mm) !important;
-        display: block !important;
-        font-family: Arial, sans-serif !important;
-        font-size: 10px !important;
-        line-height: 1.1 !important;
-        overflow: hidden !important;
-        page-break-after: avoid !important;
-        page-break-inside: avoid !important;
-    }
-    
-    .print-section {
-        page-break-inside: avoid !important;
-        break-inside: avoid !important;
-        margin-bottom: 6px !important;
-    }
-    
-    .print-order table {
-        width: 100% !important;
-        border-collapse: collapse !important;
-        page-break-inside: avoid !important;
-        break-inside: avoid !important;
-        margin-bottom: 6px !important;
-    }
-    
-    .print-order th,
-    .print-order td {
-        border: 1px solid black !important;
-        padding: 3px !important;
-        font-size: 9px !important;
-        background: transparent !important;
-        vertical-align: top !important;
-    }
-    
-    .print-order th {
-        background: #f0f0f0 !important;
-        font-weight: bold !important;
-        font-size: 8px !important;
-    }
-    
-    .print-order .signature-approved {
-        color: #0066cc !important;
-        font-weight: bold !important;
-    }
-    
-    .print-order h2 {
-        font-size: 14px !important;
-        margin: 0 0 10px 0 !important;
-    }
-    
-    .print-order h3 {
-        font-size: 11px !important;
-        margin: 6px 0 4px 0 !important;
-        padding: 2px !important;
-    }
-    
-    .print-order p {
-        margin: 3px 0 !important;
-        font-size: 9px !important;
-    }
-    
-    body {
-        margin: 0 !important;
-        padding: 0 !important;
-        overflow: hidden !important;
-    }
-    
-    html, body {
-        height: 100% !important;
-        overflow: hidden !important;
-    }
-}
+        @media print {
+            @page {
+                size: A4 landscape;
+                margin: 10mm;
+            }
+            
+            * {
+                visibility: hidden;
+                background: transparent !important;
+                color: black !important;
+                box-shadow: none !important;
+                text-shadow: none !important;
+                -webkit-print-color-adjust: exact !important;
+                color-adjust: exact !important;
+            }
+            
+            .print-order,
+            .print-order * {
+                visibility: visible !important;
+            }
+            
+            .print-order {
+                position: absolute !important;
+                left: 0 !important;
+                top: 0 !important;
+                width: 100% !important;
+                height: fit-content !important;
+                max-height: calc(297mm - 20mm) !important;
+                display: block !important;
+                font-family: Arial, sans-serif !important;
+                font-size: 10px !important;
+                line-height: 1.1 !important;
+                overflow: hidden !important;
+                page-break-after: avoid !important;
+                page-break-inside: avoid !important;
+            }
+            
+            .print-section {
+                page-break-inside: avoid !important;
+                break-inside: avoid !important;
+                margin-bottom: 6px !important;
+            }
+            
+            .print-order table {
+                width: 100% !important;
+                border-collapse: collapse !important;
+                page-break-inside: avoid !important;
+                break-inside: avoid !important;
+                margin-bottom: 6px !important;
+            }
+            
+            .print-order th,
+            .print-order td {
+                border: 1px solid black !important;
+                padding: 3px !important;
+                font-size: 9px !important;
+                background: transparent !important;
+                vertical-align: top !important;
+            }
+            
+            .print-order th {
+                background: #f0f0f0 !important;
+                font-weight: bold !important;
+                font-size: 8px !important;
+            }
+            
+            .print-order .signature-approved {
+                color: #0066cc !important;
+                font-weight: bold !important;
+            }
+            
+            .print-order h2 {
+                font-size: 14px !important;
+                margin: 0 0 10px 0 !important;
+            }
+            
+            .print-order h3 {
+                font-size: 11px !important;
+                margin: 6px 0 4px 0 !important;
+                padding: 2px !important;
+            }
+            
+            .print-order p {
+                margin: 3px 0 !important;
+                font-size: 9px !important;
+            }
+            
+            body {
+                margin: 0 !important;
+                padding: 0 !important;
+                overflow: hidden !important;
+            }
+            
+            html, body {
+                height: 100% !important;
+                overflow: hidden !important;
+            }
+        }
 
         .form-group {
             margin-bottom: 1.5rem;
@@ -736,6 +755,16 @@
             transform: translateY(-2px);
         }
 
+        .btn-warning {
+            background: var(--warning);
+            color: white;
+        }
+
+        .btn-warning:hover {
+            background: #d97706;
+            transform: translateY(-2px);
+        }
+
         .btn-secondary {
             background: var(--bg-tertiary);
             color: var(--text-primary);
@@ -770,6 +799,34 @@
         .empty-icon {
             font-size: 3rem;
             margin-bottom: 1rem;
+        }
+
+        .explanation-section {
+            background: var(--bg-tertiary);
+            padding: 1rem;
+            border-radius: 8px;
+            margin: 1rem 0;
+            border-left: 4px solid var(--explanation-needed);
+        }
+
+        .explanation-text {
+            font-weight: bold;
+            color: var(--text-primary);
+            margin-bottom: 0.5rem;
+        }
+
+        .reply-section {
+            background: var(--bg-primary);
+            padding: 1rem;
+            border-radius: 8px;
+            margin-top: 1rem;
+            border-left: 4px solid var(--explanation-received);
+        }
+
+        .reply-text {
+            font-weight: bold;
+            color: var(--text-primary);
+            margin-bottom: 0.5rem;
         }
 
         @media (max-width: 768px) {
@@ -854,9 +911,10 @@
                             <th>תאריך יצירה</th>
                             <th>מספר הזמנה</th>
                             <th>תאריך הזמנה</th>
-                            <th>מחלקה</th>
+                            <th>סעיף תקציבי (מחלקה)</th>
                             <th>סה"כ</th>
                             <th>סטטוס</th>
+                            <th>שלח מייל</th>
                             <th>אישורים</th>
                             <th>פעולות</th>
                         </tr>
@@ -873,6 +931,7 @@
         </section>
     </main>
 
+    <!-- Modal for new order -->
     <div class="modal" id="newOrderModal">
         <div class="modal-content">
             <div class="modal-header">
@@ -889,7 +948,7 @@
                     <input type="date" class="form-input" id="orderDate" required>
                 </div>
                 <div class="form-group">
-                    <label class="form-label">מחלקה</label>
+                    <label class="form-label">סעיף תקציבי (מחלקה)</label>
                     <select class="form-select" id="department" required>
                         <option value="">בחר מחלקה</option>
                         <option value="תכנית בוקר">תכנית בוקר</option>
@@ -899,6 +958,10 @@
                         <option value="תחזוקה">תחזוקה</option>
                         <option value="אחר">אחר</option>
                     </select>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">הערות להזמנה (אופציונלי)</label>
+                    <textarea class="form-textarea" id="orderNotes" placeholder="הוסף הערות למאשרים אם נדרש..."></textarea>
                 </div>
 
                 <div id="orderItems">
@@ -917,23 +980,12 @@
                             <input type="number" class="form-input" name="stockQuantity" min="0">
                         </div>
                         <div class="form-group">
-                            <label class="form-label">מועד דרוש לאספקה</label>
-                            <input type="date" class="form-input" name="requiredDate" required>
-                        </div>
-                        <div class="form-group">
                             <label class="form-label">שם הספק</label>
                             <input type="text" class="form-input" name="supplier" required>
                         </div>
                         <div class="form-group">
-                            <label class="form-label">עלות בש"ח</label>
+                            <label class="form-label">עלות בש"ח כולל מע"מ</label>
                             <input type="number" class="form-input cost-input" name="cost" step="0.01" min="0" required>
-                        </div>
-                        <div class="form-group">
-                            <label class="form-label">מע"מ</label>
-                            <select class="form-select vat-select" name="vatIncluded" required>
-                                <option value="true">כולל מע"מ</option>
-                                <option value="false">לא כולל מע"מ</option>
-                            </select>
                         </div>
                     </div>
                 </div>
@@ -946,6 +998,13 @@
                     <h4>סיכום הזמנה</h4>
                     <p>סה"כ לא כולל מע"מ: <span id="totalExcludingVat">₪0</span></p>
                     <p>סה"כ כולל מע"מ: <span id="totalIncludingVat">₪0</span></p>
+                    
+                    <div style="margin-top: 1rem; padding-top: 1rem; border-top: 1px solid var(--border-color);">
+                        <label style="display: flex; align-items: center; gap: 0.5rem; cursor: pointer;">
+                            <input type="checkbox" id="sendEmailNotification" style="margin: 0;">
+                            <span>🔔 שלח מייל למאשרים </span>
+                        </label>
+                    </div>
                 </div>
 
                 <div style="display: flex; gap: 1rem; justify-content: flex-end;">
@@ -959,6 +1018,7 @@
         </div>
     </div>
 
+    <!-- Modal for order details -->
     <div class="modal" id="orderDetailsModal">
         <div class="modal-content">
             <div class="modal-header">
@@ -973,6 +1033,7 @@
         </div>
     </div>
 
+    <!-- Modal for receipt -->
     <div class="modal" id="receiptModal">
         <div class="modal-content receipt-modal-content">
             <div class="modal-header">
@@ -984,1137 +1045,1599 @@
         </div>
     </div>
 
+    <!-- Modal for explanation -->
+    <div class="modal" id="explanationModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title" id="explanationModalTitle">דרוש הסבר</h2>
+                <button class="modal-close" id="closeExplanationModal">&times;</button>
+            </div>
+            <div id="explanationContent">
+                <div class="form-group">
+                    <label class="form-label">הסבר למזמין למה ההזמנה לא אושרה:</label>
+                    <textarea class="form-textarea" id="explanationText" placeholder="כתוב כאן את ההסבר למזמין..." required></textarea>
+                </div>
+                <div style="display: flex; gap: 1rem; justify-content: flex-end;">
+                    <button class="btn btn-secondary" id="cancelExplanationBtn">ביטול</button>
+                    <button class="btn btn-warning" id="sendExplanationBtn">שלח הסבר</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal for reply -->
+    <div class="modal" id="replyModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title">הגב למאשר</h2>
+                <button class="modal-close" id="closeReplyModal">&times;</button>
+            </div>
+            <div id="replyContent">
+                <div class="form-group">
+                    <label class="form-label">הגב למאשר עם ההסבר הנדרש:</label>
+                    <textarea class="form-textarea" id="replyText" placeholder="כתוב כאן את התגובה למאשר..." required></textarea>
+                </div>
+                <div style="display: flex; gap: 1rem; justify-content: flex-end;">
+                    <button class="btn btn-secondary" id="cancelReplyBtn">ביטול</button>
+                    <button class="btn btn-primary" id="sendReplyBtn">שלח תגובה</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal for reminder -->
+    <div class="modal" id="reminderModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title">שלח מייל</h2>
+                <button class="modal-close" id="closeReminderModal">&times;</button>
+            </div>
+            <div id="reminderContent">
+                <div class="form-group">
+                    <label class="form-label">בחר למי לשלוח תזכורת:</label>
+                    <div id="approversList"></div>
+                </div>
+                <div style="display: flex; gap: 1rem; justify-content: flex-end; margin-top: 2rem;">
+                    <button class="btn btn-secondary" id="cancelReminderBtn">ביטול</button>
+                    <button class="btn btn-primary" id="sendReminderBtn">שלח מייל</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <div class="print-order" id="printOrderContent">
     </div>
 
-<script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-app.js";
-    import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-auth.js";
-    import { getDatabase, ref, set, get, push, onValue, query, orderByChild, update } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-database.js";
-    import { getStorage, ref as storageRef, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-storage.js";
+    <!-- EmailJS Script -->
+    <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+    
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-app.js";
+        import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-auth.js";
+        import { getDatabase, ref, set, get, push, onValue, query, orderByChild, update } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-database.js";
+        import { getStorage, ref as storageRef, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-storage.js";
 
-    const firebaseConfig = {
-        apiKey: "AIzaSyDpsIEhz1DExRgvzx3on3RMxtY9stIA4us",
-        authDomain: "oreders-ef40d.firebaseapp.com",
-        databaseURL: "https://oreders-ef40d-default-rtdb.firebaseio.com/",
-        projectId: "oreders-ef40d",
-        storageBucket: "oreders-ef40d.firebasestorage.app",
-        messagingSenderId: "313770368508",
-        appId: "1:313770368508:web:f1445553df848f59a32679"
-    };
+        // אתחול EmailJS
+        (function() {
+            emailjs.init("pEUlg7PtCjfrf1NYh");
+        })();
 
-    const app = initializeApp(firebaseConfig);
-    const auth = getAuth(app);
-    const database = getDatabase(app);
-    const storage = getStorage(app);
+        const firebaseConfig = {
+            apiKey: "AIzaSyDpsIEhz1DExRgvzx3on3RMxtY9stIA4us",
+            authDomain: "oreders-ef40d.firebaseapp.com",
+            databaseURL: "https://oreders-ef40d-default-rtdb.firebaseio.com/",
+            projectId: "oreders-ef40d",
+            storageBucket: "oreders-ef40d.firebasestorage.app",
+            messagingSenderId: "313770368508",
+            appId: "1:313770368508:web:f1445553df848f59a32679"
+        };
 
-    let currentUser = null;
-    let userRole = null;
-    let userData = null;
-    let orders = [];
-    let itemCounter = 0;
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const database = getDatabase(app);
+        const storage = getStorage(app);
 
-    const themeToggle = document.getElementById('themeToggle');
-    const themeIcon = document.getElementById('themeIcon');
-    const logoutBtn = document.getElementById('logoutBtn');
-    const userName = document.getElementById('userName');
-    const userAvatar = document.getElementById('userAvatar');
-    const userRoleElement = document.getElementById('userRole');
-    const welcomeTitle = document.getElementById('welcomeTitle');
-    const welcomeSubtitle = document.getElementById('welcomeSubtitle');
-    const actionButtons = document.getElementById('actionButtons');
-    const tableTitle = document.getElementById('tableTitle');
-    const ordersTableBody = document.getElementById('ordersTableBody');
-    const emptyState = document.getElementById('emptyState');
-    const filterButtons = document.getElementById('filterButtons');
-    const newOrderModal = document.getElementById('newOrderModal');
-    const orderDetailsModal = document.getElementById('orderDetailsModal');
-    const receiptModal = document.getElementById('receiptModal');
-    const ordersTableContainer = document.getElementById('ordersTableContainer');
+        let currentUser = null;
+        let userRole = null;
+        let userData = null;
+        let orders = [];
+        let itemCounter = 0;
+        let currentOrderId = null;
+        let currentApproverKey = null;
+        let currentReminderOrderId = null;
 
-    function generateOrderNumber() {
-        return Math.floor(100000 + Math.random() * 900000);
-    }
+        // מערך המיילים של המאשרים
+        const approverEmails = {
+            'emily': 'emilygolan1@gmail.com',
+            'shuli': 'shulisason@gmail.com', 
+            'gadi': 'gadimador@gmail.com'
+        };
 
-    function initApp() {
-        console.log('Initializing app...');
-        initTheme();
-        setupEventListeners();
-        checkAuthState();
-    }
+        // DOM Elements
+        const themeToggle = document.getElementById('themeToggle');
+        const themeIcon = document.getElementById('themeIcon');
+        const logoutBtn = document.getElementById('logoutBtn');
+        const userName = document.getElementById('userName');
+        const userAvatar = document.getElementById('userAvatar');
+        const userRoleElement = document.getElementById('userRole');
+        const welcomeTitle = document.getElementById('welcomeTitle');
+        const welcomeSubtitle = document.getElementById('welcomeSubtitle');
+        const actionButtons = document.getElementById('actionButtons');
+        const tableTitle = document.getElementById('tableTitle');
+        const ordersTableBody = document.getElementById('ordersTableBody');
+        const emptyState = document.getElementById('emptyState');
+        const filterButtons = document.getElementById('filterButtons');
+        const newOrderModal = document.getElementById('newOrderModal');
+        const orderDetailsModal = document.getElementById('orderDetailsModal');
+        const receiptModal = document.getElementById('receiptModal');
+        const explanationModal = document.getElementById('explanationModal');
+        const replyModal = document.getElementById('replyModal');
+        const reminderModal = document.getElementById('reminderModal');
+        const ordersTableContainer = document.getElementById('ordersTableContainer');
 
-    function initTheme() {
-        const savedTheme = localStorage.getItem('theme') || 'light';
-        document.documentElement.setAttribute('data-theme', savedTheme);
-        updateThemeIcon(savedTheme);
-    }
+        function generateOrderNumber() {
+            return Math.floor(100000 + Math.random() * 900000);
+        }
 
-    function updateThemeIcon(theme) {
-        themeIcon.textContent = theme === 'dark' ? '☀️' : '🌙';
-    }
+        function initApp() {
+            console.log('Initializing app...');
+            initTheme();
+            setupEventListeners();
+            checkAuthState();
+        }
 
-    function toggleTheme() {
-        const currentTheme = document.documentElement.getAttribute('data-theme');
-        const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
-        
-        document.documentElement.setAttribute('data-theme', newTheme);
-        localStorage.setItem('theme', newTheme);
-        updateThemeIcon(newTheme);
-    }
+        function initTheme() {
+            const savedTheme = localStorage.getItem('theme') || 'light';
+            document.documentElement.setAttribute('data-theme', savedTheme);
+            updateThemeIcon(savedTheme);
+        }
 
-    function checkAuthState() {
-        console.log('Checking auth state...');
-        onAuthStateChanged(auth, async (user) => {
-            console.log('Auth state changed:', user ? user.email : 'No user');
-            if (user) {
-                currentUser = user;
-                await loadUserData();
-                setupUI();
-                loadOrders();
-            } else {
-                console.log('No user found, redirecting to login');
-                window.location.href = 'index.html';
-            }
-        });
-    }
+        function updateThemeIcon(theme) {
+            themeIcon.textContent = theme === 'dark' ? '☀️' : '🌙';
+        }
 
-    async function loadUserData() {
-        console.log('Loading user data for:', currentUser.email);
-        try {
-const userRoles = {
-    'papasnir@gmail.com': {
-        name: 'שניר דואני',
-        role: 'requester',
-        department: 'תכנית בוקר'
-    },
-    'pratimo123@gmail.com': {
-        name: 'לירון אהרן',
-        role: 'requester',
-        department: 'תכנית בוקר'
-    },
-        'meidankadosh@gmail.com': {
-        name: 'מידן קדוש',
-        role: 'requester',
-        department: 'תכנית בוקר'
-    },
-    'emilygolan1@gmail.com': {
-        name: 'אמילי גולן',
-        role: 'approver',
-        department: 'ניהול',
-        approverType: 'emily'
-    },
-    'shulisason@gmail.com': {
-        name: 'שולי ששון',
-        role: 'approver',
-        department: 'ניהול',
-        approverType: 'shuli'
-    },
-    'gadimador@gmail.com': {
-        name: 'ד"ר גדי מדור',
-        role: 'approver',
-        department: 'ניהול',
-        approverType: 'gadi'
-    }
-};
+        function toggleTheme() {
+            const currentTheme = document.documentElement.getAttribute('data-theme');
+            const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+            
+            document.documentElement.setAttribute('data-theme', newTheme);
+            localStorage.setItem('theme', newTheme);
+            updateThemeIcon(newTheme);
+        }
 
-            if (userRoles[currentUser.email]) {
-                userData = userRoles[currentUser.email];
-                userRole = userData.role;
-                
-                console.log('User data loaded:', userData);
-                
-                userName.textContent = userData.name;
-                userAvatar.textContent = userData.name.charAt(0);
-                userRoleElement.textContent = userData.role === 'requester' ? 'מזמין' : 'מאשר הזמנות';
-
-                try {
-                    const userRef = ref(database, `users/${currentUser.uid}`);
-                    await set(userRef, {
-                        email: currentUser.email,
-                        name: userData.name,
-                        role: userData.role,
-                        department: userData.department,
-                        approverType: userData.approverType || null,
-                        lastLogin: new Date().toISOString(),
-                        photoURL: currentUser.photoURL
-                    });
-                    console.log('User data saved to database');
-                } catch (saveError) {
-                    console.error('Error saving user data:', saveError);
+        function checkAuthState() {
+            console.log('Checking auth state...');
+            onAuthStateChanged(auth, async (user) => {
+                console.log('Auth state changed:', user ? user.email : 'No user');
+                if (user) {
+                    currentUser = user;
+                    await loadUserData();
+                    setupUI();
+                    loadOrders();
+                } else {
+                    console.log('No user found, redirecting to login');
+                    window.location.href = 'index.html';
                 }
-            } else {
-                console.error('User not authorized:', currentUser.email);
-                alert('המשתמש אינו מורשה לגשת למערכת');
-                await signOut(auth);
-            }
-        } catch (error) {
-            console.error('Error loading user data:', error);
-            alert('שגיאה בטעינת נתוני משתמש');
-        }
-    }
-
-    function setupUI() {
-        console.log('Setting up UI for role:', userRole);
-        if (userRole === 'requester') {
-            setupRequesterUI();
-        } else if (userRole === 'approver') {
-            setupApproverUI();
-        }
-    }
-
-    function setupRequesterUI() {
-        const firstName = userData.name.split(' ')[0];
-        welcomeTitle.textContent = `שלום ${firstName}, ברוך הבא למערכת ההזמנות`;
-        welcomeSubtitle.textContent = 'כאן תוכל ליצור הזמנות חדשות ולעקוב אחר הסטטוס שלהן';
-        tableTitle.textContent = 'ההזמנות שלי';
-
-        actionButtons.innerHTML = `
-            <div class="action-card" id="newOrderCard">
-                <div class="action-icon">➕</div>
-                <h3 class="action-title">יצירת הזמנה חדשה</h3>
-                <p class="action-description">צור הזמנה חדשה לציוד או שירותים</p>
-            </div>
-        `;
-
-        setTimeout(() => {
-            const newOrderCard = document.getElementById('newOrderCard');
-            if (newOrderCard) {
-                newOrderCard.addEventListener('click', openNewOrderModal);
-            }
-        }, 100);
-    }
-
-    function setupApproverUI() {
-        const firstName = userData.name.split(' ')[0];
-        welcomeTitle.textContent = `שלום ${firstName}, ברוך הבא למערכת ההזמנות`;
-        welcomeSubtitle.textContent = 'כאן תוכל לאשר הזמנות ולנהל את תהליך האישורים';
-        tableTitle.textContent = 'הזמנות לאישור';
-
-        actionButtons.innerHTML = `
-            <div class="action-card" id="pendingApprovalsCard">
-                <div class="action-icon">⏳</div>
-                <h3 class="action-title">אישורי הזמנות</h3>
-                <p class="action-description">הזמנות הממתינות לאישור שלי</p>
-            </div>
-            <div class="action-card" id="allOrdersCard">
-                <div class="action-icon">📊</div>
-                <h3 class="action-title">היסטוריית הזמנות</h3>
-                <p class="action-description">כל ההזמנות במערכת לפי תאריך</p>
-            </div>
-        `;
-
-        setTimeout(() => {
-            const pendingApprovalsCard = document.getElementById('pendingApprovalsCard');
-            const allOrdersCard = document.getElementById('allOrdersCard');
-            
-            if (pendingApprovalsCard) {
-                pendingApprovalsCard.addEventListener('click', showMyPendingApprovals);
-            }
-            if (allOrdersCard) {
-                allOrdersCard.addEventListener('click', showAllOrdersHistory);
-            }
-        }, 100);
-    }
-
-    function showMyPendingApprovals() {
-        const myApproverType = userData.approverType;
-        if (!myApproverType) return;
-
-        const pendingOrders = orders.filter(order => {
-            const approvals = order.approvals || {};
-            
-            if (myApproverType === 'emily') {
-                return approvals.emily === 'pending';
-            } else if (myApproverType === 'shuli') {
-                return approvals.emily === 'approved' && approvals.shuli === 'pending';
-            } else if (myApproverType === 'gadi') {
-                return order.totalIncludingVat > 9000 && 
-                       approvals.emily === 'approved' && 
-                       approvals.shuli === 'approved' && 
-                       approvals.gadi === 'pending';
-            }
-            return false;
-        });
-
-        tableTitle.textContent = `הזמנות הממתינות לאישור שלי (${pendingOrders.length})`;
-        renderOrders(pendingOrders);
-        
-        ordersTableContainer.scrollIntoView({ behavior: 'smooth' });
-    }
-
-    function showAllOrdersHistory() {
-        tableTitle.textContent = 'היסטוריית כל ההזמנות';
-        renderOrders(orders);
-        
-        ordersTableContainer.scrollIntoView({ behavior: 'smooth' });
-    }
-
-    function setupEventListeners() {
-        console.log('Setting up event listeners...');
-        themeToggle.addEventListener('click', toggleTheme);
-        logoutBtn.addEventListener('click', handleLogout);
-        
-        document.getElementById('closeNewOrderModal').addEventListener('click', closeNewOrderModal);
-        document.getElementById('closeOrderDetailsModal').addEventListener('click', closeOrderDetailsModal);
-        document.getElementById('closeReceiptModal').addEventListener('click', closeReceiptModal);
-        document.getElementById('cancelOrderBtn').addEventListener('click', closeNewOrderModal);
-        
-        document.getElementById('newOrderForm').addEventListener('submit', handleOrderSubmit);
-        document.getElementById('addItemBtn').addEventListener('click', addOrderItem);
-        document.getElementById('printOrderBtn').addEventListener('click', printOrder);
-        
-        filterButtons.addEventListener('click', (e) => {
-            if (e.target.classList.contains('filter-btn')) {
-                document.querySelectorAll('.filter-btn').forEach(btn => btn.classList.remove('active'));
-                e.target.classList.add('active');
-                filterOrders(e.target.dataset.filter);
-            }
-        });
-
-        window.addEventListener('click', (e) => {
-            if (e.target === newOrderModal) closeNewOrderModal();
-            if (e.target === orderDetailsModal) closeOrderDetailsModal();
-            if (e.target === receiptModal) closeReceiptModal();
-        });
-    }
-
-    async function uploadReceiptFile(orderId, file) {
-        try {
-            console.log('Uploading receipt for order:', orderId);
-            
-            const timestamp = new Date().getTime();
-            const fileExtension = file.name.split('.').pop();
-            const fileName = `receipts/${orderId}_${timestamp}.${fileExtension}`;
-            const receiptRef = storageRef(storage, fileName);
-            
-            const snapshot = await uploadBytes(receiptRef, file);
-            console.log('File uploaded successfully');
-            
-            const downloadURL = await getDownloadURL(snapshot.ref);
-            console.log('Download URL:', downloadURL);
-            
-            const orderRef = ref(database, `orders/${orderId}`);
-            await update(orderRef, {
-                receiptUploaded: true,
-                receiptURL: downloadURL,
-                receiptFileName: file.name,
-                receiptUploadDate: new Date().toISOString()
             });
-            
-            console.log('Order updated with receipt info');
-            alert('הקבלה הועלתה בהצלחה!');
-            
-            return downloadURL;
-        } catch (error) {
-            console.error('Error uploading receipt:', error);
-            alert('שגיאה בהעלאת הקבלה: ' + error.message);
-            throw error;
         }
-    }
 
-    // Fixed download function using window.open instead of fetch to avoid CORS
-function downloadReceipt(receiptURL, fileName) {
-    try {
-        // פתרון שלא מפריע להדפסה
-        window.open(receiptURL, '_blank');
-        console.log('Download initiated for:', fileName);
-    } catch (error) {
-        console.error('Error downloading receipt:', error);
-        window.open(receiptURL, '_blank');
-    }
-}
-
-    async function viewReceipt(orderId) {
-        try {
-            const order = orders.find(o => o.id === orderId);
-            if (!order || !order.receiptURL) {
-                alert('לא נמצאה קבלה עבור הזמנה זו');
-                return;
-            }
-            
-            const isRequester = userRole === 'requester';
-            
-            document.getElementById('receiptModalTitle').textContent = isRequester ? 'צפייה/עריכת קבלה' : 'צפייה בקבלה';
-            
-            const receiptContent = document.getElementById('receiptContent');
-            
-            const isPDF = order.receiptFileName && order.receiptFileName.toLowerCase().endsWith('.pdf');
-            
-            let contentHTML = '';
-            
-if (isPDF) {
-    contentHTML = `
-        <div class="receipt-viewer">
-            <div style="text-align: center; padding: 2rem; background: var(--bg-tertiary); border-radius: 8px; margin-bottom: 1rem;">
-                <h3>📄 קובץ PDF</h3>
-                <p style="margin: 1rem 0; color: var(--text-secondary);">${order.receiptFileName}</p>
-                <button class="btn btn-primary" onclick="window.open('${order.receiptURL}', '_blank')" style="margin: 0.5rem;">
-                    📖 פתח PDF בכרטיסייה חדשה
-                </button>
-            </div>
-        </div>
-    `;
-} else {
-    contentHTML = `
-        <div class="receipt-viewer">
-            <img src="${order.receiptURL}" alt="קבלה" class="receipt-image" style="max-width: 100%; height: auto;">
-            <p style="margin-top: 1rem; color: var(--text-secondary);">
-                ${order.receiptFileName || 'קבלה'}
-            </p>
-        </div>
-    `;
-}
-            
-
-            
-            // Add upload section only for requesters
-            if (isRequester) {
-                contentHTML += `
-                    <div class="file-upload">
-                        <hr style="margin: 2rem 0;">
-                        <h4 style="margin-bottom: 1rem;">החלפת קבלה</h4>
-                        <input type="file" id="newReceiptFile" class="file-input" accept="image/*,.pdf">
-                        <label for="newReceiptFile" class="file-upload-btn">
-                            📁 בחר קבלה חדשה
-                        </label>
-                        <div style="margin-top: 1rem;">
-                            <button class="btn btn-primary" id="replaceReceiptBtn" style="display: none;">
-                                🔄 החלף קבלה
-                            </button>
-                        </div>
-                    </div>
-                `;
-            } else {
-                contentHTML += `
-                    <div style="margin-top: 1rem; padding: 1rem; background: var(--bg-tertiary); border-radius: 8px; text-align: center;">
-                        <p style="color: var(--text-secondary);">
-                            הקבלה הועלתה בתאריך: ${formatDate(order.receiptUploadDate)}
-                        </p>
-                    </div>
-                `;
-            }
-            
-            receiptContent.innerHTML = contentHTML;
-            
-            // Add event listeners for file replacement (only for requesters)
-            if (isRequester) {
-                const fileInput = document.getElementById('newReceiptFile');
-                const replaceBtn = document.getElementById('replaceReceiptBtn');
-                
-                fileInput.addEventListener('change', (e) => {
-                    if (e.target.files.length > 0) {
-                        replaceBtn.style.display = 'block';
-                        replaceBtn.onclick = async () => {
-                            try {
-                                replaceBtn.disabled = true;
-                                replaceBtn.innerHTML = '<div class="loading"></div> מעלה...';
-                                
-                                const newFile = e.target.files[0];
-                                await uploadReceiptFile(orderId, newFile);
-                                
-                                closeReceiptModal();
-                            } catch (error) {
-                                replaceBtn.disabled = false;
-                                replaceBtn.innerHTML = '🔄 החלף קבלה';
-                            }
-                        };
-                    } else {
-                        replaceBtn.style.display = 'none';
+        async function loadUserData() {
+            console.log('Loading user data for:', currentUser.email);
+            try {
+                const userRoles = {
+                    'papasnir@gmail.com': {
+                        name: 'שניר דואני',
+                        role: 'requester',
+                        department: 'תכנית בוקר'
+                    },
+                    'pratimo123@gmail.com': {
+                        name: 'לירון אהרן',
+                        role: 'requester',
+                        department: 'תכנית בוקר'
+                    },
+                    'emilygolan1@gmail.com': {
+                        name: 'אמילי גולן',
+                        role: 'approver',
+                        department: 'ניהול',
+                        approverType: 'emily'
+                    },
+                    'shulisason@gmail.com': {
+                        name: 'שולי ששון',
+                        role: 'approver',
+                        department: 'ניהול',
+                        approverType: 'shuli'
+                    },
+                    'gadimador@gmail.com': {
+                        name: 'ד"ר גדי מדור',
+                        role: 'approver',
+                        department: 'ניהול',
+                        approverType: 'gadi'
                     }
-                });
-            }
-            
-            receiptModal.classList.add('active');
-            
-        } catch (error) {
-            console.error('Error viewing receipt:', error);
-            alert('שגיאה בטעינת הקבלה');
-        }
-    }
+                };
 
-    async function loadOrders() {
-        console.log('Loading orders...');
-        try {
-            const ordersRef = ref(database, 'orders');
-            
-            onValue(ordersRef, (snapshot) => {
-                orders = [];
-                if (snapshot.exists()) {
-                    const data = snapshot.val();
-                    Object.keys(data).forEach(key => {
-                        orders.push({
-                            id: key,
-                            ...data[key]
+                if (userRoles[currentUser.email]) {
+                    userData = userRoles[currentUser.email];
+                    userRole = userData.role;
+                    
+                    console.log('User data loaded:', userData);
+                    
+                    userName.textContent = userData.name;
+                    userAvatar.textContent = userData.name.charAt(0);
+                    userRoleElement.textContent = userData.role === 'requester' ? 'מזמין' : 'מאשר הזמנות';
+
+                    try {
+                        const userRef = ref(database, `users/${currentUser.uid}`);
+                        await set(userRef, {
+                            email: currentUser.email,
+                            name: userData.name,
+                            role: userData.role,
+                            department: userData.department,
+                            approverType: userData.approverType || null,
+                            lastLogin: new Date().toISOString(),
+                            photoURL: currentUser.photoURL
                         });
-                    });
-                }
-                
-                orders.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
-                
-                console.log('Orders loaded:', orders.length);
-                renderOrders();
-            });
-        } catch (error) {
-            console.error('Error loading orders:', error);
-        }
-    }
-
-    function renderOrders(filteredOrders = null) {
-        const ordersToShow = filteredOrders || orders;
-        const tbody = ordersTableBody;
-        
-        let userOrders = ordersToShow;
-        if (userRole === 'requester') {
-            userOrders = ordersToShow.filter(order => order.requesterEmail === currentUser.email);
-        }
-
-        if (userOrders.length === 0) {
-            tbody.innerHTML = '';
-            emptyState.style.display = 'block';
-            return;
-        }
-
-        emptyState.style.display = 'none';
-        
-        tbody.innerHTML = userOrders.map(order => {
-            const status = getOrderStatus(order);
-            const approvals = getApprovalStatus(order);
-            const createdDate = new Date(order.createdAt);
-            const orderDate = new Date(order.orderDate);
-            
-            let receiptButton = '';
-            if (status.canUploadReceipt && userRole === 'requester') {
-                if (order.receiptUploaded) {
-                    receiptButton = `<button class="receipt-btn view-receipt-btn" onclick="viewReceipt('${order.id}')">צפה בקבלה</button>`;
+                        console.log('User data saved to database');
+                    } catch (saveError) {
+                        console.error('Error saving user data:', saveError);
+                    }
                 } else {
-                    receiptButton = `<button class="receipt-btn upload-receipt-btn" onclick="uploadReceipt('${order.id}')">העלה קבלה</button>`;
+                    console.error('User not authorized:', currentUser.email);
+                    alert('המשתמש אינו מורשה לגשת למערכת');
+                    await signOut(auth);
                 }
-            } else if (order.receiptUploaded && userRole === 'approver') {
-                receiptButton = `<button class="receipt-btn view-receipt-btn" onclick="viewReceipt('${order.id}')">צפה בקבלה</button>`;
-            } else if (userRole === 'approver' && !order.receiptUploaded && status.class === 'approved') {
-                receiptButton = `<span style="font-size: 0.8rem; color: var(--text-secondary);">עדיין לא הועלתה קבלה</span>`;
+            } catch (error) {
+                console.error('Error loading user data:', error);
+                alert('שגיאה בטעינת נתוני משתמש');
             }
-            
-            return `
-                <tr class="order-row" data-order-id="${order.id}">
-                    <td>${createdDate.toLocaleDateString('he-IL')}</td>
-                    <td>${order.orderNumber || generateOrderNumber()}</td>
-                    <td>${orderDate.toLocaleDateString('he-IL')}</td>
-                    <td>${order.department}</td>
-                    <td>₪${order.totalIncludingVat.toFixed(2)}</td>
-                    <td><span class="status-badge status-${status.class}">${status.text}</span></td>
-                    <td>
-                        <div class="approval-status">
-                            ${approvals.map(approval => `
-                                <div class="approval-item">
-                                    <div class="approval-icon approval-${approval.status}"></div>
-                                    <span>${approval.name} - ${approval.statusText}</span>
-                                </div>
-                            `).join('')}
-                        </div>
-                    </td>
-                    <td>
-                        <button class="expand-btn" onclick="openOrderDetails('${order.id}')">פרטים</button>
-                        ${receiptButton}
-                    </td>
-                </tr>
+        }
+
+        function setupUI() {
+            console.log('Setting up UI for role:', userRole);
+            if (userRole === 'requester') {
+                setupRequesterUI();
+            } else if (userRole === 'approver') {
+                setupApproverUI();
+            }
+        }
+
+        function setupRequesterUI() {
+            const firstName = userData.name.split(' ')[0];
+            welcomeTitle.textContent = `שלום ${firstName}, ברוך הבא למערכת ההזמנות`;
+            welcomeSubtitle.textContent = 'כאן תוכל ליצור הזמנות חדשות ולעקוב אחר הסטטוס שלהן';
+            tableTitle.textContent = 'ההזמנות שלי';
+
+            actionButtons.innerHTML = `
+                <div class="action-card" id="newOrderCard">
+                    <div class="action-icon">➕</div>
+                    <h3 class="action-title">יצירת הזמנה חדשה</h3>
+                    <p class="action-description">צור הזמנה חדשה לציוד או שירותים</p>
+                </div>
             `;
-        }).join('');
-    }
 
-    function getOrderStatus(order) {
-        const approvals = order.approvals || {};
-        const emily = approvals.emily || 'pending';
-        const shuli = approvals.shuli || 'pending';
-        const gadi = order.totalIncludingVat > 9000 ? (approvals.gadi || 'pending') : 'approved';
-
-        if (emily === 'rejected' || shuli === 'rejected' || gadi === 'rejected') {
-            return { class: 'rejected', text: 'נדחה', canUploadReceipt: false };
+            setTimeout(() => {
+                const newOrderCard = document.getElementById('newOrderCard');
+                if (newOrderCard) {
+                    newOrderCard.addEventListener('click', openNewOrderModal);
+                }
+            }, 100);
         }
 
-        if (emily === 'approved' && shuli === 'approved' && gadi === 'approved') {
-            return { class: 'approved', text: 'מאושר', canUploadReceipt: true };
-        }
+        function setupApproverUI() {
+            const firstName = userData.name.split(' ')[0];
+            welcomeTitle.textContent = `שלום ${firstName}, ברוך הבא למערכת ההזמנות`;
+            welcomeSubtitle.textContent = 'כאן תוכל לאשר הזמנות ולנהל את תהליך האישורים';
+            tableTitle.textContent = 'הזמנות לאישור';
 
-        if (emily === 'approved' || shuli === 'approved') {
-            return { class: 'partial', text: 'אושר חלקית', canUploadReceipt: false };
-        }
+            actionButtons.innerHTML = `
+                <div class="action-card" id="pendingApprovalsCard">
+                    <div class="action-icon">⏳</div>
+                    <h3 class="action-title">אישורי הזמנות</h3>
+                    <p class="action-description">הזמנות הממתינות לאישור שלי</p>
+                </div>
+                <div class="action-card" id="allOrdersCard">
+                    <div class="action-icon">📊</div>
+                    <h3 class="action-title">היסטוריית הזמנות</h3>
+                    <p class="action-description">כל ההזמנות במערכת לפי תאריך</p>
+                </div>
+            `;
 
-        return { class: 'pending', text: 'בהמתנה', canUploadReceipt: false };
-    }
-
-    function getApprovalStatus(order) {
-        const approvals = order.approvals || {};
-        const result = [
-            {
-                name: 'אמילי',
-                key: 'emily',
-                status: approvals.emily || 'pending',
-                statusText: getStatusText(approvals.emily || 'pending')
-            },
-            {
-                name: 'שולי', 
-                key: 'shuli',
-                status: approvals.shuli || 'pending',
-                statusText: getStatusText(approvals.shuli || 'pending')
-            }
-        ];
-
-        if (order.totalIncludingVat > 9000) {
-            result.push({
-                name: 'גדי',
-                key: 'gadi',
-                status: approvals.gadi || 'pending',
-                statusText: getStatusText(approvals.gadi || 'pending')
-            });
-        }
-
-        return result;
-    }
-
-    function getStatusText(status) {
-        switch (status) {
-            case 'approved': return 'אושר';
-            case 'rejected': return 'נדחה';
-            default: return 'בהמתנה';
-        }
-    }
-
-    function filterOrders(filter) {
-        let filtered = orders;
-        
-        if (filter !== 'all') {
-            filtered = orders.filter(order => {
-                const status = getOrderStatus(order);
-                return status.class === filter;
-            });
-        }
-        
-        renderOrders(filtered);
-    }
-
-    function closeReceiptModal() {
-        receiptModal.classList.remove('active');
-    }
-
-    function openNewOrderModal() {
-        console.log('Opening new order modal...');
-        newOrderModal.classList.add('active');
-        
-        document.getElementById('requesterName').value = userData.name;
-        document.getElementById('orderDate').value = new Date().toISOString().split('T')[0];
-        
-        const form = document.getElementById('newOrderForm');
-        form.reset();
-        document.getElementById('requesterName').value = userData.name;
-        document.getElementById('orderDate').value = new Date().toISOString().split('T')[0];
-        
-        itemCounter = 0;
-        const orderItems = document.getElementById('orderItems');
-        const extraItems = orderItems.querySelectorAll('.order-item[data-item]:not([data-item="0"])');
-        extraItems.forEach(item => item.remove());
-        
-        updateOrderSummary();
-    }
-
-    function closeNewOrderModal() {
-        newOrderModal.classList.remove('active');
-    }
-
-    function closeOrderDetailsModal() {
-        orderDetailsModal.classList.remove('active');
-    }
-
-    function addOrderItem() {
-        itemCounter++;
-        const orderItems = document.getElementById('orderItems');
-        
-        const newItem = document.createElement('div');
-        newItem.className = 'order-item';
-        newItem.dataset.item = itemCounter;
-        newItem.innerHTML = `
-            <hr style="margin: 2rem 0;">
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
-                <h4>פריט #${itemCounter + 1}</h4>
-                <button type="button" class="btn btn-danger" style="font-size: 0.8rem; padding: 0.3rem 0.8rem;" onclick="removeOrderItem(${itemCounter})">הסר פריט</button>
-            </div>
-            <div class="form-group">
-                <label class="form-label">שם המוצר ותיאור</label>
-                <input type="text" class="form-input" name="productName" required>
-            </div>
-            <div class="form-group">
-                <label class="form-label">מטרה - תיאור הצורך</label>
-                <textarea class="form-textarea" name="purpose" required></textarea>
-            </div>
-            <div class="form-group">
-                <label class="form-label">כמות קיימת במלאי</label>
-                <input type="number" class="form-input" name="stockQuantity" min="0">
-            </div>
-            <div class="form-group">
-                <label class="form-label">מועד דרוש לאספקה</label>
-                <input type="date" class="form-input" name="requiredDate" required>
-            </div>
-            <div class="form-group">
-                <label class="form-label">שם הספק</label>
-                <input type="text" class="form-input" name="supplier" required>
-            </div>
-            <div class="form-group">
-                <label class="form-label">עלות בש"ח</label>
-                <input type="number" class="form-input cost-input" name="cost" step="0.01" min="0" required>
-            </div>
-            <div class="form-group">
-                <label class="form-label">מע"מ</label>
-                <select class="form-select vat-select" name="vatIncluded" required>
-                    <option value="true">כולל מע"מ</option>
-                    <option value="false">לא כולל מע"מ</option>
-                </select>
-            </div>
-        `;
-        
-        orderItems.appendChild(newItem);
-        
-        const costInput = newItem.querySelector('.cost-input');
-        const vatSelect = newItem.querySelector('.vat-select');
-        
-        costInput.addEventListener('input', updateOrderSummary);
-        vatSelect.addEventListener('change', updateOrderSummary);
-    }
-
-    function removeOrderItem(itemId) {
-        const item = document.querySelector(`[data-item="${itemId}"]`);
-        if (item) {
-            item.remove();
-            updateOrderSummary();
-        }
-    }
-
-    function updateOrderSummary() {
-        const costInputs = document.querySelectorAll('.cost-input');
-        const vatSelects = document.querySelectorAll('.vat-select');
-        
-        let totalExcludingVat = 0;
-        let totalIncludingVat = 0;
-        
-        costInputs.forEach((input, index) => {
-            const cost = parseFloat(input.value) || 0;
-            const vatSelect = vatSelects[index];
-            const includesVat = vatSelect ? vatSelect.value === 'true' : true;
-            
-            if (includesVat) {
-                totalIncludingVat += cost;
-                totalExcludingVat += cost / 1.17;
-            } else {
-                totalExcludingVat += cost;
-                totalIncludingVat += cost * 1.17;
-            }
-        });
-        
-        document.getElementById('totalExcludingVat').textContent = `₪${totalExcludingVat.toFixed(2)}`;
-        document.getElementById('totalIncludingVat').textContent = `₪${totalIncludingVat.toFixed(2)}`;
-    }
-
-    async function handleOrderSubmit(e) {
-        e.preventDefault();
-        console.log('Submitting order...');
-        
-        const submitBtn = document.getElementById('submitOrderBtn');
-        const btnText = submitBtn.querySelector('span');
-        const loading = submitBtn.querySelector('.loading');
-        
-        btnText.style.display = 'none';
-        loading.style.display = 'block';
-        submitBtn.disabled = true;
-        
-        try {
-            const orderItemsElements = document.querySelectorAll('.order-item');
-            
-            const items = [];
-            orderItemsElements.forEach((item, index) => {
-                const inputs = item.querySelectorAll('input, textarea, select');
-                const itemData = {};
+            setTimeout(() => {
+                const pendingApprovalsCard = document.getElementById('pendingApprovalsCard');
+                const allOrdersCard = document.getElementById('allOrdersCard');
                 
-                inputs.forEach(input => {
-                    if (input.name) {
-                        itemData[input.name] = input.value;
+                if (pendingApprovalsCard) {
+                    pendingApprovalsCard.addEventListener('click', showMyPendingApprovals);
+                }
+                if (allOrdersCard) {
+                    allOrdersCard.addEventListener('click', showAllOrdersHistory);
+                }
+            }, 100);
+        }
+
+        function showMyPendingApprovals() {
+            const myApproverType = userData.approverType;
+            if (!myApproverType) return;
+
+            const pendingOrders = orders.filter(order => {
+                const approvals = order.approvals || {};
+                
+                if (myApproverType === 'emily') {
+                    return approvals.emily === 'pending' || approvals.emily === 'explanation_received';
+                } else if (myApproverType === 'shuli') {
+                    return (approvals.emily === 'approved' && (approvals.shuli === 'pending' || approvals.shuli === 'explanation_received'));
+                } else if (myApproverType === 'gadi') {
+                    return order.totalIncludingVat > 9000 && 
+                           approvals.emily === 'approved' && 
+                           approvals.shuli === 'approved' && 
+                           (approvals.gadi === 'pending' || approvals.gadi === 'explanation_received');
+                }
+                return false;
+            });
+
+            tableTitle.textContent = `הזמנות הממתינות לאישור שלי (${pendingOrders.length})`;
+            renderOrders(pendingOrders);
+            
+            ordersTableContainer.scrollIntoView({ behavior: 'smooth' });
+        }
+
+        function showAllOrdersHistory() {
+            tableTitle.textContent = 'היסטוריית כל ההזמנות';
+            renderOrders(orders);
+            
+            ordersTableContainer.scrollIntoView({ behavior: 'smooth' });
+        }
+
+        function setupEventListeners() {
+            console.log('Setting up event listeners...');
+            themeToggle.addEventListener('click', toggleTheme);
+            logoutBtn.addEventListener('click', handleLogout);
+            
+            // Modal event listeners
+            document.getElementById('closeNewOrderModal').addEventListener('click', closeNewOrderModal);
+            document.getElementById('closeOrderDetailsModal').addEventListener('click', closeOrderDetailsModal);
+            document.getElementById('closeReceiptModal').addEventListener('click', closeReceiptModal);
+            document.getElementById('closeExplanationModal').addEventListener('click', closeExplanationModal);
+            document.getElementById('closeReplyModal').addEventListener('click', closeReplyModal);
+            document.getElementById('closeReminderModal').addEventListener('click', closeReminderModal);
+            document.getElementById('cancelOrderBtn').addEventListener('click', closeNewOrderModal);
+            document.getElementById('cancelExplanationBtn').addEventListener('click', closeExplanationModal);
+            document.getElementById('cancelReplyBtn').addEventListener('click', closeReplyModal);
+            document.getElementById('cancelReminderBtn').addEventListener('click', closeReminderModal);
+            
+            // Form event listeners
+            document.getElementById('newOrderForm').addEventListener('submit', handleOrderSubmit);
+            document.getElementById('addItemBtn').addEventListener('click', addOrderItem);
+            document.getElementById('printOrderBtn').addEventListener('click', printOrder);
+            document.getElementById('sendExplanationBtn').addEventListener('click', sendExplanation);
+            document.getElementById('sendReplyBtn').addEventListener('click', sendReply);
+            document.getElementById('sendReminderBtn').addEventListener('click', sendReminder);
+            
+            // Filter event listeners
+            filterButtons.addEventListener('click', (e) => {
+                if (e.target.classList.contains('filter-btn')) {
+                    document.querySelectorAll('.filter-btn').forEach(btn => btn.classList.remove('active'));
+                    e.target.classList.add('active');
+                    filterOrders(e.target.dataset.filter);
+                }
+            });
+
+            // Window click events for modal closing
+            window.addEventListener('click', (e) => {
+                if (e.target === newOrderModal) closeNewOrderModal();
+                if (e.target === orderDetailsModal) closeOrderDetailsModal();
+                if (e.target === receiptModal) closeReceiptModal();
+                if (e.target === explanationModal) closeExplanationModal();
+                if (e.target === replyModal) closeReplyModal();
+                if (e.target === reminderModal) closeReminderModal();
+            });
+        }
+
+        async function loadOrders() {
+            console.log('Loading orders...');
+            try {
+                const ordersRef = ref(database, 'orders');
+                
+                onValue(ordersRef, (snapshot) => {
+                    orders = [];
+                    if (snapshot.exists()) {
+                        const data = snapshot.val();
+                        Object.keys(data).forEach(key => {
+                            orders.push({
+                                id: key,
+                                ...data[key]
+                            });
+                        });
+                    }
+                    
+                    orders.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+                    
+                    console.log('Orders loaded:', orders.length);
+                    renderOrders();
+                });
+            } catch (error) {
+                console.error('Error loading orders:', error);
+            }
+        }
+
+        function canSendReminder(order) {
+            if (userRole !== 'requester') return false;
+            
+            const approvals = order.approvals || {};
+            const emily = approvals.emily || 'pending';
+            const shuli = approvals.shuli || 'pending';
+            const gadi = order.totalIncludingVat > 9000 ? (approvals.gadi || 'pending') : 'approved';
+            
+            return emily !== 'approved' || shuli !== 'approved' || gadi !== 'approved';
+        }
+
+        function renderOrders(filteredOrders = null) {
+            const ordersToShow = filteredOrders || orders;
+            const tbody = ordersTableBody;
+            
+            let userOrders = ordersToShow;
+            if (userRole === 'requester') {
+                userOrders = ordersToShow.filter(order => order.requesterEmail === currentUser.email);
+            }
+
+            if (userOrders.length === 0) {
+                tbody.innerHTML = '';
+                emptyState.style.display = 'block';
+                return;
+            }
+
+            emptyState.style.display = 'none';
+            
+            tbody.innerHTML = userOrders.map(order => {
+                const status = getOrderStatus(order);
+                const approvals = getApprovalStatus(order);
+                const createdDate = new Date(order.createdAt);
+                const orderDate = new Date(order.orderDate);
+                
+                let receiptButton = '';
+                if (status.canUploadReceipt && userRole === 'requester') {
+                    if (order.receiptUploaded) {
+                        receiptButton = `<button class="receipt-btn view-receipt-btn" onclick="viewReceipt('${order.id}')">צפה בקבלה</button>`;
+                    } else {
+                        receiptButton = `<button class="receipt-btn upload-receipt-btn" onclick="uploadReceipt('${order.id}')">העלה קבלה</button>`;
+                    }
+                } else if (order.receiptUploaded && userRole === 'approver') {
+                    receiptButton = `<button class="receipt-btn view-receipt-btn" onclick="viewReceipt('${order.id}')">צפה בקבלה</button>`;
+                } else if (userRole === 'approver' && !order.receiptUploaded && status.class === 'approved') {
+                    receiptButton = `<span style="font-size: 0.8rem; color: var(--text-secondary);">עדיין לא הועלתה קבלה</span>`;
+                }
+                
+                return `
+                    <tr class="order-row" data-order-id="${order.id}">
+                        <td>${createdDate.toLocaleDateString('he-IL')}</td>
+                        <td>${order.orderNumber || generateOrderNumber()}</td>
+                        <td>${orderDate.toLocaleDateString('he-IL')}</td>
+                        <td>${order.department}</td>
+                        <td>₪${order.totalIncludingVat.toFixed(2)}</td>
+                        <td><span class="status-badge status-${status.class}">${status.text}</span></td>
+                        <td>
+                            ${canSendReminder(order) ? 
+                                `<button class="btn btn-secondary" style="font-size: 0.8rem; padding: 0.3rem 0.8rem;" onclick="openReminderModal('${order.id}')">🔔</button>` : 
+                                '<span style="color: var(--text-secondary); font-size: 0.8rem;">-</span>'
+                            }
+                        </td>
+                        <td>
+                            <div class="approval-status">
+                                ${approvals.map(approval => `
+                                    <div class="approval-item">
+                                        <div class="approval-icon approval-${approval.status}"></div>
+                                        <span>${approval.name} - ${approval.statusText}</span>
+                                    </div>
+                                `).join('')}
+                            </div>
+                        </td>
+                        <td>
+                            <button class="expand-btn" onclick="openOrderDetails('${order.id}')">פרטים</button>
+                            ${receiptButton}
+                        </td>
+                    </tr>
+                `;
+            }).join('');
+        }
+
+        function getOrderStatus(order) {
+            const approvals = order.approvals || {};
+            const emily = approvals.emily || 'pending';
+            const shuli = approvals.shuli || 'pending';
+            const gadi = order.totalIncludingVat > 9000 ? (approvals.gadi || 'pending') : 'approved';
+
+            // Check for explanation needed status
+            if (emily === 'explanation_needed' || shuli === 'explanation_needed' || gadi === 'explanation_needed') {
+                return { class: 'explanation-needed', text: 'נדרש נימוק מהמזמין', canUploadReceipt: false };
+            }
+
+            if (emily === 'rejected' || shuli === 'rejected' || gadi === 'rejected') {
+                return { class: 'rejected', text: 'נדחה', canUploadReceipt: false };
+            }
+
+            if (emily === 'approved' && shuli === 'approved' && gadi === 'approved') {
+                return { class: 'approved', text: 'מאושר', canUploadReceipt: true };
+            }
+
+            if (emily === 'approved' || shuli === 'approved') {
+                return { class: 'partial', text: 'אושר חלקית', canUploadReceipt: false };
+            }
+
+            return { class: 'pending', text: 'בהמתנה', canUploadReceipt: false };
+        }
+
+        function getApprovalStatus(order) {
+            const approvals = order.approvals || {};
+            const result = [
+                {
+                    name: 'אמילי',
+                    key: 'emily',
+                    status: approvals.emily || 'pending',
+                    statusText: getStatusText(approvals.emily || 'pending')
+                },
+                {
+                    name: 'שולי', 
+                    key: 'shuli',
+                    status: approvals.shuli || 'pending',
+                    statusText: getStatusText(approvals.shuli || 'pending')
+                }
+            ];
+
+            if (order.totalIncludingVat > 9000) {
+                result.push({
+                    name: 'גדי',
+                    key: 'gadi',
+                    status: approvals.gadi || 'pending',
+                    statusText: getStatusText(approvals.gadi || 'pending')
+                });
+            }
+
+            return result;
+        }
+
+        function getStatusText(status) {
+            switch (status) {
+                case 'approved': return 'אושר';
+                case 'rejected': return 'נדחה';
+                case 'explanation_needed': return 'נדרש נימוק מהמזמין';
+                case 'explanation_received': return 'בבדיקה חוזרת אצל המאשר';
+                default: return 'בהמתנה';
+            }
+        }
+
+        function filterOrders(filter) {
+            let filtered = orders;
+            
+            if (filter !== 'all') {
+                filtered = orders.filter(order => {
+                    const status = getOrderStatus(order);
+                    return status.class === filter;
+                });
+            }
+            
+            renderOrders(filtered);
+        }
+
+        // Modal functions
+        function closeReceiptModal() {
+            receiptModal.classList.remove('active');
+        }
+
+        function closeExplanationModal() {
+            explanationModal.classList.remove('active');
+            document.getElementById('explanationText').value = '';
+            currentOrderId = null;
+            currentApproverKey = null;
+        }
+
+        function closeReplyModal() {
+            replyModal.classList.remove('active');
+            document.getElementById('replyText').value = '';
+            currentOrderId = null;
+            currentApproverKey = null;
+        }
+
+        function closeReminderModal() {
+            reminderModal.classList.remove('active');
+            currentReminderOrderId = null;
+        }
+
+function openNewOrderModal() {
+    console.log('Opening new order modal...');
+    newOrderModal.classList.add('active');
+    
+    // רק אם השדות ריקים - מלא אותם
+    if (!document.getElementById('requesterName').value) {
+        document.getElementById('requesterName').value = userData.name;
+    }
+    if (!document.getElementById('orderDate').value) {
+        document.getElementById('orderDate').value = new Date().toISOString().split('T')[0];
+    }
+    
+    // עדכן את הסיכום הכספי (במקרה שיש נתונים קיימים)
+    updateOrderSummary();
+}
+
+        function closeNewOrderModal() {
+            newOrderModal.classList.remove('active');
+        }
+
+        function closeOrderDetailsModal() {
+            orderDetailsModal.classList.remove('active');
+        }
+
+        function addOrderItem() {
+            itemCounter++;
+            const orderItems = document.getElementById('orderItems');
+            
+            const newItem = document.createElement('div');
+            newItem.className = 'order-item';
+            newItem.dataset.item = itemCounter;
+            newItem.innerHTML = `
+                <hr style="margin: 2rem 0;">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+                    <h4>פריט #${itemCounter + 1}</h4>
+                    <button type="button" class="btn btn-danger" style="font-size: 0.8rem; padding: 0.3rem 0.8rem;" onclick="removeOrderItem(${itemCounter})">הסר פריט</button>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">שם המוצר ותיאור</label>
+                    <input type="text" class="form-input" name="productName" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">מטרה - תיאור הצורך</label>
+                    <textarea class="form-textarea" name="purpose" required></textarea>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">כמות קיימת במלאי</label>
+                    <input type="number" class="form-input" name="stockQuantity" min="0">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">שם הספק</label>
+                    <input type="text" class="form-input" name="supplier" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">עלות בש"ח כולל מע"מ</label>
+                    <input type="number" class="form-input cost-input" name="cost" step="0.01" min="0" required>
+                </div>
+            `;
+            
+            orderItems.appendChild(newItem);
+            
+            const costInput = newItem.querySelector('.cost-input');
+            costInput.addEventListener('input', updateOrderSummary);
+        }
+
+        function removeOrderItem(itemId) {
+            const item = document.querySelector(`[data-item="${itemId}"]`);
+            if (item) {
+                item.remove();
+                updateOrderSummary();
+            }
+        }
+
+        function updateOrderSummary() {
+            const costInputs = document.querySelectorAll('.cost-input');
+            
+            let totalIncludingVat = 0;
+            let totalExcludingVat = 0;
+            
+            costInputs.forEach((input) => {
+                const cost = parseFloat(input.value) || 0;
+                totalIncludingVat += cost;
+                totalExcludingVat += cost / 1.18;
+            });
+            
+            document.getElementById('totalExcludingVat').textContent = `₪${totalExcludingVat.toFixed(2)}`;
+            document.getElementById('totalIncludingVat').textContent = `₪${totalIncludingVat.toFixed(2)}`;
+        }
+
+        async function handleOrderSubmit(e) {
+            e.preventDefault();
+            console.log('Submitting order...');
+            
+            const submitBtn = document.getElementById('submitOrderBtn');
+            const btnText = submitBtn.querySelector('span');
+            const loading = submitBtn.querySelector('.loading');
+            
+            btnText.style.display = 'none';
+            loading.style.display = 'block';
+            submitBtn.disabled = true;
+            
+            try {
+                const orderItemsElements = document.querySelectorAll('.order-item');
+                
+                const items = [];
+                orderItemsElements.forEach((item, index) => {
+                    const inputs = item.querySelectorAll('input, textarea, select');
+                    const itemData = {};
+                    
+                    inputs.forEach(input => {
+                        if (input.name) {
+                            itemData[input.name] = input.value;
+                        }
+                    });
+                    
+                    if (itemData.productName) {
+                        items.push(itemData);
                     }
                 });
                 
-                if (itemData.productName) {
-                    items.push(itemData);
+                if (items.length === 0) {
+                    alert('אנא הוסף לפחות פריט אחד להזמנה');
+                    return;
                 }
-            });
+                
+                let totalExcludingVat = 0;
+                let totalIncludingVat = 0;
+                
+                items.forEach(item => {
+                    const cost = parseFloat(item.cost) || 0;
+                    totalIncludingVat += cost;
+                    totalExcludingVat += cost / 1.18;
+                });
+                
+                const order = {
+                    requesterEmail: currentUser.email,
+                    requesterName: userData.name,
+                    orderDate: document.getElementById('orderDate').value,
+                    department: document.getElementById('department').value,
+                    orderNotes: document.getElementById('orderNotes').value,
+                    items: items,
+                    totalExcludingVat: totalExcludingVat,
+                    totalIncludingVat: totalIncludingVat,
+                    status: 'pending',
+                    approvals: {
+                        emily: 'pending',
+                        shuli: 'pending'
+                    },
+                    createdAt: new Date().toISOString(),
+                    orderNumber: generateOrderNumber(),
+                    receiptUploaded: false
+                };
+                
+                if (totalIncludingVat > 9000) {
+                    order.approvals.gadi = 'pending';
+                }
+                
+                console.log('Order to save:', order);
+                
+                const ordersRef = ref(database, 'orders');
+                await push(ordersRef, order);
+                
+                // בדיקה אם לשלוח מייל
+                const sendEmail = document.getElementById('sendEmailNotification').checked;
+                if (sendEmail) {
+                    try {
+                        await sendNewOrderEmails(order);
+                        console.log('Email notifications sent successfully');
+                    } catch (error) {
+                        console.error('Error sending email notifications:', error);
+                        // לא לעצור את התהליך אם המייל נכשל
+                    }
+                }
+                
+                alert('ההזמנה נשלחה בהצלחה לאישור!');
+                // נקה את הטופס רק אחרי שליחה מוצלחת
+const form = document.getElementById('newOrderForm');
+form.reset();
+itemCounter = 0;
+const orderItems = document.getElementById('orderItems');
+const extraItems = orderItems.querySelectorAll('.order-item[data-item]:not([data-item="0"])');
+extraItems.forEach(item => item.remove());
+
+closeNewOrderModal();
+                
+            } catch (error) {
+                console.error('Error submitting order:', error);
+                alert('אירעה שגיאה בשליחת ההזמנה. אנא נסה שוב.');
+            } finally {
+                btnText.style.display = 'block';
+                loading.style.display = 'none';
+                submitBtn.disabled = false;
+            }
+        }
+
+        async function sendExplanation() {
+            const explanationText = document.getElementById('explanationText').value.trim();
             
-            if (items.length === 0) {
-                alert('אנא הוסף לפחות פריט אחד להזמנה');
+            if (!explanationText) {
+                alert('אנא כתוב הסבר למזמין');
                 return;
             }
             
-            let totalExcludingVat = 0;
-            let totalIncludingVat = 0;
-            
-            items.forEach(item => {
-                const cost = parseFloat(item.cost) || 0;
-                const includesVat = item.vatIncluded === 'true';
+            try {
+                const orderRef = ref(database, `orders/${currentOrderId}/approvals/${currentApproverKey}`);
+                await set(orderRef, 'explanation_needed');
                 
-                if (includesVat) {
-                    totalIncludingVat += cost;
-                    totalExcludingVat += cost / 1.17;
-                } else {
-                    totalExcludingVat += cost;
-                    totalIncludingVat += cost * 1.17;
-                }
-            });
+                const explanationRef = ref(database, `orders/${currentOrderId}/explanations/${currentApproverKey}`);
+                await set(explanationRef, {
+                    text: explanationText,
+                    timestamp: new Date().toISOString(),
+                    from: userData.name
+                });
+                
+                alert('ההסבר נשלח למזמין בהצלחה!');
+                closeExplanationModal();
+                closeOrderDetailsModal();
+                
+            } catch (error) {
+                console.error('Error sending explanation:', error);
+                alert('שגיאה בשליחת ההסבר');
+            }
+        }
+
+        async function sendReply() {
+            const replyText = document.getElementById('replyText').value.trim();
             
-            const order = {
-                requesterEmail: currentUser.email,
-                requesterName: userData.name,
-                orderDate: document.getElementById('orderDate').value,
-                department: document.getElementById('department').value,
-                items: items,
-                totalExcludingVat: totalExcludingVat,
-                totalIncludingVat: totalIncludingVat,
-                status: 'pending',
-                approvals: {
-                    emily: 'pending',
-                    shuli: 'pending'
-                },
-                createdAt: new Date().toISOString(),
-                orderNumber: generateOrderNumber(),
-                receiptUploaded: false
-            };
-            
-            if (totalIncludingVat > 9000) {
-                order.approvals.gadi = 'pending';
+            if (!replyText) {
+                alert('אנא כתוב תגובה למאשר');
+                return;
             }
             
-            console.log('Order to save:', order);
-            
-            const ordersRef = ref(database, 'orders');
-            await push(ordersRef, order);
-            
-            alert('ההזמנה נשלחה בהצלחה לאישור!');
-            
-            closeNewOrderModal();
-            
-        } catch (error) {
-            console.error('Error submitting order:', error);
-            alert('אירעה שגיאה בשליחת ההזמנה. אנא נסה שוב.');
-        } finally {
-            btnText.style.display = 'block';
-            loading.style.display = 'none';
-            submitBtn.disabled = false;
-        }
-    }
-
-    // Fixed print function that works for both requesters and approvers
-    function printOrder() {
-        const order = window.currentOrderForPrint;
-        if (!order) {
-            alert('אין הזמנה להדפסה');
-            return;
-        }
-
-        const printContent = document.getElementById('printOrderContent');
-        const needsGadi = order.totalIncludingVat > 9000;
-        const approvals = order.approvals || {};
-        
-        function getSignatureText(approverKey) {
-            const status = approvals[approverKey];
-            if (status === 'approved') {
-                return 'נחתם דיגיטלית';
-            } else if (status === 'rejected') {
-                return 'נדחה';
+            try {
+                const orderRef = ref(database, `orders/${currentOrderId}/approvals/${currentApproverKey}`);
+                await set(orderRef, 'explanation_received');
+                
+                const replyRef = ref(database, `orders/${currentOrderId}/replies/${currentApproverKey}`);
+                await set(replyRef, {
+                    text: replyText,
+                    timestamp: new Date().toISOString(),
+                    from: userData.name
+                });
+                
+                alert('התגובה נשלחה למאשר בהצלחה!');
+                closeReplyModal();
+                closeOrderDetailsModal();
+                
+            } catch (error) {
+                console.error('Error sending reply:', error);
+                alert('שגיאה בשליחת התגובה');
             }
-            return '';
         }
 
-        // Calculate total for display in print
-        let printTotal = 0;
-        order.items.forEach(item => {
-            printTotal += parseFloat(item.cost) || 0;
-        });
-        
-        printContent.innerHTML = `
-            <div class="print-section" style="text-align: center; margin-bottom: 15px;">
-                <h2 style="margin: 0; padding: 0;">טופס הזמנת עבודה או ציוד</h2>
-            </div>
-            
-            <div class="print-section">
-                <h3 style="text-align: center; margin: 8px 0; background-color: #f0f0f0; padding: 3px;">פרטי המזמין</h3>
-                <table style="width: 100%; border-collapse: collapse; margin-bottom: 12px;">
-                    <tr>
-                        <td style="border: 1px solid #000; padding: 4px; width: 25%; font-weight: bold;">שם המזמין</td>
-                        <td style="border: 1px solid #000; padding: 4px; width: 25%;">${order.requesterName.split(' ')[0]}</td>
-                        <td style="border: 1px solid #000; padding: 4px; width: 25%; font-weight: bold;">תאריך הזמנה</td>
-                        <td style="border: 1px solid #000; padding: 4px; width: 25%;">${formatDate(order.orderDate)}</td>
-                    </tr>
-                    <tr>
-                        <td style="border: 1px solid #000; padding: 4px; font-weight: bold;">מחלקה</td>
-                        <td style="border: 1px solid #000; padding: 4px;" colspan="3">${order.department}</td>
-                    </tr>
-                </table>
-            </div>
-
-            <div class="print-section">
-                <h3 style="text-align: center; margin: 8px 0; background-color: #f0f0f0; padding: 3px;">תיאור המוצר</h3>
-                <table style="width: 100%; border-collapse: collapse; margin-bottom: 12px;">
-                    <tr>
-                        <th style="border: 1px solid #000; padding: 3px; background-color: #f0f0f0; font-size: 9px;">שם המוצר תיאור המוצר או העבודה</th>
-                        <th style="border: 1px solid #000; padding: 3px; background-color: #f0f0f0; font-size: 9px;">מטרה- תיאור הצורך</th>
-                        <th style="border: 1px solid #000; padding: 3px; background-color: #f0f0f0; font-size: 9px;">כמות קיימת במלאי</th>
-                        <th style="border: 1px solid #000; padding: 3px; background-color: #f0f0f0; font-size: 9px;">מועד דרוש לאספקה לטכנודע</th>
-                        <th style="border: 1px solid #000; padding: 3px; background-color: #f0f0f0; font-size: 9px;">שם הספק</th>
-                        <th style="border: 1px solid #000; padding: 3px; background-color: #f0f0f0; font-size: 9px;">עלות בש"ח כולל/לא כולל מע"מ</th>
-                    </tr>
-                    ${order.items.map(item => `
-                        <tr>
-                            <td style="border: 1px solid #000; padding: 3px; font-size: 9px;">${item.productName}</td>
-                            <td style="border: 1px solid #000; padding: 3px; font-size: 9px;">${item.purpose}</td>
-                            <td style="border: 1px solid #000; padding: 3px; text-align: center; font-size: 9px;">${item.stockQuantity || 0}</td>
-                            <td style="border: 1px solid #000; padding: 3px; text-align: center; font-size: 9px;">${formatDate(item.requiredDate)}</td>
-                            <td style="border: 1px solid #000; padding: 3px; font-size: 9px;">${item.supplier}</td>
-                            <td style="border: 1px solid #000; padding: 3px; text-align: center; font-size: 9px;">₪${parseFloat(item.cost).toFixed(2)} ${item.vatIncluded === 'true' ? '(כולל מע"מ)' : '(לא כולל מע"מ)'}</td>
-                        </tr>
-                    `).join('')}
-                </table>
-                
-                <div style="text-align: left; margin: 8px 0; font-weight: bold; font-size: 11px;">
-                    <p style="margin: 2px 0;">סה"כ תשלום: ₪${order.totalIncludingVat.toFixed(2)}</p>
-                </div>
-            </div>
-
-            <div class="print-section">
-                <p style="margin: 10px 0; font-size: 10px;"><strong>במידה וההזמנה כוללת כמות גדולה של פריטים ניתן לצרף את דף ההזמנה</strong></p>
-                
-                <h3 style="text-align: center; margin: 8px 0; background-color: #f0f0f0; padding: 3px;">אישור ההזמנה (חתימות)</h3>
-                <table style="width: 100%; border-collapse: collapse;">
-                    <tr>
-                        <th style="border: 1px solid #000; padding: 4px; background-color: #f0f0f0; width: 20%;">שם המאשר</th>
-                        <th style="border: 1px solid #000; padding: 4px; background-color: #f0f0f0; width: 25%;">הערות</th>
-                        <th style="border: 1px solid #000; padding: 4px; background-color: #f0f0f0; width: 15%;">תאריך</th>
-                        <th style="border: 1px solid #000; padding: 4px; background-color: #f0f0f0; width: 20%;">הגבלת הזמנה</th>
-                        <th style="border: 1px solid #000; padding: 4px; background-color: #f0f0f0; width: 20%;">חתימה</th>
-                    </tr>
-                    ${needsGadi ? `
-                    <tr>
-                        <td style="border: 1px solid #000; padding: 6px; height: 25px;">ד"ר גדי מדור</td>
-                        <td style="border: 1px solid #000; padding: 6px;"></td>
-                        <td style="border: 1px solid #000; padding: 6px;"></td>
-                        <td style="border: 1px solid #000; padding: 6px;"></td>
-                        <td style="border: 1px solid #000; padding: 6px; text-align: center;"><span class="signature-approved">${getSignatureText('gadi')}</span></td>
-                    </tr>` : ''}
-                    <tr>
-                        <td style="border: 1px solid #000; padding: 6px; height: 25px;">אמילי גולן</td>
-                        <td style="border: 1px solid #000; padding: 6px;"></td>
-                        <td style="border: 1px solid #000; padding: 6px;"></td>
-                        <td style="border: 1px solid #000; padding: 6px;"></td>
-                        <td style="border: 1px solid #000; padding: 6px; text-align: center;"><span class="signature-approved">${getSignatureText('emily')}</span></td>
-                    </tr>
-                    <tr>
-                        <td style="border: 1px solid #000; padding: 6px; height: 25px;">שולי ששון</td>
-                        <td style="border: 1px solid #000; padding: 6px;"></td>
-                        <td style="border: 1px solid #000; padding: 6px;"></td>
-                        <td style="border: 1px solid #000; padding: 6px;"></td>
-                        <td style="border: 1px solid #000; padding: 6px; text-align: center;"><span class="signature-approved">${getSignatureText('shuli')}</span></td>
-                    </tr>
-                </table>
-            </div>
-        `;
-
-        // Force print with small delay to ensure rendering
-        setTimeout(() => {
-            window.print();
-        }, 200);
-    }
-
-    window.openOrderDetails = async function(orderId) {
-        try {
+        // פונקציות תזכורת מייל
+        window.openReminderModal = function(orderId) {
+            currentReminderOrderId = orderId;
             const order = orders.find(o => o.id === orderId);
             if (!order) return;
             
-            const approvals = getApprovalStatus(order);
-            const status = getOrderStatus(order);
+            const approvals = order.approvals || {};
+            const approversList = document.getElementById('approversList');
             
-            document.getElementById('orderDetailsContent').innerHTML = `
-                <div style="margin-bottom: 2rem;">
-                    <h3>פרטי הזמנה #${order.orderNumber || generateOrderNumber()}</h3>
-                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; margin: 1rem 0;">
-                        <div><strong>מזמין:</strong> ${order.requesterName}</div>
-                        <div><strong>תאריך יצירה:</strong> ${formatDate(order.createdAt)}</div>
-                        <div><strong>תאריך הזמנה:</strong> ${formatDate(order.orderDate)}</div>
-                        <div><strong>מחלקה:</strong> ${order.department}</div>
-                        <div><strong>סטטוס:</strong> <span class="status-badge status-${status.class}">${status.text}</span></div>
-                    </div>
+            let pendingApprovers = [];
+            
+            if ((approvals.emily || 'pending') !== 'approved') {
+                pendingApprovers.push({key: 'emily', name: 'אמילי גולן', email: approverEmails.emily});
+            }
+            if ((approvals.shuli || 'pending') !== 'approved') {
+                pendingApprovers.push({key: 'shuli', name: 'שולי ששון', email: approverEmails.shuli});
+            }
+            if (order.totalIncludingVat > 9000 && (approvals.gadi || 'pending') !== 'approved') {
+                pendingApprovers.push({key: 'gadi', name: 'ד"ר גדי מדור', email: approverEmails.gadi});
+            }
+            
+            if (pendingApprovers.length === 0) {
+                alert('כל המאשרים כבר אישרו את ההזמנה');
+                return;
+            }
+            
+            let checkboxes = pendingApprovers.map(approver => `
+                <label style="display: flex; align-items: center; gap: 0.5rem; margin: 0.5rem 0; cursor: pointer;">
+                    <input type="checkbox" value="${approver.key}" class="reminder-checkbox">
+                    <span>${approver.name}</span>
+                </label>
+            `).join('');
+            
+            if (pendingApprovers.length > 1) {
+                checkboxes += `
+                    <label style="display: flex; align-items: center; gap: 0.5rem; margin: 1rem 0; cursor: pointer; font-weight: bold;">
+                        <input type="checkbox" id="selectAllApprovers">
+                        <span>בחר הכל</span>
+                    </label>
+                `;
+            }
+            
+            approversList.innerHTML = checkboxes;
+            
+            const selectAll = document.getElementById('selectAllApprovers');
+            if (selectAll) {
+                selectAll.addEventListener('change', (e) => {
+                    const checkboxes = document.querySelectorAll('.reminder-checkbox');
+                    checkboxes.forEach(cb => cb.checked = e.target.checked);
+                });
+            }
+            
+            reminderModal.classList.add('active');
+        };
+
+        async function sendReminder() {
+            const selectedApprovers = Array.from(document.querySelectorAll('.reminder-checkbox:checked'))
+                .map(cb => cb.value);
+            
+            if (selectedApprovers.length === 0) {
+                alert('אנא בחר לפחות מאשר אחד');
+                return;
+            }
+            
+            const order = orders.find(o => o.id === currentReminderOrderId);
+            if (!order) return;
+            
+            try {
+                const sendBtn = document.getElementById('sendReminderBtn');
+                sendBtn.disabled = true;
+                sendBtn.innerHTML = '<div class="loading"></div> שולח...';
+                
+                let successCount = 0;
+                let errorCount = 0;
+                
+                for (const approverKey of selectedApprovers) {
+                    const approverEmail = approverEmails[approverKey];
+                    const approverName = getApproverName(approverKey);
+                    
+                    try {
+                        await sendEmailReminder(approverEmail, approverName, order);
+                        successCount++;
+                        console.log(`תזכורת נשלחה ל-${approverName}`);
+                    } catch (error) {
+                        errorCount++;
+                        console.error(`שגיאה עבור ${approverName}:`, error);
+                    }
+                }
+                
+                if (successCount > 0) {
+                    alert(`תזכורות נשלחו בהצלחה ל-${successCount} מאשרים!`);
+                }
+                if (errorCount > 0) {
+                    alert(`שגיאה בשליחה ל-${errorCount} מאשרים`);
+                }
+                
+                if (successCount > 0) {
+                    closeReminderModal();
+                }
+                
+            } catch (error) {
+                console.error('Error sending reminders:', error);
+                alert('שגיאה בשליחת התזכורות');
+            } finally {
+                const sendBtn = document.getElementById('sendReminderBtn');
+                sendBtn.disabled = false;
+                sendBtn.innerHTML = 'שלח מייל';
+            }
+        }
+
+        function getApproverName(approverKey) {
+            const names = {
+                'emily': 'אמילי',
+                'shuli': 'שולי', 
+                'gadi': 'ד"ר גדי'
+            };
+            return names[approverKey] || approverKey;
+        }
+
+        async function sendEmailReminder(email, approverName, order) {
+            const templateParams = {
+                to_email: email,
+                to_name: approverName,
+                from_name: 'מערכת ההזמנות',
+                subject: 'תזכורת: הזמנה ממתינה לאישור במערכת ההזמנות',
+                approver_name: approverName,
+                requester_name: order.requesterName,
+                order_number: order.orderNumber,
+                total_amount: order.totalIncludingVat.toFixed(2),
+                order_date: formatDate(order.orderDate),
+                system_link: 'https://snirsnir.github.io/orders/index.html'
+            };
+            
+            console.log('Sending reminder email to:', email, 'with params:', templateParams);
+            
+            return await emailjs.send(
+                'service_lgb24x4',
+                'template_069cokp',
+                templateParams
+            );
+        }
+
+async function sendNewOrderEmails(order) {
+    const approversToNotify = [];
+    
+    // אמילי תמיד מקבלת
+    approversToNotify.push({
+        email: approverEmails.emily,
+        name: 'אמילי'
+    });
+    
+    // שולי תמיד מקבלת (אחרי אמילי)
+    approversToNotify.push({
+        email: approverEmails.shuli,
+        name: 'שולי'
+    });
+    
+    // גדי מקבל רק אם הסכום מעל 9000
+    if (order.totalIncludingVat > 9000) {
+        approversToNotify.push({
+            email: approverEmails.gadi,
+            name: 'ד"ר גדי'
+        });
+    }
+    
+    for (const approver of approversToNotify) {
+        await sendNewOrderEmail(approver.email, approver.name, order);
+    }
+}
+
+        async function sendNewOrderEmail(email, approverName, order) {
+            const firstItem = order.items[0];
+            const productName = firstItem ? firstItem.productName : 'מוצרים שונים';
+            
+            const templateParams = {
+                to_email: email,
+                to_name: approverName,
+                from_name: 'מערכת ההזמנות',
+                subject: 'הזמנה חדשה ממערכת ההזמנות',
+                approver_name: approverName,
+                requester_name: order.requesterName,
+                product_name: productName,
+                order_number: order.orderNumber,
+                total_amount: order.totalIncludingVat.toFixed(2),
+                order_date: formatDate(order.orderDate),
+                system_link: 'https://snirsnir.github.io/orders/index.html'
+            };
+            
+            console.log('Sending new order email to:', email, 'with params:', templateParams);
+            
+            return await emailjs.send(
+                'service_lgb24x4',
+                'template_069cokp',
+                templateParams
+            );
+        }
+
+        function printOrder() {
+            const order = window.currentOrderForPrint;
+            if (!order) {
+                alert('אין הזמנה להדפסה');
+                return;
+            }
+
+            const printContent = document.getElementById('printOrderContent');
+            const needsGadi = order.totalIncludingVat > 9000;
+            const approvals = order.approvals || {};
+            
+            function getSignatureText(approverKey) {
+                const status = approvals[approverKey];
+                if (status === 'approved') {
+                    return 'נחתם דיגיטלית';
+                } else if (status === 'rejected') {
+                    return 'נדחה';
+                }
+                return '';
+            }
+
+            printContent.innerHTML = `
+                <div class="print-section" style="text-align: center; margin-bottom: 15px;">
+                    <h2 style="margin: 0; padding: 0;">טופס הזמנת עבודה או ציוד</h2>
                 </div>
                 
-                <div style="margin-bottom: 2rem;">
-                    <h4>סטטוס אישורים</h4>
-                    <div style="display: flex; flex-direction: column; gap: 0.5rem; margin: 1rem 0;">
-                        ${approvals.map(approval => `
-                            <div style="display: flex; align-items: center; gap: 0.5rem;">
-                                <div class="approval-icon approval-${approval.status}" style="width: 16px; height: 16px;"></div>
-                                <span><strong>${approval.name}:</strong> ${approval.statusText}</span>
-                                ${userRole === 'approver' && approval.status === 'pending' && isUserApprover(approval.name) ? 
-                                    `<div style="margin-right: auto;">
-                                        <button class="btn btn-success" style="font-size: 0.8rem; padding: 0.3rem 0.8rem; margin-left: 0.5rem;" onclick="approveOrder('${orderId}', '${approval.key}')">אשר</button>
-                                        <button class="btn btn-danger" style="font-size: 0.8rem; padding: 0.3rem 0.8rem;" onclick="rejectOrder('${orderId}', '${approval.key}')">דחה</button>
-                                    </div>` : ''
+                <div class="print-section">
+                    <h3 style="text-align: center; margin: 8px 0; background-color: #f0f0f0; padding: 3px;">פרטי המזמין</h3>
+                    <table style="width: 100%; border-collapse: collapse; margin-bottom: 12px;">
+                        <tr>
+                            <td style="border: 1px solid #000; padding: 4px; width: 25%; font-weight: bold;">שם המזמין</td>
+                            <td style="border: 1px solid #000; padding: 4px; width: 25%;">${order.requesterName.split(' ')[0]}</td>
+                            <td style="border: 1px solid #000; padding: 4px; width: 25%; font-weight: bold;">תאריך הזמנה</td>
+                            <td style="border: 1px solid #000; padding: 4px; width: 25%;">${formatDate(order.orderDate)}</td>
+                        </tr>
+                        <tr>
+                            <td style="border: 1px solid #000; padding: 4px; font-weight: bold;">סעיף תקציבי</td>
+                            <td style="border: 1px solid #000; padding: 4px;" colspan="3">${order.department}</td>
+                        </tr>
+                        ${order.orderNotes ? `
+                        <tr>
+                            <td style="border: 1px solid #000; padding: 4px; font-weight: bold;">הערות</td>
+                            <td style="border: 1px solid #000; padding: 4px;" colspan="3">${order.orderNotes}</td>
+                        </tr>` : ''}
+                    </table>
+                </div>
+
+                <div class="print-section">
+                    <h3 style="text-align: center; margin: 8px 0; background-color: #f0f0f0; padding: 3px;">תיאור המוצר</h3>
+                    <table style="width: 100%; border-collapse: collapse; margin-bottom: 12px;">
+                        <tr>
+                            <th style="border: 1px solid #000; padding: 3px; background-color: #f0f0f0; font-size: 9px;">שם המוצר תיאור המוצר או העבודה</th>
+                            <th style="border: 1px solid #000; padding: 3px; background-color: #f0f0f0; font-size: 9px;">מטרה- תיאור הצורך</th>
+                            <th style="border: 1px solid #000; padding: 3px; background-color: #f0f0f0; font-size: 9px;">כמות קיימת במלאי</th>
+                            <th style="border: 1px solid #000; padding: 3px; background-color: #f0f0f0; font-size: 9px;">הערות</th>
+                            <th style="border: 1px solid #000; padding: 3px; background-color: #f0f0f0; font-size: 9px;">שם הספק</th>
+                            <th style="border: 1px solid #000; padding: 3px; background-color: #f0f0f0; font-size: 9px;">עלות בש"ח כולל מע"מ</th>
+                        </tr>
+                        ${order.items.map(item => `
+                            <tr>
+                                <td style="border: 1px solid #000; padding: 3px; font-size: 9px;">${item.productName}</td>
+                                <td style="border: 1px solid #000; padding: 3px; font-size: 9px;">${item.purpose}</td>
+                                <td style="border: 1px solid #000; padding: 3px; text-align: center; font-size: 9px;">${item.stockQuantity || 0}</td>
+                                <td style="border: 1px solid #000; padding: 3px; text-align: center; font-size: 9px;">-</td>
+                                <td style="border: 1px solid #000; padding: 3px; font-size: 9px;">${item.supplier}</td>
+                                <td style="border: 1px solid #000; padding: 3px; text-align: center; font-size: 9px;">₪${parseFloat(item.cost).toFixed(2)} (כולל מע"מ)</td>
+                            </tr>
+                        `).join('')}
+                    </table>
+                    
+                    <div style="text-align: left; margin: 8px 0; font-weight: bold; font-size: 11px;">
+                        <p style="margin: 2px 0;">סה"כ תשלום: ₪${order.totalIncludingVat.toFixed(2)}</p>
+                    </div>
+                </div>
+
+                <div class="print-section">
+                    <p style="margin: 10px 0; font-size: 10px;"><strong>במידה וההזמנה כוללת כמות גדולה של פריטים ניתן לצרף את דף ההזמנה</strong></p>
+                    
+                    <h3 style="text-align: center; margin: 8px 0; background-color: #f0f0f0; padding: 3px;">אישור ההזמנה (חתימות)</h3>
+                    <table style="width: 100%; border-collapse: collapse;">
+                        <tr>
+                            <th style="border: 1px solid #000; padding: 4px; background-color: #f0f0f0; width: 20%;">שם המאשר</th>
+                            <th style="border: 1px solid #000; padding: 4px; background-color: #f0f0f0; width: 25%;">הערות</th>
+                            <th style="border: 1px solid #000; padding: 4px; background-color: #f0f0f0; width: 15%;">תאריך</th>
+                            <th style="border: 1px solid #000; padding: 4px; background-color: #f0f0f0; width: 20%;">הגבלת הזמנה</th>
+                            <th style="border: 1px solid #000; padding: 4px; background-color: #f0f0f0; width: 20%;">חתימה</th>
+                        </tr>
+                        ${needsGadi ? `
+                        <tr>
+                            <td style="border: 1px solid #000; padding: 6px; height: 25px;">ד"ר גדי מדור</td>
+                            <td style="border: 1px solid #000; padding: 6px;"></td>
+                            <td style="border: 1px solid #000; padding: 6px;"></td>
+                            <td style="border: 1px solid #000; padding: 6px;"></td>
+                            <td style="border: 1px solid #000; padding: 6px; text-align: center;"><span class="signature-approved">${getSignatureText('gadi')}</span></td>
+                        </tr>` : ''}
+                        <tr>
+                            <td style="border: 1px solid #000; padding: 6px; height: 25px;">אמילי גולן</td>
+                            <td style="border: 1px solid #000; padding: 6px;"></td>
+                            <td style="border: 1px solid #000; padding: 6px;"></td>
+                            <td style="border: 1px solid #000; padding: 6px;"></td>
+                            <td style="border: 1px solid #000; padding: 6px; text-align: center;"><span class="signature-approved">${getSignatureText('emily')}</span></td>
+                        </tr>
+                        <tr>
+                            <td style="border: 1px solid #000; padding: 6px; height: 25px;">שולי ששון</td>
+                            <td style="border: 1px solid #000; padding: 6px;"></td>
+                            <td style="border: 1px solid #000; padding: 6px;"></td>
+                            <td style="border: 1px solid #000; padding: 6px;"></td>
+                            <td style="border: 1px solid #000; padding: 6px; text-align: center;"><span class="signature-approved">${getSignatureText('shuli')}</span></td>
+                        </tr>
+                    </table>
+                </div>
+            `;
+
+            setTimeout(() => {
+                window.print();
+            }, 200);
+        }
+
+        // Global functions for onclick events
+        window.openOrderDetails = async function(orderId) {
+            try {
+                const order = orders.find(o => o.id === orderId);
+                if (!order) return;
+                
+                const approvals = getApprovalStatus(order);
+                const status = getOrderStatus(order);
+                
+                let orderNotesSection = '';
+                if (order.orderNotes) {
+                    orderNotesSection = `
+                        <div style="background: var(--bg-tertiary); padding: 1rem; border-radius: 8px; margin: 1rem 0;">
+                            <h4>הערות להזמנה</h4>
+                            <p style="margin: 0.5rem 0;"><strong>${order.orderNotes}</strong></p>
+                        </div>
+                    `;
+                }
+                
+                let explanationsSection = '';
+                if (order.explanations || order.replies) {
+                    explanationsSection = '<div style="margin: 2rem 0;"><h4>תקשורת עם מאשרים</h4>';
+                    
+                    approvals.forEach(approval => {
+                        const explanation = order.explanations && order.explanations[approval.key];
+                        const reply = order.replies && order.replies[approval.key];
+                        
+                        if (explanation || reply) {
+                            explanationsSection += `<div style="margin: 1rem 0; padding: 1rem; background: var(--bg-tertiary); border-radius: 8px;">`;
+                            explanationsSection += `<h5>${approval.name}</h5>`;
+                            
+                            if (explanation) {
+                                explanationsSection += `
+                                    <div class="explanation-section">
+                                        <div class="explanation-text">הסבר דרוש:</div>
+                                        <p><strong>${explanation.text}</strong></p>
+                                        <small>נשלח ב: ${formatDate(explanation.timestamp)}</small>
+                                    </div>
+                                `;
+                            }
+                            
+                            if (reply) {
+                                explanationsSection += `
+                                    <div class="reply-section">
+                                        <div class="reply-text">תגובת המזמין:</div>
+                                        <p><strong>${reply.text}</strong></p>
+                                        <small>נשלח ב: ${formatDate(reply.timestamp)}</small>
+                                    </div>
+                                `;
+                            }
+                            
+                            explanationsSection += '</div>';
+                        }
+                    });
+                    explanationsSection += '</div>';
+                }
+                
+                document.getElementById('orderDetailsContent').innerHTML = `
+                    <div style="margin-bottom: 2rem;">
+                        <h3>פרטי הזמנה #${order.orderNumber || generateOrderNumber()}</h3>
+                        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; margin: 1rem 0;">
+                            <div><strong>מזמין:</strong> ${order.requesterName}</div>
+                            <div><strong>תאריך יצירה:</strong> ${formatDate(order.createdAt)}</div>
+                            <div><strong>תאריך הזמנה:</strong> ${formatDate(order.orderDate)}</div>
+                            <div><strong>סעיף תקציבי:</strong> ${order.department}</div>
+                            <div><strong>סטטוס:</strong> <span class="status-badge status-${status.class}">${status.text}</span></div>
+                        </div>
+                    </div>
+                    
+                    ${orderNotesSection}
+                    
+                    <div style="margin-bottom: 2rem;">
+                        <h4>סטטוס אישורים</h4>
+                        <div style="display: flex; flex-direction: column; gap: 0.5rem; margin: 1rem 0;">
+                            ${approvals.map(approval => {
+                                const explanation = order.explanations && order.explanations[approval.key];
+                                const reply = order.replies && order.replies[approval.key];
+                                
+                                let actionButtons = '';
+                                if (userRole === 'approver' && isUserApprover(approval.name)) {
+                                    if (approval.status === 'pending') {
+                                        actionButtons = `
+                                            <div style="margin-right: auto;">
+                                                <button class="btn btn-success" style="font-size: 0.8rem; padding: 0.3rem 0.8rem; margin-left: 0.5rem;" onclick="approveOrder('${orderId}', '${approval.key}')">אשר</button>
+                                                <button class="btn btn-warning" style="font-size: 0.8rem; padding: 0.3rem 0.8rem; margin-left: 0.5rem;" onclick="requestExplanation('${orderId}', '${approval.key}')">דרוש הסבר</button>
+                                                <button class="btn btn-danger" style="font-size: 0.8rem; padding: 0.3rem 0.8rem;" onclick="rejectOrder('${orderId}', '${approval.key}')">דחה</button>
+                                            </div>
+                                        `;
+                                    } else if (approval.status === 'explanation_received') {
+                                        actionButtons = `
+                                            <div style="margin-right: auto;">
+                                                <button class="btn btn-success" style="font-size: 0.8rem; padding: 0.3rem 0.8rem; margin-left: 0.5rem;" onclick="approveOrder('${orderId}', '${approval.key}')">אשר</button>
+                                                <button class="btn btn-danger" style="font-size: 0.8rem; padding: 0.3rem 0.8rem;" onclick="rejectOrder('${orderId}', '${approval.key}')">דחה</button>
+                                            </div>
+                                        `;
+                                    }
+                                } else if (userRole === 'requester' && approval.status === 'explanation_needed') {
+                                    actionButtons = `
+                                        <div style="margin-right: auto;">
+                                            <button class="btn btn-primary" style="font-size: 0.8rem; padding: 0.3rem 0.8rem;" onclick="replyToExplanation('${orderId}', '${approval.key}')">הגב</button>
+                                        </div>
+                                    `;
                                 }
+                                
+                                let explanationText = '';
+                                if (explanation) {
+                                    explanationText = `<br><small style="font-weight: bold; color: var(--explanation-needed);">${explanation.text}</small>`;
+                                }
+                                
+                                return `
+                                    <div style="display: flex; align-items: center; gap: 0.5rem;">
+                                        <div class="approval-icon approval-${approval.status}" style="width: 16px; height: 16px;"></div>
+                                        <span><strong>${approval.name}:</strong> ${approval.statusText}${explanationText}</span>
+                                        ${actionButtons}
+                                    </div>
+                                `;
+                            }).join('')}
+                        </div>
+                    </div>
+                    
+                    ${explanationsSection}
+                    
+                    <div style="margin-bottom: 2rem;">
+                        <h4>פריטי ההזמנה</h4>
+                        ${order.items.map((item, index) => `
+                            <div style="background: var(--bg-tertiary); padding: 1rem; border-radius: 8px; margin: 1rem 0;">
+                                <h5>פריט #${index + 1}</h5>
+                                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 0.5rem; margin: 0.5rem 0;">
+                                    <div><strong>מוצר:</strong> ${item.productName}</div>
+                                    <div><strong>ספק:</strong> ${item.supplier}</div>
+                                    <div><strong>עלות:</strong> ₪${parseFloat(item.cost).toFixed(2)} (כולל מע"מ)</div>
+                                </div>
+                                <div style="margin: 0.5rem 0;">
+                                    <strong>מטרה:</strong> ${item.purpose}
+                                </div>
+                                <div>
+                                    <strong>כמות במלאי:</strong> ${item.stockQuantity || 0}
+                                </div>
                             </div>
                         `).join('')}
                     </div>
-                </div>
-                
-                <div style="margin-bottom: 2rem;">
-                    <h4>פריטי ההזמנה</h4>
-                    ${order.items.map((item, index) => `
-                        <div style="background: var(--bg-tertiary); padding: 1rem; border-radius: 8px; margin: 1rem 0;">
-                            <h5>פריט #${index + 1}</h5>
-                            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 0.5rem; margin: 0.5rem 0;">
-                                <div><strong>מוצר:</strong> ${item.productName}</div>
-                                <div><strong>ספק:</strong> ${item.supplier}</div>
-                                <div><strong>עלות:</strong> ₪${parseFloat(item.cost).toFixed(2)} ${item.vatIncluded === 'true' ? '(כולל מע"מ)' : '(לא כולל מע"מ)'}</div>
-                                <div><strong>תאריך נדרש:</strong> ${formatDate(item.requiredDate)}</div>
-                            </div>
-                            <div style="margin: 0.5rem 0;">
-                                <strong>מטרה:</strong> ${item.purpose}
-                            </div>
-                            <div>
-                                <strong>כמות במלאי:</strong> ${item.stockQuantity || 0}
-                            </div>
+                    
+                    <div style="background: var(--bg-tertiary); padding: 1rem; border-radius: 8px;">
+                        <h4>סיכום כספי</h4>
+                        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; margin: 1rem 0;">
+                            <div><strong>סה"כ לא כולל מע"מ:</strong> ₪${order.totalExcludingVat.toFixed(2)}</div>
+                            <div><strong>סה"כ כולל מע"מ:</strong> ₪${order.totalIncludingVat.toFixed(2)}</div>
                         </div>
-                    `).join('')}
-                </div>
-                
-                <div style="background: var(--bg-tertiary); padding: 1rem; border-radius: 8px;">
-                    <h4>סיכום כספי</h4>
-                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; margin: 1rem 0;">
-                        <div><strong>סה"כ לא כולל מע"מ:</strong> ₪${order.totalExcludingVat.toFixed(2)}</div>
-                        <div><strong>סה"כ כולל מע"מ:</strong> ₪${order.totalIncludingVat.toFixed(2)}</div>
                     </div>
-                </div>
-            `;
-            
-            window.currentOrderForPrint = order;
-            
-            orderDetailsModal.classList.add('active');
-            
-        } catch (error) {
-            console.error('Error loading order details:', error);
-            alert('שגיאה בטעינת פרטי ההזמנה');
-        }
-    };
+                `;
+                
+                window.currentOrderForPrint = order;
+                orderDetailsModal.classList.add('active');
+                
+            } catch (error) {
+                console.error('Error loading order details:', error);
+                alert('שגיאה בטעינת פרטי ההזמנה');
+            }
+        };
 
-    window.uploadReceipt = function(orderId) {
-        const fileInput = document.createElement('input');
-        fileInput.type = 'file';
-        fileInput.accept = 'image/*,.pdf';
-        fileInput.style.display = 'none';
-        
-        fileInput.addEventListener('change', async (e) => {
-            const file = e.target.files[0];
-            if (!file) return;
-            
-            if (file.size > 10 * 1024 * 1024) {
-                alert('גודל הקובץ חייב להיות קטן מ-10MB');
-                return;
+        window.requestExplanation = function(orderId, approverKey) {
+            currentOrderId = orderId;
+            currentApproverKey = approverKey;
+            explanationModal.classList.add('active');
+        };
+
+        window.replyToExplanation = function(orderId, approverKey) {
+            currentOrderId = orderId;
+            currentApproverKey = approverKey;
+            replyModal.classList.add('active');
+        };
+
+        window.approveOrder = async function(orderId, approver) {
+            if (confirm(`האם אתה בטוח שברצונך לאשר הזמנה זו?`)) {
+                try {
+                    const orderRef = ref(database, `orders/${orderId}/approvals/${approver}`);
+                    await set(orderRef, 'approved');
+                    alert('ההזמנה אושרה בהצלחה!');
+                    closeOrderDetailsModal();
+                } catch (error) {
+                    console.error('Error approving order:', error);
+                    alert('שגיאה באישור ההזמנה');
+                }
             }
-            
-            const validTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif', 'application/pdf'];
-            if (!validTypes.includes(file.type)) {
-                alert('סוג קובץ לא נתמך. אנא בחר תמונה או קובץ PDF');
-                return;
+        };
+
+        window.rejectOrder = async function(orderId, approver) {
+            if (confirm(`האם אתה בטוח שברצונך לדחות הזמנה זו?`)) {
+                try {
+                    const orderRef = ref(database, `orders/${orderId}/approvals/${approver}`);
+                    await set(orderRef, 'rejected');
+                    alert('ההזמנה נדחתה');
+                    closeOrderDetailsModal();
+                } catch (error) {
+                    console.error('Error rejecting order:', error);
+                    alert('שגיאה בדחיית ההזמנה');
+                }
             }
-            
+        };
+
+        // Receipt and file functions
+        async function uploadReceiptFile(orderId, file) {
             try {
-                await uploadReceiptFile(orderId, file);
+                console.log('Uploading receipt for order:', orderId);
+                
+                const timestamp = new Date().getTime();
+                const fileExtension = file.name.split('.').pop();
+                const fileName = `receipts/${orderId}_${timestamp}.${fileExtension}`;
+                const receiptRef = storageRef(storage, fileName);
+                
+                const snapshot = await uploadBytes(receiptRef, file);
+                console.log('File uploaded successfully');
+                
+                const downloadURL = await getDownloadURL(snapshot.ref);
+                console.log('Download URL:', downloadURL);
+                
+                const orderRef = ref(database, `orders/${orderId}`);
+                await update(orderRef, {
+                    receiptUploaded: true,
+                    receiptURL: downloadURL,
+                    receiptFileName: file.name,
+                    receiptUploadDate: new Date().toISOString()
+                });
+                
+                console.log('Order updated with receipt info');
+                alert('הקבלה הועלתה בהצלחה!');
+                
+                return downloadURL;
             } catch (error) {
                 console.error('Error uploading receipt:', error);
-            }
-        });
-        
-        document.body.appendChild(fileInput);
-        fileInput.click();
-        document.body.removeChild(fileInput);
-    };
-
-    window.approveOrder = async function(orderId, approver) {
-        if (confirm(`האם אתה בטוח שברצונך לאשר הזמנה זו?`)) {
-            try {
-                const orderRef = ref(database, `orders/${orderId}/approvals/${approver}`);
-                await set(orderRef, 'approved');
-                alert('ההזמנה אושרה בהצלחה!');
-                closeOrderDetailsModal();
-            } catch (error) {
-                console.error('Error approving order:', error);
-                alert('שגיאה באישור ההזמנה');
+                alert('שגיאה בהעלאת הקבלה: ' + error.message);
+                throw error;
             }
         }
-    };
 
-    window.rejectOrder = async function(orderId, approver) {
-        if (confirm(`האם אתה בטוח שברצונך לדחות הזמנה זו?`)) {
+        function downloadReceipt(receiptURL, fileName) {
             try {
-                const orderRef = ref(database, `orders/${orderId}/approvals/${approver}`);
-                await set(orderRef, 'rejected');
-                alert('ההזמנה נדחתה');
-                closeOrderDetailsModal();
+                window.open(receiptURL, '_blank');
+                console.log('Download initiated for:', fileName);
             } catch (error) {
-                console.error('Error rejecting order:', error);
-                alert('שגיאה בדחיית ההזמנה');
+                console.error('Error downloading receipt:', error);
+                window.open(receiptURL, '_blank');
             }
         }
-    };
 
-    function isUserApprover(approverName) {
-        if (!userData.approverType) return false;
-        
-        const approverMap = {
-            'אמילי': 'emily',
-            'שולי': 'shuli',
-            'גדי': 'gadi'
+        async function viewReceipt(orderId) {
+            try {
+                const order = orders.find(o => o.id === orderId);
+                if (!order || !order.receiptURL) {
+                    alert('לא נמצאה קבלה עבור הזמנה זו');
+                    return;
+                }
+                
+                const isRequester = userRole === 'requester';
+                
+                document.getElementById('receiptModalTitle').textContent = isRequester ? 'צפייה/עריכת קבלה' : 'צפייה בקבלה';
+                
+                const receiptContent = document.getElementById('receiptContent');
+                
+                const isPDF = order.receiptFileName && order.receiptFileName.toLowerCase().endsWith('.pdf');
+                
+                let contentHTML = '';
+                
+                if (isPDF) {
+                    contentHTML = `
+                        <div class="receipt-viewer">
+                            <div style="text-align: center; padding: 2rem; background: var(--bg-tertiary); border-radius: 8px; margin-bottom: 1rem;">
+                                <h3>📄 קובץ PDF</h3>
+                                <p style="margin: 1rem 0; color: var(--text-secondary);">${order.receiptFileName}</p>
+                                <button class="btn btn-primary" onclick="window.open('${order.receiptURL}', '_blank')" style="margin: 0.5rem;">
+                                    📖 פתח PDF בכרטיסייה חדשה
+                                </button>
+                            </div>
+                        </div>
+                    `;
+                } else {
+                    contentHTML = `
+                        <div class="receipt-viewer">
+                            <img src="${order.receiptURL}" alt="קבלה" class="receipt-image" style="max-width: 100%; height: auto;">
+                            <p style="margin-top: 1rem; color: var(--text-secondary);">
+                                ${order.receiptFileName || 'קבלה'}
+                            </p>
+                        </div>
+                    `;
+                }
+                
+                if (isRequester) {
+                    contentHTML += `
+                        <div class="file-upload">
+                            <hr style="margin: 2rem 0;">
+                            <h4 style="margin-bottom: 1rem;">החלפת קבלה</h4>
+                            <input type="file" id="newReceiptFile" class="file-input" accept="image/*,.pdf">
+                            <label for="newReceiptFile" class="file-upload-btn">
+                                📁 בחר קבלה חדשה
+                            </label>
+                            <div style="margin-top: 1rem;">
+                                <button class="btn btn-primary" id="replaceReceiptBtn" style="display: none;">
+                                    🔄 החלף קבלה
+                                </button>
+                            </div>
+                        </div>
+                    `;
+                } else {
+                    contentHTML += `
+                        <div style="margin-top: 1rem; padding: 1rem; background: var(--bg-tertiary); border-radius: 8px; text-align: center;">
+                            <p style="color: var(--text-secondary);">
+                                הקבלה הועלתה בתאריך: ${formatDate(order.receiptUploadDate)}
+                            </p>
+                        </div>
+                    `;
+                }
+                
+                receiptContent.innerHTML = contentHTML;
+                
+                if (isRequester) {
+                    const fileInput = document.getElementById('newReceiptFile');
+                    const replaceBtn = document.getElementById('replaceReceiptBtn');
+                    
+                    fileInput.addEventListener('change', (e) => {
+                        if (e.target.files.length > 0) {
+                            replaceBtn.style.display = 'block';
+                            replaceBtn.onclick = async () => {
+                                try {
+                                    replaceBtn.disabled = true;
+                                    replaceBtn.innerHTML = '<div class="loading"></div> מעלה...';
+                                    
+                                    const newFile = e.target.files[0];
+                                    await uploadReceiptFile(orderId, newFile);
+                                    
+                                    closeReceiptModal();
+                                } catch (error) {
+                                    replaceBtn.disabled = false;
+                                    replaceBtn.innerHTML = '🔄 החלף קבלה';
+                                }
+                            };
+                        } else {
+                            replaceBtn.style.display = 'none';
+                        }
+                    });
+                }
+                
+                receiptModal.classList.add('active');
+                
+            } catch (error) {
+                console.error('Error viewing receipt:', error);
+                alert('שגיאה בטעינת הקבלה');
+            }
+        }
+
+        window.uploadReceipt = function(orderId) {
+            const fileInput = document.createElement('input');
+            fileInput.type = 'file';
+            fileInput.accept = 'image/*,.pdf';
+            fileInput.style.display = 'none';
+            
+            fileInput.addEventListener('change', async (e) => {
+                const file = e.target.files[0];
+                if (!file) return;
+                
+                if (file.size > 10 * 1024 * 1024) {
+                    alert('גודל הקובץ חייב להיות קטן מ-10MB');
+                    return;
+                }
+                
+                const validTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif', 'application/pdf'];
+                if (!validTypes.includes(file.type)) {
+                    alert('סוג קובץ לא נתמך. אנא בחר תמונה או קובץ PDF');
+                    return;
+                }
+                
+                try {
+                    await uploadReceiptFile(orderId, file);
+                } catch (error) {
+                    console.error('Error uploading receipt:', error);
+                }
+            });
+            
+            document.body.appendChild(fileInput);
+            fileInput.click();
+            document.body.removeChild(fileInput);
         };
-        
-        return approverMap[approverName] === userData.approverType;
-    }
 
-    function formatDate(dateString) {
-        const date = new Date(dateString);
-        return date.toLocaleDateString('he-IL');
-    }
+        // Utility functions
+        function isUserApprover(approverName) {
+            if (!userData.approverType) return false;
+            
+            const approverMap = {
+                'אמילי': 'emily',
+                'שולי': 'shuli',
+                'גדי': 'gadi'
+            };
+            
+            return approverMap[approverName] === userData.approverType;
+        }
 
-    async function handleLogout() {
-        if (confirm('האם אתה בטוח שברצונך להתנתק?')) {
-            try {
-                await signOut(auth);
-                window.location.href = 'index.html';
-            } catch (error) {
-                console.error('Error signing out:', error);
+        function formatDate(dateString) {
+            const date = new Date(dateString);
+            return date.toLocaleDateString('he-IL');
+        }
+
+        async function handleLogout() {
+            if (confirm('האם אתה בטוח שברצונך להתנתק?')) {
+                try {
+                    await signOut(auth);
+                    window.location.href = 'index.html';
+                } catch (error) {
+                    console.error('Error signing out:', error);
+                }
             }
         }
-    }
 
-    initApp();
+        // Initialize app
+        initApp();
 
-    setTimeout(() => {
-        const initialCostInput = document.querySelector('.cost-input');
-        const initialVatSelect = document.querySelector('.vat-select');
+        // Setup initial event listeners for cost calculation
+        setTimeout(() => {
+            const initialCostInput = document.querySelector('.cost-input');
+            
+            if (initialCostInput) {
+                initialCostInput.addEventListener('input', updateOrderSummary);
+                console.log('Initial cost input event listener added');
+            }
+        }, 500);
+
+        // Make functions globally available
+        window.removeOrderItem = removeOrderItem;
+        window.viewReceipt = viewReceipt;
+        window.downloadReceipt = downloadReceipt;
         
-        if (initialCostInput) {
-            initialCostInput.addEventListener('input', updateOrderSummary);
-            console.log('Initial cost input event listener added');
-        }
-        if (initialVatSelect) {
-            initialVatSelect.addEventListener('change', updateOrderSummary);
-            console.log('Initial VAT select event listener added');
-        }
-    }, 500);
-
-    // Make functions globally available
-    window.removeOrderItem = removeOrderItem;
-    window.viewReceipt = viewReceipt;
-    window.downloadReceipt = downloadReceipt;
-</script>
+    </script>
 </body>
 </html>
-
