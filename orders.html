@@ -26,7 +26,7 @@
             --warning: #f59e0b;
             --error: #ef4444;
             --pending: #6b7280;
-            --explanation-needed: #f59e0b;
+            --explanation-needed: #d4755d;
             --explanation-received: #3b82f6;
         }
 
@@ -45,7 +45,7 @@
             --warning: #d97706;
             --error: #dc2626;
             --pending: #6b7280;
-            --explanation-needed: #d97706;
+            --explanation-needed: #d9cb06;
             --explanation-received: #3b82f6;
         }
 
@@ -266,6 +266,7 @@
         .filter-buttons {
             display: flex;
             gap: 0.5rem;
+            flex-wrap: wrap;
         }
 
         .filter-btn {
@@ -288,9 +289,54 @@
             border-color: var(--accent-primary);
         }
 
+        .search-filters {
+            background: var(--bg-tertiary);
+            padding: 1.5rem;
+            border-bottom: 1px solid var(--border-color);
+            display: none;
+        }
+
+        .search-filters.active {
+            display: block;
+        }
+
+        .search-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .search-item {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .search-item label {
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            color: var(--text-primary);
+        }
+
+        .search-item input,
+        .search-item select {
+            padding: 0.5rem;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            background: var(--bg-secondary);
+            color: var(--text-primary);
+        }
+
+        .search-actions {
+            display: flex;
+            gap: 1rem;
+            justify-content: flex-end;
+        }
+
         .orders-table {
             width: 100%;
             border-collapse: collapse;
+            overflow-x: auto;
         }
 
         .orders-table th,
@@ -298,12 +344,15 @@
             padding: 1rem;
             text-align: right;
             border-bottom: 1px solid var(--border-color);
+            white-space: nowrap;
         }
 
         .orders-table th {
             background: var(--bg-tertiary);
             font-weight: 600;
             color: var(--text-secondary);
+            position: sticky;
+            top: 0;
         }
 
         .order-row {
@@ -344,8 +393,31 @@
         }
 
         .status-explanation-needed {
-            background: #fef3c7;
+            background: #eeea0b;
             color: var(--explanation-needed);
+        }
+
+        .billing-badge {
+            padding: 0.2rem 0.6rem;
+            border-radius: 16px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            display: inline-block;
+        }
+
+        .billing-onetime {
+            background: #e0f2fe;
+            color: #0277bd;
+        }
+
+        .billing-monthly {
+            background: #fff3e0;
+            color: #ef6c00;
+        }
+
+        .billing-yearly {
+            background: #f3e5f5;
+            color: #7b1fa2;
         }
 
         .approval-status {
@@ -433,6 +505,15 @@
 
         .view-receipt-btn:hover {
             background: #d97706;
+        }
+
+        .manage-receipts-btn {
+            background: var(--accent-primary);
+            color: white;
+        }
+
+        .manage-receipts-btn:hover {
+            background: var(--accent-hover);
         }
 
         .modal {
@@ -572,6 +653,233 @@
             transform: translateY(-2px);
         }
 
+        .billing-section {
+            background: var(--bg-tertiary);
+            padding: 1.5rem;
+            border-radius: 12px;
+            margin: 1.5rem 0;
+            border: 1px solid var(--border-color);
+        }
+
+        .billing-options {
+            display: flex;
+            gap: 2rem;
+            margin: 1rem 0;
+        }
+
+        .billing-radio {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            cursor: pointer;
+        }
+
+        .billing-radio input[type="radio"] {
+            margin: 0;
+        }
+
+        .billing-sub-options {
+            margin-left: 2rem;
+            margin-top: 1rem;
+            display: none;
+        }
+
+        .billing-sub-options.active {
+            display: block;
+        }
+
+        .billing-schedule {
+            margin-top: 1rem;
+            display: none;
+        }
+
+        .billing-schedule.active {
+            display: block;
+        }
+
+        .receipts-list {
+            margin-top: 1rem;
+        }
+
+        .receipt-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            margin-bottom: 0.5rem;
+        }
+
+        .receipt-info {
+            flex-grow: 1;
+        }
+
+        .receipt-actions {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .form-input,
+        .form-select,
+        .form-textarea {
+            width: 100%;
+            padding: 0.8rem;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .form-input:focus,
+        .form-select:focus,
+        .form-textarea:focus {
+            outline: none;
+            border-color: var(--accent-primary);
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+        }
+
+        .form-textarea {
+            resize: vertical;
+            min-height: 100px;
+        }
+
+        .btn {
+            padding: 0.8rem 1.5rem;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .btn-primary {
+            background: var(--accent-primary);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: var(--accent-hover);
+            transform: translateY(-2px);
+        }
+
+        .btn-success {
+            background: var(--success);
+            color: white;
+        }
+
+        .btn-success:hover {
+            background: #059669;
+            transform: translateY(-2px);
+        }
+
+        .btn-danger {
+            background: var(--error);
+            color: white;
+        }
+
+        .btn-danger:hover {
+            background: #dc2626;
+            transform: translateY(-2px);
+        }
+
+        .btn-warning {
+            background: var(--warning);
+            color: white;
+        }
+
+        .btn-warning:hover {
+            background: #d97706;
+            transform: translateY(-2px);
+        }
+
+        .btn-secondary {
+            background: var(--bg-tertiary);
+            color: var(--text-primary);
+            border: 1px solid var(--border-color);
+        }
+
+        .btn-secondary:hover {
+            background: var(--border-color);
+        }
+
+        .btn-small {
+            padding: 0.3rem 0.8rem;
+            font-size: 0.8rem;
+        }
+
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 2px solid var(--border-color);
+            border-top: 2px solid var(--accent-primary);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 3rem;
+            color: var(--text-secondary);
+        }
+
+        .empty-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+
+        .explanation-section {
+            background: var(--bg-tertiary);
+            padding: 1rem;
+            border-radius: 8px;
+            margin: 1rem 0;
+            border-left: 4px solid var(--explanation-needed);
+        }
+
+        .explanation-text {
+            font-weight: bold;
+            color: var(--text-primary);
+            margin-bottom: 0.5rem;
+        }
+
+        .reply-section {
+            background: var(--bg-primary);
+            padding: 1rem;
+            border-radius: 8px;
+            margin-top: 1rem;
+            border-left: 4px solid var(--explanation-received);
+        }
+
+        .reply-text {
+            font-weight: bold;
+            color: var(--text-primary);
+            margin-bottom: 0.5rem;
+        }
+
         .print-order {
             display: none;
         }
@@ -675,160 +983,6 @@
             }
         }
 
-        .form-group {
-            margin-bottom: 1.5rem;
-        }
-
-        .form-label {
-            display: block;
-            margin-bottom: 0.5rem;
-            font-weight: 600;
-            color: var(--text-primary);
-        }
-
-        .form-input,
-        .form-select,
-        .form-textarea {
-            width: 100%;
-            padding: 0.8rem;
-            border: 1px solid var(--border-color);
-            border-radius: 8px;
-            background: var(--bg-primary);
-            color: var(--text-primary);
-            font-size: 1rem;
-            transition: all 0.3s ease;
-        }
-
-        .form-input:focus,
-        .form-select:focus,
-        .form-textarea:focus {
-            outline: none;
-            border-color: var(--accent-primary);
-            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
-        }
-
-        .form-textarea {
-            resize: vertical;
-            min-height: 100px;
-        }
-
-        .btn {
-            padding: 0.8rem 1.5rem;
-            border: none;
-            border-radius: 8px;
-            cursor: pointer;
-            font-size: 1rem;
-            font-weight: 600;
-            transition: all 0.3s ease;
-            display: inline-flex;
-            align-items: center;
-            gap: 0.5rem;
-        }
-
-        .btn-primary {
-            background: var(--accent-primary);
-            color: white;
-        }
-
-        .btn-primary:hover {
-            background: var(--accent-hover);
-            transform: translateY(-2px);
-        }
-
-        .btn-success {
-            background: var(--success);
-            color: white;
-        }
-
-        .btn-success:hover {
-            background: #059669;
-            transform: translateY(-2px);
-        }
-
-        .btn-danger {
-            background: var(--error);
-            color: white;
-        }
-
-        .btn-danger:hover {
-            background: #dc2626;
-            transform: translateY(-2px);
-        }
-
-        .btn-warning {
-            background: var(--warning);
-            color: white;
-        }
-
-        .btn-warning:hover {
-            background: #d97706;
-            transform: translateY(-2px);
-        }
-
-        .btn-secondary {
-            background: var(--bg-tertiary);
-            color: var(--text-primary);
-            border: 1px solid var(--border-color);
-        }
-
-        .btn-secondary:hover {
-            background: var(--border-color);
-        }
-
-        .loading {
-            display: inline-block;
-            width: 20px;
-            height: 20px;
-            border: 2px solid var(--border-color);
-            border-top: 2px solid var(--accent-primary);
-            border-radius: 50%;
-            animation: spin 1s linear infinite;
-        }
-
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-
-        .empty-state {
-            text-align: center;
-            padding: 3rem;
-            color: var(--text-secondary);
-        }
-
-        .empty-icon {
-            font-size: 3rem;
-            margin-bottom: 1rem;
-        }
-
-        .explanation-section {
-            background: var(--bg-tertiary);
-            padding: 1rem;
-            border-radius: 8px;
-            margin: 1rem 0;
-            border-left: 4px solid var(--explanation-needed);
-        }
-
-        .explanation-text {
-            font-weight: bold;
-            color: var(--text-primary);
-            margin-bottom: 0.5rem;
-        }
-
-        .reply-section {
-            background: var(--bg-primary);
-            padding: 1rem;
-            border-radius: 8px;
-            margin-top: 1rem;
-            border-left: 4px solid var(--explanation-received);
-        }
-
-        .reply-text {
-            font-weight: bold;
-            color: var(--text-primary);
-            margin-bottom: 0.5rem;
-        }
-
         @media (max-width: 768px) {
             .header-content {
                 flex-direction: column;
@@ -850,6 +1004,15 @@
             .filter-buttons {
                 flex-wrap: wrap;
             }
+
+            .search-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .billing-options {
+                flex-direction: column;
+                gap: 1rem;
+            }
         }
 
         .fade-in {
@@ -859,6 +1022,22 @@
         @keyframes fadeIn {
             from { opacity: 0; transform: translateY(20px); }
             to { opacity: 1; transform: translateY(0); }
+        }
+
+        .toggle-search-btn {
+            background: var(--accent-primary);
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+            margin-left: 1rem;
+        }
+
+        .toggle-search-btn:hover {
+            background: var(--accent-hover);
         }
     </style>
 </head>
@@ -902,26 +1081,86 @@
                     <button class="filter-btn" data-filter="pending">בהמתנה</button>
                     <button class="filter-btn" data-filter="approved">מאושר</button>
                     <button class="filter-btn" data-filter="rejected">נדחה</button>
+                    <button class="toggle-search-btn" id="toggleSearchBtn">🔍 חיפוש מתקדם</button>
                 </div>
             </div>
+            
+            <!-- Search and filter section for approvers -->
+            <div class="search-filters" id="searchFilters">
+                <div class="search-grid">
+                    <div class="search-item">
+                        <label>חיפוש כללי</label>
+                        <input type="text" id="generalSearch" placeholder="חפש לפי שם מוצר או מספר הזמנה...">
+                    </div>
+                    <div class="search-item">
+                        <label>שם המזמין</label>
+                        <input type="text" id="requesterSearch" placeholder="שם המזמין...">
+                    </div>
+                    <div class="search-item">
+                        <label>סעיף תקציבי</label>
+                        <select id="departmentFilter">
+                            <option value="">כל המחלקות</option>
+                            <option value="תכנית בוקר">תכנית בוקר</option>
+                            <option value="מחוננים">מחוננים</option>
+                            <option value="ניהול">ניהול</option>
+                            <option value="IT">מחלקת מחשבים</option>
+                            <option value="תחזוקה">תחזוקה</option>
+                            <option value="אחר">אחר</option>
+                        </select>
+                    </div>
+                    <div class="search-item">
+                        <label>סכום מינימלי</label>
+                        <input type="number" id="minAmount" placeholder="₪0" step="0.01">
+                    </div>
+                    <div class="search-item">
+                        <label>סכום מקסימלי</label>
+                        <input type="number" id="maxAmount" placeholder="₪999999" step="0.01">
+                    </div>
+                    <div class="search-item">
+                        <label>תאריך מ-</label>
+                        <input type="date" id="fromDate">
+                    </div>
+                    <div class="search-item">
+                        <label>תאריך עד</label>
+                        <input type="date" id="toDate">
+                    </div>
+                    <div class="search-item">
+                        <label>סוג חיוב</label>
+                        <select id="billingTypeFilter">
+                            <option value="">כל סוגי החיוב</option>
+                            <option value="onetime">חד פעמי</option>
+                            <option value="monthly">חודשי</option>
+                            <option value="yearly">שנתי</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="search-actions">
+                    <button class="btn btn-secondary btn-small" id="clearFiltersBtn">נקה סינון</button>
+                    <button class="btn btn-primary btn-small" id="applyFiltersBtn">החל סינון</button>
+                </div>
+            </div>
+
             <div id="ordersTableContent">
-                <table class="orders-table">
-                    <thead>
-                        <tr>
-                            <th>תאריך יצירה</th>
-                            <th>מספר הזמנה</th>
-                            <th>תאריך הזמנה</th>
-                            <th>סעיף תקציבי (מחלקה)</th>
-                            <th>סה"כ</th>
-                            <th>סטטוס</th>
-                            <th>שלח מייל</th>
-                            <th>אישורים</th>
-                            <th>פעולות</th>
-                        </tr>
-                    </thead>
-                    <tbody id="ordersTableBody">
-                    </tbody>
-                </table>
+                <div style="overflow-x: auto;">
+                    <table class="orders-table">
+<thead>
+    <tr>
+        <th>תאריך</th>
+        <th id="requesterNameHeader" style="display: none;">שם</th>
+        <th>הזמנה מס</th>
+        <th>סעיף תקציבי</th>
+        <th>חיוב</th>
+        <th>סה"כ</th>
+        <th>סטטוס</th>
+        <th id="emailColumnHeader">שלח מייל</th>
+        <th>אישורים</th>
+        <th>פעולות</th>
+    </tr>
+</thead>
+                        <tbody id="ordersTableBody">
+                        </tbody>
+                    </table>
+                </div>
                 <div class="empty-state" id="emptyState" style="display: none;">
                     <div class="empty-icon">📋</div>
                     <h3>אין הזמנות להצגה</h3>
@@ -944,11 +1183,11 @@
                     <input type="text" class="form-input" id="requesterName" readonly>
                 </div>
                 <div class="form-group">
-                    <label class="form-label">תאריך הזמנה</label>
+                    <label class="form-label">תאריך</label>
                     <input type="date" class="form-input" id="orderDate" required>
                 </div>
                 <div class="form-group">
-                    <label class="form-label">סעיף תקציבי (מחלקה)</label>
+                    <label class="form-label">סעיף תקציבי</label>
                     <select class="form-select" id="department" required>
                         <option value="">בחר מחלקה</option>
                         <option value="תכנית בוקר">תכנית בוקר</option>
@@ -959,6 +1198,47 @@
                         <option value="אחר">אחר</option>
                     </select>
                 </div>
+
+                <!-- Billing Section -->
+                <div class="billing-section">
+                    <h4>סוג חיוב</h4>
+                    <div class="billing-options">
+                        <label class="billing-radio">
+                            <input type="radio" name="billingType" value="onetime" checked>
+                            <span>חיוב חד פעמי</span>
+                        </label>
+                        <label class="billing-radio">
+                            <input type="radio" name="billingType" value="recurring">
+                            <span>חיוב רב פעמי</span>
+                        </label>
+                    </div>
+                    
+                    <div class="billing-sub-options" id="recurringOptions">
+                        <h5>תדירות חיוב</h5>
+                        <div class="billing-options">
+                            <label class="billing-radio">
+                                <input type="radio" name="recurringType" value="monthly">
+                                <span>חודשי</span>
+                            </label>
+                            <label class="billing-radio">
+                                <input type="radio" name="recurringType" value="yearly">
+                                <span>שנתי</span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="billing-schedule" id="billingSchedule">
+                        <div class="form-group">
+                            <label class="form-label">מועד חיוב ראשון</label>
+                            <input type="date" class="form-input" id="firstBillingDate">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">מספר חיובים (אופציונלי)</label>
+                            <input type="number" class="form-input" id="billingCount" min="1" placeholder="השאר ריק לחיוב רציף">
+                        </div>
+                    </div>
+                </div>
+
                 <div class="form-group">
                     <label class="form-label">הערות להזמנה (אופציונלי)</label>
                     <textarea class="form-textarea" id="orderNotes" placeholder="הוסף הערות למאשרים אם נדרש..."></textarea>
@@ -1041,6 +1321,40 @@
                 <button class="modal-close" id="closeReceiptModal">&times;</button>
             </div>
             <div id="receiptContent">
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal for managing multiple receipts -->
+    <div class="modal" id="receiptsManagementModal">
+        <div class="modal-content receipt-modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title">ניהול קבלות</h2>
+                <button class="modal-close" id="closeReceiptsManagementModal">&times;</button>
+            </div>
+            <div id="receiptsManagementContent">
+                <div class="form-group">
+                    <label class="form-label">תאריך חיוב</label>
+                    <input type="date" class="form-input" id="receiptDate" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">הערות (אופציונלי)</label>
+                    <input type="text" class="form-input" id="receiptNotes" placeholder="הערות על החיוב...">
+                </div>
+                <div class="file-upload">
+                    <input type="file" id="newMultipleReceiptFile" class="file-input" accept="image/*,.pdf">
+                    <label for="newMultipleReceiptFile" class="file-upload-btn">
+                        📁 בחר קבלה
+                    </label>
+                    <button class="btn btn-primary" id="addReceiptBtn" style="margin-left: 1rem; display: none;">
+                        ➕ הוסף קבלה
+                    </button>
+                </div>
+                
+                <div class="receipts-list" id="receiptsList">
+                    <h4>קבלות קיימות</h4>
+                    <div id="existingReceipts"></div>
+                </div>
             </div>
         </div>
     </div>
@@ -1141,6 +1455,7 @@
         let userRole = null;
         let userData = null;
         let orders = [];
+        let filteredOrders = [];
         let itemCounter = 0;
         let currentOrderId = null;
         let currentApproverKey = null;
@@ -1170,10 +1485,14 @@
         const newOrderModal = document.getElementById('newOrderModal');
         const orderDetailsModal = document.getElementById('orderDetailsModal');
         const receiptModal = document.getElementById('receiptModal');
+        const receiptsManagementModal = document.getElementById('receiptsManagementModal');
         const explanationModal = document.getElementById('explanationModal');
         const replyModal = document.getElementById('replyModal');
         const reminderModal = document.getElementById('reminderModal');
         const ordersTableContainer = document.getElementById('ordersTableContainer');
+        const searchFilters = document.getElementById('searchFilters');
+        const toggleSearchBtn = document.getElementById('toggleSearchBtn');
+        const requesterNameHeader = document.getElementById('requesterNameHeader');
 
         function generateOrderNumber() {
             return Math.floor(100000 + Math.random() * 900000);
@@ -1306,6 +1625,9 @@
             welcomeSubtitle.textContent = 'כאן תוכל ליצור הזמנות חדשות ולעקוב אחר הסטטוס שלהן';
             tableTitle.textContent = 'ההזמנות שלי';
 
+            // Hide search button for requesters
+            toggleSearchBtn.style.display = 'none';
+
             actionButtons.innerHTML = `
                 <div class="action-card" id="newOrderCard">
                     <div class="action-icon">➕</div>
@@ -1320,39 +1642,49 @@
                     newOrderCard.addEventListener('click', openNewOrderModal);
                 }
             }, 100);
+            
         }
 
-        function setupApproverUI() {
-            const firstName = userData.name.split(' ')[0];
-            welcomeTitle.textContent = `שלום ${firstName}, ברוך הבא למערכת ההזמנות`;
-            welcomeSubtitle.textContent = 'כאן תוכל לאשר הזמנות ולנהל את תהליך האישורים';
-            tableTitle.textContent = 'הזמנות לאישור';
+function setupApproverUI() {
+    const firstName = userData.name.split(' ')[0];
+    welcomeTitle.textContent = `שלום ${firstName}, ברוך הבא למערכת ההזמנות`;
+    welcomeSubtitle.textContent = 'כאן תוכל לאשר הזמנות ולנהל את תהליך האישורים';
+    tableTitle.textContent = 'הזמנות לאישור';
 
-            actionButtons.innerHTML = `
-                <div class="action-card" id="pendingApprovalsCard">
-                    <div class="action-icon">⏳</div>
-                    <h3 class="action-title">אישורי הזמנות</h3>
-                    <p class="action-description">הזמנות הממתינות לאישור שלי</p>
-                </div>
-                <div class="action-card" id="allOrdersCard">
-                    <div class="action-icon">📊</div>
-                    <h3 class="action-title">היסטוריית הזמנות</h3>
-                    <p class="action-description">כל ההזמנות במערכת לפי תאריך</p>
-                </div>
-            `;
+    // Show requester name column for approvers
+    requesterNameHeader.style.display = 'table-cell';
 
-            setTimeout(() => {
-                const pendingApprovalsCard = document.getElementById('pendingApprovalsCard');
-                const allOrdersCard = document.getElementById('allOrdersCard');
-                
-                if (pendingApprovalsCard) {
-                    pendingApprovalsCard.addEventListener('click', showMyPendingApprovals);
-                }
-                if (allOrdersCard) {
-                    allOrdersCard.addEventListener('click', showAllOrdersHistory);
-                }
-            }, 100);
+    // Hide email column for approvers
+    const emailColumnHeader = document.getElementById('emailColumnHeader');
+    if (emailColumnHeader) {
+        emailColumnHeader.style.display = 'none';
+    }
+
+    actionButtons.innerHTML = `
+        <div class="action-card" id="pendingApprovalsCard">
+            <div class="action-icon">⏳</div>
+            <h3 class="action-title">הזמנות ממתינות לאישור</h3>
+            <p class="action-description">הזמנות הממתינות לאישור שלי</p>
+        </div>
+        <div class="action-card" id="allOrdersCard">
+            <div class="action-icon">📊</div>
+            <h3 class="action-title">היסטוריית הזמנות</h3>
+            <p class="action-description">כל ההזמנות במערכת לפי תאריך</p>
+        </div>
+    `;
+
+    setTimeout(() => {
+        const pendingApprovalsCard = document.getElementById('pendingApprovalsCard');
+        const allOrdersCard = document.getElementById('allOrdersCard');
+        
+        if (pendingApprovalsCard) {
+            pendingApprovalsCard.addEventListener('click', showMyPendingApprovals);
         }
+        if (allOrdersCard) {
+            allOrdersCard.addEventListener('click', showAllOrdersHistory);
+        }
+    }, 100);
+}
 
         function showMyPendingApprovals() {
             const myApproverType = userData.approverType;
@@ -1382,7 +1714,8 @@
 
         function showAllOrdersHistory() {
             tableTitle.textContent = 'היסטוריית כל ההזמנות';
-            renderOrders(orders);
+            filteredOrders = [...orders];
+            renderOrders(filteredOrders);
             
             ordersTableContainer.scrollIntoView({ behavior: 'smooth' });
         }
@@ -1396,6 +1729,7 @@
             document.getElementById('closeNewOrderModal').addEventListener('click', closeNewOrderModal);
             document.getElementById('closeOrderDetailsModal').addEventListener('click', closeOrderDetailsModal);
             document.getElementById('closeReceiptModal').addEventListener('click', closeReceiptModal);
+            document.getElementById('closeReceiptsManagementModal').addEventListener('click', closeReceiptsManagementModal);
             document.getElementById('closeExplanationModal').addEventListener('click', closeExplanationModal);
             document.getElementById('closeReplyModal').addEventListener('click', closeReplyModal);
             document.getElementById('closeReminderModal').addEventListener('click', closeReminderModal);
@@ -1412,6 +1746,24 @@
             document.getElementById('sendReplyBtn').addEventListener('click', sendReply);
             document.getElementById('sendReminderBtn').addEventListener('click', sendReminder);
             
+            // Billing type event listeners
+            document.querySelectorAll('input[name="billingType"]').forEach(radio => {
+                radio.addEventListener('change', handleBillingTypeChange);
+            });
+            
+            document.querySelectorAll('input[name="recurringType"]').forEach(radio => {
+                radio.addEventListener('change', handleRecurringTypeChange);
+            });
+
+            // Search and filter event listeners
+            toggleSearchBtn.addEventListener('click', toggleSearchFilters);
+            document.getElementById('applyFiltersBtn').addEventListener('click', applyFilters);
+            document.getElementById('clearFiltersBtn').addEventListener('click', clearFilters);
+            
+            // Real-time search
+            document.getElementById('generalSearch').addEventListener('input', applyFilters);
+            document.getElementById('requesterSearch').addEventListener('input', applyFilters);
+            
             // Filter event listeners
             filterButtons.addEventListener('click', (e) => {
                 if (e.target.classList.contains('filter-btn')) {
@@ -1421,15 +1773,115 @@
                 }
             });
 
+            // Receipts management
+            document.getElementById('newMultipleReceiptFile').addEventListener('change', handleMultipleReceiptFileSelect);
+            document.getElementById('addReceiptBtn').addEventListener('click', addNewReceipt);
+
             // Window click events for modal closing
             window.addEventListener('click', (e) => {
                 if (e.target === newOrderModal) closeNewOrderModal();
                 if (e.target === orderDetailsModal) closeOrderDetailsModal();
                 if (e.target === receiptModal) closeReceiptModal();
+                if (e.target === receiptsManagementModal) closeReceiptsManagementModal();
                 if (e.target === explanationModal) closeExplanationModal();
                 if (e.target === replyModal) closeReplyModal();
                 if (e.target === reminderModal) closeReminderModal();
             });
+        }
+
+        function handleBillingTypeChange(e) {
+            const recurringOptions = document.getElementById('recurringOptions');
+            const billingSchedule = document.getElementById('billingSchedule');
+            
+            if (e.target.value === 'recurring') {
+                recurringOptions.classList.add('active');
+            } else {
+                recurringOptions.classList.remove('active');
+                billingSchedule.classList.remove('active');
+                // Clear recurring selections
+                document.querySelectorAll('input[name="recurringType"]').forEach(radio => {
+                    radio.checked = false;
+                });
+            }
+        }
+
+        function handleRecurringTypeChange(e) {
+            const billingSchedule = document.getElementById('billingSchedule');
+            billingSchedule.classList.add('active');
+        }
+
+        function toggleSearchFilters() {
+            searchFilters.classList.toggle('active');
+            const isActive = searchFilters.classList.contains('active');
+            toggleSearchBtn.textContent = isActive ? '🔍 סגור חיפוש' : '🔍 חיפוש מתקדם';
+        }
+
+        function applyFilters() {
+            if (userRole !== 'approver') return;
+
+            const generalSearch = document.getElementById('generalSearch').value.toLowerCase();
+            const requesterSearch = document.getElementById('requesterSearch').value.toLowerCase();
+            const departmentFilter = document.getElementById('departmentFilter').value;
+            const minAmount = parseFloat(document.getElementById('minAmount').value) || 0;
+            const maxAmount = parseFloat(document.getElementById('maxAmount').value) || Infinity;
+            const fromDate = document.getElementById('fromDate').value;
+            const toDate = document.getElementById('toDate').value;
+            const billingTypeFilter = document.getElementById('billingTypeFilter').value;
+
+            filteredOrders = orders.filter(order => {
+                // General search
+                if (generalSearch) {
+                    const searchText = (order.items || []).map(item => item.productName).join(' ').toLowerCase() + 
+                                     order.orderNumber.toString();
+                    if (!searchText.includes(generalSearch)) return false;
+                }
+
+                // Requester search
+                if (requesterSearch && !order.requesterName.toLowerCase().includes(requesterSearch)) {
+                    return false;
+                }
+
+                // Department filter
+                if (departmentFilter && order.department !== departmentFilter) {
+                    return false;
+                }
+
+                // Amount filters
+                if (order.totalIncludingVat < minAmount || order.totalIncludingVat > maxAmount) {
+                    return false;
+                }
+
+                // Date filters
+                if (fromDate && order.orderDate < fromDate) {
+                    return false;
+                }
+                if (toDate && order.orderDate > toDate) {
+                    return false;
+                }
+
+                // Billing type filter
+                if (billingTypeFilter && order.billingType !== billingTypeFilter) {
+                    return false;
+                }
+
+                return true;
+            });
+
+            renderOrders(filteredOrders);
+        }
+
+        function clearFilters() {
+            document.getElementById('generalSearch').value = '';
+            document.getElementById('requesterSearch').value = '';
+            document.getElementById('departmentFilter').value = '';
+            document.getElementById('minAmount').value = '';
+            document.getElementById('maxAmount').value = '';
+            document.getElementById('fromDate').value = '';
+            document.getElementById('toDate').value = '';
+            document.getElementById('billingTypeFilter').value = '';
+            
+            filteredOrders = [...orders];
+            renderOrders(filteredOrders);
         }
 
         async function loadOrders() {
@@ -1450,6 +1902,7 @@
                     }
                     
                     orders.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+                    filteredOrders = [...orders];
                     
                     console.log('Orders loaded:', orders.length);
                     renderOrders();
@@ -1470,13 +1923,26 @@
             return emily !== 'approved' || shuli !== 'approved' || gadi !== 'approved';
         }
 
-        function renderOrders(filteredOrders = null) {
-            const ordersToShow = filteredOrders || orders;
+        function getBillingTypeDisplay(billingType, recurringType) {
+            if (billingType === 'onetime') {
+                return { text: 'חד פעמי', class: 'billing-onetime' };
+            } else if (billingType === 'recurring') {
+                if (recurringType === 'monthly') {
+                    return { text: 'חודשי', class: 'billing-monthly' };
+                } else if (recurringType === 'yearly') {
+                    return { text: 'שנתי', class: 'billing-yearly' };
+                }
+            }
+            return { text: 'חד פעמי', class: 'billing-onetime' };
+        }
+
+        function renderOrders(ordersToShow = null) {
+            const ordersToRender = ordersToShow || (userRole === 'approver' ? filteredOrders : orders);
             const tbody = ordersTableBody;
             
-            let userOrders = ordersToShow;
+            let userOrders = ordersToRender;
             if (userRole === 'requester') {
-                userOrders = ordersToShow.filter(order => order.requesterEmail === currentUser.email);
+                userOrders = ordersToRender.filter(order => order.requesterEmail === currentUser.email);
             }
 
             if (userOrders.length === 0) {
@@ -1490,52 +1956,70 @@
             tbody.innerHTML = userOrders.map(order => {
                 const status = getOrderStatus(order);
                 const approvals = getApprovalStatus(order);
-                const createdDate = new Date(order.createdAt);
                 const orderDate = new Date(order.orderDate);
+                const billingDisplay = getBillingTypeDisplay(order.billingType, order.recurringType);
                 
                 let receiptButton = '';
                 if (status.canUploadReceipt && userRole === 'requester') {
-                    if (order.receiptUploaded) {
-                        receiptButton = `<button class="receipt-btn view-receipt-btn" onclick="viewReceipt('${order.id}')">צפה בקבלה</button>`;
+                    if (order.billingType === 'onetime') {
+                        if (order.receiptUploaded) {
+                            receiptButton = `<button class="receipt-btn view-receipt-btn" onclick="viewReceipt('${order.id}')">צפה בקבלה</button>`;
+                        } else {
+                            receiptButton = `<button class="receipt-btn upload-receipt-btn" onclick="uploadReceipt('${order.id}')">העלה קבלה</button>`;
+                        }
                     } else {
-                        receiptButton = `<button class="receipt-btn upload-receipt-btn" onclick="uploadReceipt('${order.id}')">העלה קבלה</button>`;
+                        // Recurring billing - show manage receipts button
+                        const receiptsCount = order.receipts ? Object.keys(order.receipts).length : 0;
+                        receiptButton = `<button class="receipt-btn manage-receipts-btn" onclick="manageReceipts('${order.id}')">נהל קבלות (${receiptsCount})</button>`;
                     }
-                } else if (order.receiptUploaded && userRole === 'approver') {
-                    receiptButton = `<button class="receipt-btn view-receipt-btn" onclick="viewReceipt('${order.id}')">צפה בקבלה</button>`;
-                } else if (userRole === 'approver' && !order.receiptUploaded && status.class === 'approved') {
-                    receiptButton = `<span style="font-size: 0.8rem; color: var(--text-secondary);">עדיין לא הועלתה קבלה</span>`;
+                } else if (userRole === 'approver') {
+                    if (order.billingType === 'onetime') {
+                        if (order.receiptUploaded) {
+                            receiptButton = `<button class="receipt-btn view-receipt-btn" onclick="viewReceipt('${order.id}')">צפה בקבלה</button>`;
+                        } else if (status.class === 'approved') {
+                            receiptButton = `<span style="font-size: 0.8rem; color: var(--text-secondary);">עדיין לא הועלתה קבלה</span>`;
+                        }
+                    } else {
+                        // Recurring billing for approvers
+                        const receiptsCount = order.receipts ? Object.keys(order.receipts).length : 0;
+                        receiptButton = `<button class="receipt-btn view-receipt-btn" onclick="manageReceipts('${order.id}')">צפה בקבלות (${receiptsCount})</button>`;
+                    }
                 }
                 
-                return `
-                    <tr class="order-row" data-order-id="${order.id}">
-                        <td>${createdDate.toLocaleDateString('he-IL')}</td>
-                        <td>${order.orderNumber || generateOrderNumber()}</td>
-                        <td>${orderDate.toLocaleDateString('he-IL')}</td>
-                        <td>${order.department}</td>
-                        <td>₪${order.totalIncludingVat.toFixed(2)}</td>
-                        <td><span class="status-badge status-${status.class}">${status.text}</span></td>
-                        <td>
-                            ${canSendReminder(order) ? 
-                                `<button class="btn btn-secondary" style="font-size: 0.8rem; padding: 0.3rem 0.8rem;" onclick="openReminderModal('${order.id}')">🔔</button>` : 
-                                '<span style="color: var(--text-secondary); font-size: 0.8rem;">-</span>'
-                            }
-                        </td>
-                        <td>
-                            <div class="approval-status">
-                                ${approvals.map(approval => `
-                                    <div class="approval-item">
-                                        <div class="approval-icon approval-${approval.status}"></div>
-                                        <span>${approval.name} - ${approval.statusText}</span>
-                                    </div>
-                                `).join('')}
-                            </div>
-                        </td>
-                        <td>
-                            <button class="expand-btn" onclick="openOrderDetails('${order.id}')">פרטים</button>
-                            ${receiptButton}
-                        </td>
-                    </tr>
-                `;
+               const requesterNameCell = userRole === 'approver' ? `<td>${order.requesterName.split(' ')[0]}</td>` : '';
+                
+   return `
+    <tr class="order-row" data-order-id="${order.id}">
+        <td>${orderDate.toLocaleDateString('he-IL')}</td>
+        ${requesterNameCell}
+        <td>${order.orderNumber || generateOrderNumber()}</td>
+        <td>${order.department}</td>
+        <td><span class="billing-badge ${billingDisplay.class}">${billingDisplay.text}</span></td>
+        <td>₪${order.totalIncludingVat.toFixed(2)}</td>
+        <td><span class="status-badge status-${status.class}">${status.text}</span></td>
+        ${userRole === 'requester' ? `
+        <td>
+            ${canSendReminder(order) ? 
+                `<button class="btn btn-secondary" style="font-size: 0.8rem; padding: 0.3rem 0.8rem;" onclick="openReminderModal('${order.id}')">🔔</button>` : 
+                '<span style="color: var(--text-secondary); font-size: 0.8rem;">-</span>'
+            }
+        </td>` : ''}
+        <td>
+            <div class="approval-status">
+                ${approvals.map(approval => `
+                    <div class="approval-item">
+                        <div class="approval-icon approval-${approval.status}"></div>
+                        <span>${approval.name} - ${approval.statusText}</span>
+                    </div>
+                `).join('')}
+            </div>
+        </td>
+        <td>
+            <button class="expand-btn" onclick="openOrderDetails('${order.id}')">פרטים</button>
+            ${receiptButton}
+        </td>
+    </tr>
+`;
             }).join('');
         }
 
@@ -1547,7 +2031,7 @@
 
             // Check for explanation needed status
             if (emily === 'explanation_needed' || shuli === 'explanation_needed' || gadi === 'explanation_needed') {
-                return { class: 'explanation-needed', text: 'נדרש נימוק מהמזמין', canUploadReceipt: false };
+                return { class: 'explanation-needed', text: 'ממתין לנימוק', canUploadReceipt: false };
             }
 
             if (emily === 'rejected' || shuli === 'rejected' || gadi === 'rejected') {
@@ -1598,17 +2082,17 @@
             switch (status) {
                 case 'approved': return 'אושר';
                 case 'rejected': return 'נדחה';
-                case 'explanation_needed': return 'נדרש נימוק מהמזמין';
-                case 'explanation_received': return 'בבדיקה חוזרת אצל המאשר';
+                case 'explanation_needed': return 'ממתין לנימוק';
+                case 'explanation_received': return 'בבדיקה חוזרת';
                 default: return 'בהמתנה';
             }
         }
 
         function filterOrders(filter) {
-            let filtered = orders;
+            let filtered = userRole === 'approver' ? filteredOrders : orders;
             
             if (filter !== 'all') {
-                filtered = orders.filter(order => {
+                filtered = filtered.filter(order => {
                     const status = getOrderStatus(order);
                     return status.class === filter;
                 });
@@ -1620,6 +2104,11 @@
         // Modal functions
         function closeReceiptModal() {
             receiptModal.classList.remove('active');
+        }
+
+        function closeReceiptsManagementModal() {
+            receiptsManagementModal.classList.remove('active');
+            currentOrderId = null;
         }
 
         function closeExplanationModal() {
@@ -1641,21 +2130,21 @@
             currentReminderOrderId = null;
         }
 
-function openNewOrderModal() {
-    console.log('Opening new order modal...');
-    newOrderModal.classList.add('active');
-    
-    // רק אם השדות ריקים - מלא אותם
-    if (!document.getElementById('requesterName').value) {
-        document.getElementById('requesterName').value = userData.name;
-    }
-    if (!document.getElementById('orderDate').value) {
-        document.getElementById('orderDate').value = new Date().toISOString().split('T')[0];
-    }
-    
-    // עדכן את הסיכום הכספי (במקרה שיש נתונים קיימים)
-    updateOrderSummary();
-}
+        function openNewOrderModal() {
+            console.log('Opening new order modal...');
+            newOrderModal.classList.add('active');
+            
+            // רק אם השדות ריקים - מלא אותם
+            if (!document.getElementById('requesterName').value) {
+                document.getElementById('requesterName').value = userData.name;
+            }
+            if (!document.getElementById('orderDate').value) {
+                document.getElementById('orderDate').value = new Date().toISOString().split('T')[0];
+            }
+            
+            // עדכן את הסיכום הכספי (במקרה שיש נתונים קיימים)
+            updateOrderSummary();
+        }
 
         function closeNewOrderModal() {
             newOrderModal.classList.remove('active');
@@ -1774,6 +2263,12 @@ function openNewOrderModal() {
                     totalIncludingVat += cost;
                     totalExcludingVat += cost / 1.18;
                 });
+
+                // Get billing information
+                const billingType = document.querySelector('input[name="billingType"]:checked').value;
+                const recurringType = document.querySelector('input[name="recurringType"]:checked')?.value;
+                const firstBillingDate = document.getElementById('firstBillingDate').value;
+                const billingCount = document.getElementById('billingCount').value;
                 
                 const order = {
                     requesterEmail: currentUser.email,
@@ -1785,13 +2280,18 @@ function openNewOrderModal() {
                     totalExcludingVat: totalExcludingVat,
                     totalIncludingVat: totalIncludingVat,
                     status: 'pending',
+                    billingType: billingType,
+                    recurringType: recurringType || null,
+                    firstBillingDate: firstBillingDate || null,
+                    billingCount: billingCount ? parseInt(billingCount) : null,
                     approvals: {
                         emily: 'pending',
                         shuli: 'pending'
                     },
                     createdAt: new Date().toISOString(),
                     orderNumber: generateOrderNumber(),
-                    receiptUploaded: false
+                    receiptUploaded: false,
+                    receipts: {}
                 };
                 
                 if (totalIncludingVat > 9000) {
@@ -1817,14 +2317,18 @@ function openNewOrderModal() {
                 
                 alert('ההזמנה נשלחה בהצלחה לאישור!');
                 // נקה את הטופס רק אחרי שליחה מוצלחת
-const form = document.getElementById('newOrderForm');
-form.reset();
-itemCounter = 0;
-const orderItems = document.getElementById('orderItems');
-const extraItems = orderItems.querySelectorAll('.order-item[data-item]:not([data-item="0"])');
-extraItems.forEach(item => item.remove());
+                const form = document.getElementById('newOrderForm');
+                form.reset();
+                itemCounter = 0;
+                const orderItems = document.getElementById('orderItems');
+                const extraItems = orderItems.querySelectorAll('.order-item[data-item]:not([data-item="0"])');
+                extraItems.forEach(item => item.remove());
 
-closeNewOrderModal();
+                // Reset billing options
+                document.getElementById('recurringOptions').classList.remove('active');
+                document.getElementById('billingSchedule').classList.remove('active');
+
+                closeNewOrderModal();
                 
             } catch (error) {
                 console.error('Error submitting order:', error);
@@ -1835,6 +2339,159 @@ closeNewOrderModal();
                 submitBtn.disabled = false;
             }
         }
+
+        // Receipt management functions
+        function handleMultipleReceiptFileSelect(e) {
+            const addBtn = document.getElementById('addReceiptBtn');
+            if (e.target.files.length > 0) {
+                addBtn.style.display = 'inline-flex';
+            } else {
+                addBtn.style.display = 'none';
+            }
+        }
+
+        async function addNewReceipt() {
+            const fileInput = document.getElementById('newMultipleReceiptFile');
+            const receiptDate = document.getElementById('receiptDate').value;
+            const receiptNotes = document.getElementById('receiptNotes').value;
+            
+            if (!fileInput.files[0]) {
+                alert('אנא בחר קובץ קבלה');
+                return;
+            }
+            
+            if (!receiptDate) {
+                alert('אנא בחר תאריך חיוב');
+                return;
+            }
+            
+            try {
+                const addBtn = document.getElementById('addReceiptBtn');
+                addBtn.disabled = true;
+                addBtn.innerHTML = '<div class="loading"></div> מעלה...';
+                
+                const file = fileInput.files[0];
+                const receiptId = Date.now().toString();
+                
+                // Upload file
+                const timestamp = new Date().getTime();
+                const fileExtension = file.name.split('.').pop();
+                const fileName = `receipts/${currentOrderId}_${receiptId}.${fileExtension}`;
+                const receiptRef = storageRef(storage, fileName);
+                
+                const snapshot = await uploadBytes(receiptRef, file);
+                const downloadURL = await getDownloadURL(snapshot.ref);
+                
+                // Save receipt data
+                const orderReceiptRef = ref(database, `orders/${currentOrderId}/receipts/${receiptId}`);
+                await set(orderReceiptRef, {
+                    receiptDate: receiptDate,
+                    receiptNotes: receiptNotes,
+                    fileName: file.name,
+                    downloadURL: downloadURL,
+                    uploadDate: new Date().toISOString()
+                });
+                
+                alert('הקבלה נוספה בהצלחה!');
+                
+                // Reset form
+                fileInput.value = '';document.getElementById('receiptDate').value = '';
+                document.getElementById('receiptNotes').value = '';
+                addBtn.style.display = 'none';
+                
+                // Refresh receipts list
+                loadReceiptsList(currentOrderId);
+                
+            } catch (error) {
+                console.error('Error adding receipt:', error);
+                alert('שגיאה בהעלאת הקבלה: ' + error.message);
+            } finally {
+                const addBtn = document.getElementById('addReceiptBtn');
+                addBtn.disabled = false;
+                addBtn.innerHTML = '➕ הוסף קבלה';
+            }
+        }
+
+        async function loadReceiptsList(orderId) {
+            try {
+                const orderRef = ref(database, `orders/${orderId}`);
+                const snapshot = await get(orderRef);
+                
+                if (snapshot.exists()) {
+                    const order = snapshot.val();
+                    const receipts = order.receipts || {};
+                    const existingReceipts = document.getElementById('existingReceipts');
+                    
+                    if (Object.keys(receipts).length === 0) {
+                        existingReceipts.innerHTML = '<p style="color: var(--text-secondary);">אין קבלות</p>';
+                        return;
+                    }
+                    
+                    existingReceipts.innerHTML = Object.entries(receipts).map(([receiptId, receipt]) => `
+                        <div class="receipt-item">
+                            <div class="receipt-info">
+                                <strong>${formatDate(receipt.receiptDate)}</strong>
+                                <p style="margin: 0.2rem 0; color: var(--text-secondary);">${receipt.fileName}</p>
+                                ${receipt.receiptNotes ? `<p style="margin: 0.2rem 0; font-size: 0.9rem;">${receipt.receiptNotes}</p>` : ''}
+                            </div>
+                            <div class="receipt-actions">
+                                <button class="btn btn-secondary btn-small" onclick="viewSingleReceipt('${receipt.downloadURL}', '${receipt.fileName}')">
+                                    👁️ צפה
+                                </button>
+                                ${userRole === 'requester' ? `
+                                <button class="btn btn-danger btn-small" onclick="deleteReceipt('${orderId}', '${receiptId}')">
+                                    🗑️ מחק
+                                </button>` : ''}
+                            </div>
+                        </div>
+                    `).join('');
+                }
+            } catch (error) {
+                console.error('Error loading receipts list:', error);
+            }
+        }
+
+        window.manageReceipts = async function(orderId) {
+            currentOrderId = orderId;
+            const order = orders.find(o => o.id === orderId);
+            
+            if (!order) return;
+            
+            if (userRole === 'requester' && order.billingType === 'recurring') {
+                // Show management modal for requesters with recurring billing
+                receiptsManagementModal.classList.add('active');
+                await loadReceiptsList(orderId);
+            } else {
+                // Show view-only for approvers or single receipts
+                receiptsManagementModal.classList.add('active');
+                await loadReceiptsList(orderId);
+                
+                // Hide add receipt functionality for approvers
+                if (userRole === 'approver') {
+                    document.querySelector('.file-upload').style.display = 'none';
+                }
+            }
+        };
+
+        window.viewSingleReceipt = function(receiptURL, fileName) {
+            window.open(receiptURL, '_blank');
+        };
+
+        window.deleteReceipt = async function(orderId, receiptId) {
+            if (!confirm('האם אתה בטוח שברצונך למחוק קבלה זו?')) return;
+            
+            try {
+                const receiptRef = ref(database, `orders/${orderId}/receipts/${receiptId}`);
+                await set(receiptRef, null);
+                
+                alert('הקבלה נמחקה בהצלחה');
+                await loadReceiptsList(orderId);
+                
+            } catch (error) {
+                console.error('Error deleting receipt:', error);
+                alert('שגיאה במחיקת הקבלה');
+            }
+        };
 
         async function sendExplanation() {
             const explanationText = document.getElementById('explanationText').value.trim();
@@ -2036,33 +2693,33 @@ closeNewOrderModal();
             );
         }
 
-async function sendNewOrderEmails(order) {
-    const approversToNotify = [];
-    
-    // אמילי תמיד מקבלת
-    approversToNotify.push({
-        email: approverEmails.emily,
-        name: 'אמילי'
-    });
-    
-    // שולי תמיד מקבלת (אחרי אמילי)
-    approversToNotify.push({
-        email: approverEmails.shuli,
-        name: 'שולי'
-    });
-    
-    // גדי מקבל רק אם הסכום מעל 9000
-    if (order.totalIncludingVat > 9000) {
-        approversToNotify.push({
-            email: approverEmails.gadi,
-            name: 'ד"ר גדי'
-        });
-    }
-    
-    for (const approver of approversToNotify) {
-        await sendNewOrderEmail(approver.email, approver.name, order);
-    }
-}
+        async function sendNewOrderEmails(order) {
+            const approversToNotify = [];
+            
+            // אמילי תמיד מקבלת
+            approversToNotify.push({
+                email: approverEmails.emily,
+                name: 'אמילי'
+            });
+            
+            // שולי תמיד מקבלת (אחרי אמילי)
+            approversToNotify.push({
+                email: approverEmails.shuli,
+                name: 'שולי'
+            });
+            
+            // גדי מקבל רק אם הסכום מעל 9000
+            if (order.totalIncludingVat > 9000) {
+                approversToNotify.push({
+                    email: approverEmails.gadi,
+                    name: 'ד"ר גדי'
+                });
+            }
+            
+            for (const approver of approversToNotify) {
+                await sendNewOrderEmail(approver.email, approver.name, order);
+            }
+        }
 
         async function sendNewOrderEmail(email, approverName, order) {
             const firstItem = order.items[0];
@@ -2101,6 +2758,7 @@ async function sendNewOrderEmails(order) {
             const printContent = document.getElementById('printOrderContent');
             const needsGadi = order.totalIncludingVat > 9000;
             const approvals = order.approvals || {};
+            const billingDisplay = getBillingTypeDisplay(order.billingType, order.recurringType);
             
             function getSignatureText(approverKey) {
                 const status = approvals[approverKey];
@@ -2123,12 +2781,16 @@ async function sendNewOrderEmails(order) {
                         <tr>
                             <td style="border: 1px solid #000; padding: 4px; width: 25%; font-weight: bold;">שם המזמין</td>
                             <td style="border: 1px solid #000; padding: 4px; width: 25%;">${order.requesterName.split(' ')[0]}</td>
-                            <td style="border: 1px solid #000; padding: 4px; width: 25%; font-weight: bold;">תאריך הזמנה</td>
+                            <td style="border: 1px solid #000; padding: 4px; width: 25%; font-weight: bold;">תאריך</td>
                             <td style="border: 1px solid #000; padding: 4px; width: 25%;">${formatDate(order.orderDate)}</td>
                         </tr>
                         <tr>
                             <td style="border: 1px solid #000; padding: 4px; font-weight: bold;">סעיף תקציבי</td>
                             <td style="border: 1px solid #000; padding: 4px;" colspan="3">${order.department}</td>
+                        </tr>
+                        <tr>
+                            <td style="border: 1px solid #000; padding: 4px; font-weight: bold;">סוג חיוב</td>
+                            <td style="border: 1px solid #000; padding: 4px;" colspan="3">${billingDisplay.text}</td>
                         </tr>
                         ${order.orderNotes ? `
                         <tr>
@@ -2163,6 +2825,7 @@ async function sendNewOrderEmails(order) {
                     
                     <div style="text-align: left; margin: 8px 0; font-weight: bold; font-size: 11px;">
                         <p style="margin: 2px 0;">סה"כ תשלום: ₪${order.totalIncludingVat.toFixed(2)}</p>
+                        <p style="margin: 2px 0;">סוג חיוב: ${billingDisplay.text}</p>
                     </div>
                 </div>
 
@@ -2217,6 +2880,7 @@ async function sendNewOrderEmails(order) {
                 
                 const approvals = getApprovalStatus(order);
                 const status = getOrderStatus(order);
+                const billingDisplay = getBillingTypeDisplay(order.billingType, order.recurringType);
                 
                 let orderNotesSection = '';
                 if (order.orderNotes) {
@@ -2224,6 +2888,20 @@ async function sendNewOrderEmails(order) {
                         <div style="background: var(--bg-tertiary); padding: 1rem; border-radius: 8px; margin: 1rem 0;">
                             <h4>הערות להזמנה</h4>
                             <p style="margin: 0.5rem 0;"><strong>${order.orderNotes}</strong></p>
+                        </div>
+                    `;
+                }
+
+                let billingSection = '';
+                if (order.billingType !== 'onetime') {
+                    billingSection = `
+                        <div style="background: var(--bg-tertiary); padding: 1rem; border-radius: 8px; margin: 1rem 0;">
+                            <h4>פרטי חיוב</h4>
+                            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem;">
+                                <div><strong>סוג חיוב:</strong> ${billingDisplay.text}</div>
+                                ${order.firstBillingDate ? `<div><strong>תאריך חיוב ראשון:</strong> ${formatDate(order.firstBillingDate)}</div>` : ''}
+                                ${order.billingCount ? `<div><strong>מספר חיובים:</strong> ${order.billingCount}</div>` : '<div><strong>חיוב:</strong> רציף</div>'}
+                            </div>
                         </div>
                     `;
                 }
@@ -2270,15 +2948,17 @@ async function sendNewOrderEmails(order) {
                     <div style="margin-bottom: 2rem;">
                         <h3>פרטי הזמנה #${order.orderNumber || generateOrderNumber()}</h3>
                         <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; margin: 1rem 0;">
-                            <div><strong>מזמין:</strong> ${order.requesterName}</div>
+                            <div><strong>מזמין:</strong> ${order.requesterName.split(' ')[0]}</div>
                             <div><strong>תאריך יצירה:</strong> ${formatDate(order.createdAt)}</div>
-                            <div><strong>תאריך הזמנה:</strong> ${formatDate(order.orderDate)}</div>
+                            <div><strong>תאריך:</strong> ${formatDate(order.orderDate)}</div>
                             <div><strong>סעיף תקציבי:</strong> ${order.department}</div>
+                            <div><strong>סוג חיוב:</strong> <span class="billing-badge ${billingDisplay.class}">${billingDisplay.text}</span></div>
                             <div><strong>סטטוס:</strong> <span class="status-badge status-${status.class}">${status.text}</span></div>
                         </div>
                     </div>
                     
                     ${orderNotesSection}
+                    ${billingSection}
                     
                     <div style="margin-bottom: 2rem;">
                         <h4>סטטוס אישורים</h4>
@@ -2356,6 +3036,7 @@ async function sendNewOrderEmails(order) {
                         <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; margin: 1rem 0;">
                             <div><strong>סה"כ לא כולל מע"מ:</strong> ₪${order.totalExcludingVat.toFixed(2)}</div>
                             <div><strong>סה"כ כולל מע"מ:</strong> ₪${order.totalIncludingVat.toFixed(2)}</div>
+                            <div><strong>סוג חיוב:</strong> <span class="billing-badge ${billingDisplay.class}">${billingDisplay.text}</span></div>
                         </div>
                     </div>
                 `;
