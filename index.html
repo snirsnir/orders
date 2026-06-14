@@ -273,42 +273,17 @@
         const database = getDatabase(app);
         const provider = new GoogleAuthProvider();
 
-        // User roles configuration
-const userRoles = {
-    'papasnir@gmail.com': {
-        name: 'שניר דואני',
-        role: 'requester',
-        department: 'תכנית בוקר'
-    },
-    'pratimo123@gmail.com': {
-        name: 'לירון אהרן',
-        role: 'requester',
-        department: 'תכנית בוקר'
-    },
-    'emilygolan1@gmail.com': {
-        name: 'אמילי גולן',
-        role: 'approver',
-        department: 'ניהול',
-        approverType: 'emily'
-    },
-    'shulisason@gmail.com': {
-        name: 'שולי ששון',
-        role: 'approver',
-        department: 'ניהול',
-        approverType: 'shuli'
-    },
-    'gadimador@gmail.com': {
-        name: 'ד"ר גדי מדור',
-        role: 'approver',
-        department: 'ניהול',
-        approverType: 'gadi'
-    },
-    'kerenbaileydahan@gmail.com': {
-        name: 'קרן ביילי דהן',
-        role: 'requester',
-        department: 'שיווק'
-    }
-};
+        // המרת מייל למפתח Firebase
+        function emailToKey(email) {
+            return email.replace(/\./g, '-dot-').replace(/@/g, '-at-');
+        }
+
+        // טעינת נתוני משתמש מ-Firebase
+        async function getUserData(email) {
+            const key  = emailToKey(email);
+            const snap = await get(ref(database, `userRoles/${key}`));
+            return snap.val();
+        }
 
         // DOM elements
         const googleSignInBtn = document.getElementById('googleSignIn');
@@ -386,7 +361,7 @@ const userRoles = {
                 const user = result.user;
                 
                 // Check if user is authorized
-                const userData = userRoles[user.email];
+                const userData = await getUserData(user.email);
                 if (!userData) {
                     throw new Error('המשתמש אינו מורשה לגשת למערכת');
                 }
@@ -417,13 +392,10 @@ const userRoles = {
         // Check if user is already signed in
         onAuthStateChanged(auth, async (user) => {
             if (user) {
-                // Check if user is authorized
-                const userData = userRoles[user.email];
+                const userData = await getUserData(user.email);
                 if (userData) {
-                    // User is already signed in and authorized
                     window.location.href = 'orders.html';
                 } else {
-                    // User not authorized, sign out
                     await auth.signOut();
                 }
             }

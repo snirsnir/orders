@@ -134,7 +134,33 @@
             padding: 0.5rem 1rem;
             border-radius: 50px;
             border: 1px solid var(--border-color);
+            cursor: pointer;
+            position: relative;
+            transition: border-color 0.2s;
+            user-select: none;
         }
+        .user-info:hover { border-color: var(--accent-primary); }
+        .user-info.open  { border-color: var(--accent-primary); }
+
+        .user-info-arrow {
+            font-size: 0.65rem;
+            color: var(--text-secondary);
+            transition: transform 0.2s;
+        }
+        .user-info.open .user-info-arrow { transform: rotate(180deg); }
+
+        .user-info-dropdown {
+            position: absolute; top: calc(100% + 8px); left: 50%; transform: translateX(-50%);
+            background: var(--accent-primary); color: white;
+            padding: 8px 18px; border-radius: 10px;
+            font-size: 0.85rem; font-weight: 600;
+            white-space: nowrap; text-decoration: none;
+            display: none;
+            z-index: 100;
+            box-shadow: 0 4px 16px rgba(0,0,0,0.18);
+        }
+        .user-info-dropdown:hover { opacity: 0.88; }
+        .user-info.open .user-info-dropdown { display: block; }
 
         .user-avatar {
             width: 32px;
@@ -162,6 +188,86 @@
             background: #dc2626;
             transform: translateY(-2px);
         }
+
+
+        .version-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.3rem;
+            padding: 0.2rem 0.6rem;
+            background: var(--gradient);
+            color: white;
+            border-radius: 20px;
+            font-size: 0.72rem;
+            font-weight: 700;
+            cursor: pointer;
+            border: none;
+            transition: opacity 0.2s ease, transform 0.2s ease;
+            white-space: nowrap;
+            margin-right: 0.5rem;
+        }
+        .version-badge:hover {
+            opacity: 0.85;
+            transform: translateY(-1px);
+        }
+
+        #changelogModal .modal-content {
+            max-width: 560px;
+        }
+        .changelog-version {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-bottom: 1.2rem;
+        }
+        .changelog-version-tag {
+            background: var(--gradient);
+            color: white;
+            border-radius: 20px;
+            padding: 0.2rem 0.7rem;
+            font-size: 0.8rem;
+            font-weight: 700;
+        }
+        .changelog-date {
+            color: var(--text-secondary);
+            font-size: 0.85rem;
+        }
+        .changelog-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+        .changelog-list li {
+            padding: 0.45rem 0;
+            border-bottom: 1px solid var(--border-color);
+            font-size: 0.9rem;
+            display: flex;
+            align-items: flex-start;
+            gap: 0.5rem;
+        }
+        .changelog-list li:last-child { border-bottom: none; }
+        .changelog-list li::before {
+            content: '✦';
+            color: var(--accent-primary);
+            font-size: 0.7rem;
+            margin-top: 0.2rem;
+            flex-shrink: 0;
+        }
+        .changelog-category {
+            display: inline-block;
+            font-size: 0.7rem;
+            font-weight: 700;
+            padding: 0.1rem 0.4rem;
+            border-radius: 4px;
+            margin-left: 0.3rem;
+            flex-shrink: 0;
+        }
+        .cat-new { background: #dcfce7; color: #166534; }
+        .cat-fix { background: #fee2e2; color: #991b1b; }
+        .cat-ui  { background: #eff6ff; color: #1e40af; }
+        [data-theme="dark"] .cat-new { background: #14532d; color: #86efac; }
+        [data-theme="dark"] .cat-fix { background: #450a0a; color: #fca5a5; }
+        [data-theme="dark"] .cat-ui  { background: #1e3a5f; color: #93c5fd; }
 
         .main-content {
             max-width: 1200px;
@@ -433,6 +539,19 @@
             gap: 0.3rem;
         }
 
+        .approval-badge {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 26px;
+            height: 26px;
+            border-radius: 50%;
+            color: white;
+            font-weight: bold;
+            font-size: 0.8rem;
+            cursor: default;
+        }
+
         .approval-icon {
             width: 12px;
             height: 12px;
@@ -445,6 +564,14 @@
 
         .approval-approved {
             background: var(--success);
+        }
+
+        .approval-rejected {
+            background: var(--error);
+        }
+
+        .approval-partial {
+            background: var(--warning);
         }
 
         .approval-explanation_needed {
@@ -555,6 +682,25 @@
         .modal-title {
             font-size: 1.5rem;
             font-weight: 600;
+        }
+
+        #quoteDetailsModal .modal-header {
+            background: #fef3c7;
+            margin: -2rem -2rem 1.5rem -2rem;
+            padding: 1.5rem 2rem;
+            border-radius: 14px 14px 0 0;
+        }
+        [data-theme="dark"] #quoteDetailsModal .modal-header {
+            background: #3d2308;
+        }
+        #orderDetailsModal .modal-header {
+            background: #dcfce7;
+            margin: -2rem -2rem 1.5rem -2rem;
+            padding: 1.5rem 2rem;
+            border-radius: 14px 14px 0 0;
+        }
+        [data-theme="dark"] #orderDetailsModal .modal-header {
+            background: #052e16;
         }
 
         .modal-close {
@@ -886,100 +1032,100 @@
 
         @media print {
             @page {
-                size: A4 landscape;
-                margin: 10mm;
+                size: A4 portrait;
+                margin: 12mm 15mm;
             }
-            
-            * {
-                visibility: hidden;
-                background: transparent !important;
+
+            body > *:not(#printOrderContent):not(#printQuoteContent) {
+                display: none !important;
+            }
+
+            #printOrderContent, #printQuoteContent {
+                display: block !important;
+                width: 100% !important;
+                font-family: Arial, sans-serif !important;
+                font-size: 12pt !important;
+                line-height: 1.4 !important;
                 color: black !important;
-                box-shadow: none !important;
-                text-shadow: none !important;
                 -webkit-print-color-adjust: exact !important;
                 color-adjust: exact !important;
             }
-            
-            .print-order,
-            .print-order * {
-                visibility: visible !important;
-            }
-            
-            .print-order {
-                position: absolute !important;
-                left: 0 !important;
-                top: 0 !important;
+
+            #printQuoteContent table {
                 width: 100% !important;
-                height: fit-content !important;
-                max-height: calc(297mm - 20mm) !important;
-                display: block !important;
-                font-family: Arial, sans-serif !important;
-                font-size: 10px !important;
-                line-height: 1.1 !important;
-                overflow: hidden !important;
-                page-break-after: avoid !important;
-                page-break-inside: avoid !important;
+                border-collapse: collapse !important;
+                margin-bottom: 10px !important;
             }
-            
+            #printQuoteContent th, #printQuoteContent td {
+                border: 1px solid black !important;
+                padding: 6px 8px !important;
+                font-size: 11pt !important;
+                vertical-align: middle !important;
+                color: black !important;
+            }
+            #printQuoteContent th { background-color: #e8e8e8 !important; font-weight: bold !important; }
+            #printQuoteContent h2 { font-size: 16pt !important; margin: 0 0 12px 0 !important; color: black !important; background-color: #fef08a !important; padding: 10px 0 !important; border-radius: 6px !important; }
+            #printQuoteContent h3 { font-size: 12pt !important; margin: 8px 0 5px 0 !important; padding: 3px 6px !important; background-color: #e8e8e8 !important; color: black !important; }
+            #printQuoteContent p, #printQuoteContent div { color: black !important; }
+            #printQuoteContent .signature-approved { color: #0066cc !important; font-weight: bold !important; }
+
             .print-section {
                 page-break-inside: avoid !important;
                 break-inside: avoid !important;
-                margin-bottom: 6px !important;
+                margin-bottom: 10px !important;
             }
-            
-            .print-order table {
+
+            #printOrderContent table {
                 width: 100% !important;
                 border-collapse: collapse !important;
-                page-break-inside: avoid !important;
-                break-inside: avoid !important;
-                margin-bottom: 6px !important;
+                margin-bottom: 10px !important;
             }
-            
-            .print-order th,
-            .print-order td {
+
+            #printOrderContent th,
+            #printOrderContent td {
                 border: 1px solid black !important;
-                padding: 3px !important;
-                font-size: 9px !important;
-                background: transparent !important;
-                vertical-align: top !important;
+                padding: 6px 8px !important;
+                font-size: 11pt !important;
+                vertical-align: middle !important;
+                color: black !important;
             }
-            
-            .print-order th {
-                background: #f0f0f0 !important;
+
+            #printOrderContent th {
+                background-color: #e8e8e8 !important;
                 font-weight: bold !important;
-                font-size: 8px !important;
             }
-            
-            .print-order .signature-approved {
+
+            #printOrderContent .signature-approved {
                 color: #0066cc !important;
                 font-weight: bold !important;
             }
-            
-            .print-order h2 {
-                font-size: 14px !important;
-                margin: 0 0 10px 0 !important;
+
+            #printOrderContent h2 {
+                font-size: 16pt !important;
+                margin: 0 0 12px 0 !important;
+                color: black !important;
+                background-color: #bbf7d0 !important;
+                padding: 10px 0 !important;
+                border-radius: 6px !important;
             }
-            
-            .print-order h3 {
-                font-size: 11px !important;
-                margin: 6px 0 4px 0 !important;
-                padding: 2px !important;
+
+            #printOrderContent h3 {
+                font-size: 12pt !important;
+                margin: 8px 0 5px 0 !important;
+                padding: 3px 6px !important;
+                background-color: #e8e8e8 !important;
+                color: black !important;
             }
-            
-            .print-order p {
-                margin: 3px 0 !important;
-                font-size: 9px !important;
+
+            #printOrderContent p,
+            #printOrderContent div {
+                color: black !important;
             }
-            
-            body {
+
+            html, body {
                 margin: 0 !important;
                 padding: 0 !important;
-                overflow: hidden !important;
-            }
-            
-            html, body {
-                height: 100% !important;
-                overflow: hidden !important;
+                height: auto !important;
             }
         }
 
@@ -1039,6 +1185,11 @@
         .toggle-search-btn:hover {
             background: var(--accent-hover);
         }
+        @keyframes pulse {
+            0%   { transform: scale(1); }
+            50%  { transform: scale(1.02); }
+            100% { transform: scale(1); }
+        }
     </style>
 </head>
 <body>
@@ -1050,14 +1201,21 @@
                     <h1>מערכת הזמנות</h1>
                     <p id="userRole">טוען...</p>
                 </div>
+                <button class="version-badge" id="versionBadgeBtn">גרסה 1.2</button>
+                <div style="margin-right: 1.5rem; padding: 0.3rem 0.8rem; background: var(--bg-tertiary); border-radius: 8px; font-size: 0.75rem; color: var(--text-secondary); border: 1px solid var(--border-color); line-height: 1.6;">
+                    <strong style="color: var(--text-primary);">נוהל חתימות:</strong>
+                    אמילי — כל סכום &nbsp;|&nbsp; שולי — כל סכום &nbsp;|&nbsp; גדי — מ-10,000 ש"ח
+                </div>
             </div>
             <div class="user-section">
                 <button class="theme-toggle" id="themeToggle">
                     <span id="themeIcon">🌙</span>
                 </button>
-                <div class="user-info">
+                <div class="user-info" id="userInfoChip">
                     <div class="user-avatar" id="userAvatar">👤</div>
                     <span id="userName">טוען...</span>
+                    <span class="user-info-arrow">▾</span>
+                    <a class="user-info-dropdown" id="adminLink" href="admin.html">⚙️ ממשק ניהול</a>
                 </div>
                 <button class="logout-btn" id="logoutBtn">יציאה</button>
             </div>
@@ -1169,11 +1327,43 @@
                 </div>
             </div>
         </section>
+
+        <!-- Quotes Table Section -->
+        <section class="orders-table-container fade-in" id="quotesTableContainer" style="display: none; margin-top: 2rem;">
+            <div class="table-header">
+                <h3 class="table-title">הצעות המחיר שלי</h3>
+            </div>
+            <div id="quotesTableContent">
+                <div style="overflow-x: auto;">
+                    <table class="orders-table">
+                        <thead>
+                            <tr>
+                                <th>תאריך</th>
+                                <th>הצעה מס'</th>
+                                <th>סעיף תקציבי</th>
+                                <th>עבור</th>
+                                <th>ספק</th>
+                                <th>סה"כ</th>
+                                <th>סטטוס</th>
+                                <th>אישורים</th>
+                                <th>פעולות</th>
+                            </tr>
+                        </thead>
+                        <tbody id="quotesTableBody"></tbody>
+                    </table>
+                </div>
+                <div class="empty-state" id="quotesEmptyState" style="display: none;">
+                    <div class="empty-icon">📋</div>
+                    <h3>אין הצעות מחיר להצגה</h3>
+                    <p>התחל ביצירת הצעת מחיר חדשה</p>
+                </div>
+            </div>
+        </section>
     </main>
 
     <!-- Modal for new order -->
     <div class="modal" id="newOrderModal">
-        <div class="modal-content">
+        <div class="modal-content" style="background: #f0fdf4;">
             <div class="modal-header">
                 <h2 class="modal-title">יצירת הזמנה חדשה</h2>
                 <button class="modal-close" id="closeNewOrderModal">&times;</button>
@@ -1196,8 +1386,17 @@
                         <option value="ניהול">ניהול</option>
                         <option value="IT">מחלקת מחשבים</option>
                         <option value="תחזוקה">תחזוקה</option>
+                        <option value="שיווק">שיווק</option>
                         <option value="אחר">אחר</option>
                     </select>
+                </div>
+                <div class="form-group" id="departmentOtherGroup" style="display:none;">
+                    <label class="form-label">פרט...</label>
+                    <input type="text" class="form-input" id="departmentOther" placeholder="פרט את הסעיף התקציבי...">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">עבור</label>
+                    <input type="text" class="form-input" id="orderFor" placeholder="לדוגמה: מרכז חץ, חדרי מחשבים...">
                 </div>
 
                 <!-- Billing Section -->
@@ -1282,9 +1481,22 @@
                     
                     <div style="margin-top: 1rem; padding-top: 1rem; border-top: 1px solid var(--border-color);">
                         <label style="display: flex; align-items: center; gap: 0.5rem; cursor: pointer;">
-                            <input type="checkbox" id="sendEmailNotification" style="margin: 0;">
+                            <input type="checkbox" id="sendEmailNotification" style="margin: 0;" checked>
                             <span>🔔 שלח מייל למאשרים </span>
                         </label>
+                    </div>
+                </div>
+
+                <div id="gadiApprovalNotice" style="display:none; background:#fef9c3; border: 2px solid #f59e0b; border-radius:8px; padding:0.75rem 1rem; margin: 0.5rem 0; font-weight:bold; color:#92400e; animation: pulse 0.4s ease;">
+                    ⚠️ לידיעתכם — סכום זה מחייב אישור ד"ר גדי מדור (מעל 10,000 ש"ח)
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">העלאת קבצים נלווים (אופציונלי)</label>
+                    <div class="file-upload">
+                        <input type="file" id="orderQuoteFile" class="file-input" accept="image/*,.pdf">
+                        <label for="orderQuoteFile" class="file-upload-btn">📎 בחר קובץ</label>
+                        <span id="orderQuoteFileName" style="font-size: 0.85rem; margin-right: 0.5rem; color: var(--text-secondary);"></span>
                     </div>
                 </div>
 
@@ -1296,6 +1508,119 @@
                     </button>
                 </div>
             </form>
+        </div>
+    </div>
+
+    <!-- Modal for new quote -->
+    <div class="modal" id="newQuoteModal">
+        <div class="modal-content" style="background: #fefce8;">
+            <div class="modal-header">
+                <h2 class="modal-title">יצירת הצעת מחיר חדשה</h2>
+                <button class="modal-close" id="closeNewQuoteModal">&times;</button>
+            </div>
+            <form id="newQuoteForm">
+                <div class="form-group">
+                    <label class="form-label">שם המזמין</label>
+                    <input type="text" class="form-input" id="quoteRequesterName" readonly>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">תאריך</label>
+                    <input type="date" class="form-input" id="quoteDate" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">סעיף תקציבי</label>
+                    <select class="form-select" id="quoteDepartment" required>
+                        <option value="">בחר מחלקה</option>
+                        <option value="תכנית בוקר">תכנית בוקר</option>
+                        <option value="מחוננים">מחוננים</option>
+                        <option value="ניהול">ניהול</option>
+                        <option value="IT">מחלקת מחשבים</option>
+                        <option value="תחזוקה">תחזוקה</option>
+                        <option value="שיווק">שיווק</option>
+                        <option value="אחר">אחר</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">עבור</label>
+                    <input type="text" class="form-input" id="quoteFor" placeholder="לדוגמה: מרכז חץ, חדרי מחשבים...">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">שם הספק / מציע</label>
+                    <input type="text" class="form-input" id="quoteSupplier" required placeholder="שם הספק שהגיש את ההצעה">
+                </div>
+                <div id="quoteItems">
+                    <h3 style="margin-bottom: 1rem;">פריטים בהצעת המחיר</h3>
+                    <div class="order-item" data-item="0">
+                        <div class="form-group">
+                            <label class="form-label">שם המוצר / שירות</label>
+                            <input type="text" class="form-input" name="productName" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">תיאור ומטרה</label>
+                            <textarea class="form-textarea" name="purpose" required></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">כמות</label>
+                            <input type="number" class="form-input" name="quantity" min="1" value="1">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">מחיר יחידה בש"ח (כולל מע"מ)</label>
+                            <input type="number" class="form-input quote-cost-input" name="unitCost" step="0.01" min="0" required>
+                        </div>
+                    </div>
+                </div>
+                <div style="display: flex; gap: 1rem; margin: 1rem 0;">
+                    <button type="button" class="btn btn-secondary" id="addQuoteItemBtn">+ הוסף פריט</button>
+                </div>
+                <div style="background: var(--bg-tertiary); padding: 1rem; border-radius: 8px; margin: 1rem 0;">
+                    <h4>סיכום הצעה</h4>
+                    <p>סה"כ לא כולל מע"מ: <span id="quoteTotalExcludingVat">₪0</span></p>
+                    <p>סה"כ כולל מע"מ: <span id="quoteTotalIncludingVat">₪0</span></p>
+                </div>
+                <div id="gadiApprovalNoticeQuote" style="display:none; background:#fef9c3; border: 2px solid #f59e0b; border-radius:8px; padding:0.75rem 1rem; margin: 0.5rem 0; font-weight:bold; color:#92400e;">
+                    ⚠️ לידיעתכם — סכום זה מחייב אישור ד"ר גדי מדור (מעל 10,000 ש"ח)
+                </div>
+                <div class="form-group">
+                    <label class="form-label">העלאת מסמך הצעת מחיר (אופציונלי)</label>
+                    <div class="file-upload">
+                        <input type="file" id="quoteDocFile" class="file-input" accept="image/*,.pdf">
+                        <label for="quoteDocFile" class="file-upload-btn">📎 בחר קובץ (PDF / תמונה)</label>
+                        <span id="quoteDocFileName" style="font-size: 0.85rem; margin-right: 0.5rem; color: var(--text-secondary);"></span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">הערות (אופציונלי)</label>
+                    <textarea class="form-textarea" id="quoteNotes" placeholder="הערות נוספות..."></textarea>
+                </div>
+                <div style="margin: 1rem 0; padding-top: 1rem; border-top: 1px solid var(--border-color);">
+                    <label style="display: flex; align-items: center; gap: 0.5rem; cursor: pointer;">
+                        <input type="checkbox" id="sendQuoteEmailNotification" style="margin: 0;" checked>
+                        <span>🔔 שלח מייל למאשרים</span>
+                    </label>
+                </div>
+
+                <div style="display: flex; gap: 1rem; justify-content: flex-end;">
+                    <button type="button" class="btn btn-secondary" id="cancelQuoteBtn">ביטול</button>
+                    <button type="submit" class="btn btn-primary" id="submitQuoteBtn">
+                        <span>שלח הצעת מחיר לאישור</span>
+                        <div class="loading" style="display: none;"></div>
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Modal for quote details -->
+    <div class="modal" id="quoteDetailsModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title">פרטי הצעת מחיר</h2>
+                <div>
+                    <button class="print-btn" id="printQuoteBtn">🖨️ הדפס</button>
+                    <button class="modal-close" id="closeQuoteDetailsModal">&times;</button>
+                </div>
+            </div>
+            <div id="quoteDetailsContent"></div>
         </div>
     </div>
 
@@ -1422,6 +1747,42 @@
 
     <div class="print-order" id="printOrderContent">
     </div>
+    <div class="print-order" id="printQuoteContent">
+    </div>
+
+    <!-- Changelog Modal -->
+    <div class="modal" id="changelogModal">
+        <div class="modal-content">
+            <div class="modal-header" style="background: var(--gradient); margin: -2rem -2rem 1.5rem -2rem; padding: 1.5rem 2rem; border-radius: 14px 14px 0 0;">
+                <h2 class="modal-title" style="color: white;">יומן עדכונים</h2>
+                <button class="modal-close" id="closeChangelogModal" style="color: white;">&times;</button>
+            </div>
+
+            <div class="changelog-version">
+                <span class="changelog-version-tag">גרסה 1.2</span>
+                <span class="changelog-date">יוני 2026</span>
+            </div>
+            <ul class="changelog-list">
+                <li><span class="changelog-category cat-new">חדש</span>ממשק ניהול (admin.html) — הוספה, עריכה ומחיקה של משתמשים דינמית מ-Firebase ללא נגיעה בקוד</li>
+                <li><span class="changelog-category cat-new">חדש</span>תזכורות אוטומטיות — מייל נשלח אחרי 48 שעות ללא פעולה (אישור, ערעור, הסבר) דרך Firebase Cloud Functions</li>
+                <li><span class="changelog-category cat-new">חדש</span>הוספת אופציית הצעת מחיר — יצירה, אישור והמרה להזמנה</li>
+                <li><span class="changelog-category cat-new">חדש</span>הצגת סטטוס אישור לפי מאשר — נקודות צבעוניות לכל מאשר בנפרד עבור המזמין</li>
+                <li><span class="changelog-category cat-new">חדש</span>שדה סיבת דחייה נפתח בעת שמירת דחיית פריט על ידי מאשר</li>
+                <li><span class="changelog-category cat-new">חדש</span>שליחת מייל למזמין בכל שלב אישור — מי אישר ומי הבא בתור</li>
+                <li><span class="changelog-category cat-new">חדש</span>שליחת מייל למזמין כשערעור על פריט התקבל או נדחה</li>
+                <li><span class="changelog-category cat-new">חדש</span>הצגת קבצים נלווים בפרטי ההזמנה — גם למאשר וגם למזמין</li>
+                <li><span class="changelog-category cat-new">חדש</span>שדה "פרט..." בסעיף תקציבי כשבוחרים "אחר"</li>
+                <li><span class="changelog-category cat-new">חדש</span>הדפסה בהצעת מחיר עם כותרת צהובה, הדפסת הזמנה עם כותרת ירוקה</li>
+                <li><span class="changelog-category cat-ui">עיצוב</span>חלון פרטי הזמנה ופרטי הצעת מחיר מעוצב כטבלה תמציתית</li>
+                <li><span class="changelog-category cat-ui">עיצוב</span>כותרת צהובה לחלון הצעת מחיר, ירוקה לחלון הזמנה</li>
+                <li><span class="changelog-category cat-ui">עיצוב</span>שינוי תווית שדה ההעלאה ל"קבצים נלווים"</li>
+                <li><span class="changelog-category cat-fix">תיקון</span>שליחת מייל לשולי כאשר אמילי מאשרת — תוקנה בעיית race condition</li>
+                <li><span class="changelog-category cat-fix">תיקון</span>סיבת דחייה מופרדת לכל מאשר — שולי לא רואה את הערה של אמילי</li>
+                <li><span class="changelog-category cat-fix">תיקון</span>המרת הצעת מחיר להזמנה ללא כפילות פריטים</li>
+                <li><span class="changelog-category cat-fix">תיקון</span>תיקון שגיאת needsGadi בחלון פרטי הזמנה</li>
+            </ul>
+        </div>
+    </div>
 
     <!-- EmailJS Script -->
     <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
@@ -1462,12 +1823,8 @@
         let currentApproverKey = null;
         let currentReminderOrderId = null;
 
-        // מערך המיילים של המאשרים
-        const approverEmails = {
-            'emily': 'emily@technoda.org.il',
-            'shuli': 'shuli@technoda.org.il', 
-            'gadi': 'gadi1@technoda.org.il'
-        };
+        // מערך המיילים של המאשרים — יתמלא דינמית מ-Firebase ב-loadUserData
+        const approverEmails = {};
 
         // DOM Elements
         const themeToggle = document.getElementById('themeToggle');
@@ -1541,70 +1898,58 @@
             });
         }
 
+        function emailToKey(email) {
+            return email.replace(/\./g, '-dot-').replace(/@/g, '-at-');
+        }
+
         async function loadUserData() {
             console.log('Loading user data for:', currentUser.email);
             try {
-                const userRoles = {
-                    'papasnir@gmail.com': {
-                        name: 'שניר דואני',
-                        role: 'requester',
-                        department: 'תכנית בוקר'
-                    },
-                    'pratimo123@gmail.com': {
-                        name: 'לירון אהרן',
-                        role: 'requester',
-                        department: 'תכנית בוקר'
-                    },
-                    'emilygolan1@gmail.com': {
-                        name: 'אמילי גולן',
-                        role: 'approver',
-                        department: 'ניהול',
-                        approverType: 'emily'
-                    },
-                    'shulisason@gmail.com': {
-                        name: 'שולי ששון',
-                        role: 'approver',
-                        department: 'ניהול',
-                        approverType: 'shuli'
-                    },
-                    'gadimador@gmail.com': {
-                        name: 'ד"ר גדי מדור',
-                        role: 'approver',
-                        department: 'ניהול',
-                        approverType: 'gadi'
-                    },
-                    'kerenbaileydahan@gmail.com': {
-                        name: 'קרן ביילי דהן',
-                        role: 'requester',
-                        department: 'שיווק'
-                    }
-                };
+                const key  = emailToKey(currentUser.email);
+                const snap = await get(ref(database, `userRoles/${key}`));
+                const roleData = snap.val();
 
-                if (userRoles[currentUser.email]) {
-                    userData = userRoles[currentUser.email];
+                if (roleData) {
+                    userData = roleData;
                     userRole = userData.role;
-                    
+
                     console.log('User data loaded:', userData);
-                    
-                    userName.textContent = userData.name;
-                    userAvatar.textContent = userData.name.charAt(0);
+
+                    userName.textContent      = userData.name;
+                    userAvatar.textContent    = userData.name.charAt(0);
                     userRoleElement.textContent = userData.role === 'requester' ? 'מזמין' : 'מאשר הזמנות';
 
+                    // הצג דרופדאון ניהול רק למורשים
+                    const ADMIN_EMAILS = ['papasnir@gmail.com', 'emilygolan1@gmail.com'];
+                    const chip = document.getElementById('userInfoChip');
+                    if (!ADMIN_EMAILS.includes(currentUser.email)) {
+                        chip.querySelector('.user-info-arrow').style.display = 'none';
+                        chip.style.cursor = 'default';
+                        chip.querySelector('#adminLink').style.display = 'none';
+                    }
+
                     try {
-                        const userRef = ref(database, `users/${currentUser.uid}`);
-                        await set(userRef, {
-                            email: currentUser.email,
-                            name: userData.name,
-                            role: userData.role,
-                            department: userData.department,
+                        await set(ref(database, `users/${currentUser.uid}`), {
+                            email:       currentUser.email,
+                            name:        userData.name,
+                            role:        userData.role,
+                            department:  userData.department,
                             approverType: userData.approverType || null,
-                            lastLogin: new Date().toISOString(),
-                            photoURL: currentUser.photoURL
+                            lastLogin:   new Date().toISOString(),
+                            photoURL:    currentUser.photoURL
                         });
-                        console.log('User data saved to database');
                     } catch (saveError) {
                         console.error('Error saving user data:', saveError);
                     }
+
+                    // בניית מפת מיילים של מאשרים מ-Firebase
+                    const rolesSnap = await get(ref(database, 'userRoles'));
+                    const allRoles  = rolesSnap.val() || {};
+                    Object.values(allRoles).forEach(u => {
+                        if (u.role === 'approver' && u.approverType && u.email) {
+                            approverEmails[u.approverType] = u.email;
+                        }
+                    });
                 } else {
                     console.error('User not authorized:', currentUser.email);
                     alert('המשתמש אינו מורשה לגשת למערכת');
@@ -1635,9 +1980,14 @@
             toggleSearchBtn.style.display = 'none';
 
             actionButtons.innerHTML = `
+                <div class="action-card" id="newQuoteCard">
+                    <div class="action-icon">📋</div>
+                    <h3 class="action-title">יצירת <span style="background:#fef08a; padding:0 4px; border-radius:4px;">הצעת מחיר</span> חדשה</h3>
+                    <p class="action-description">צור הצעת מחיר חדשה לאישור</p>
+                </div>
                 <div class="action-card" id="newOrderCard">
                     <div class="action-icon">➕</div>
-                    <h3 class="action-title">יצירת הזמנה חדשה</h3>
+                    <h3 class="action-title">יצירת <span style="background:#bbf7d0; padding:0 4px; border-radius:4px;">הזמנה</span> חדשה</h3>
                     <p class="action-description">צור הזמנה חדשה לציוד או שירותים</p>
                 </div>
             `;
@@ -1647,7 +1997,13 @@
                 if (newOrderCard) {
                     newOrderCard.addEventListener('click', openNewOrderModal);
                 }
+                const newQuoteCard = document.getElementById('newQuoteCard');
+                if (newQuoteCard) {
+                    newQuoteCard.addEventListener('click', openNewQuoteModal);
+                }
             }, 100);
+
+            initQuotesForRequester();
             
         }
 
@@ -1690,6 +2046,15 @@ function setupApproverUI() {
             allOrdersCard.addEventListener('click', showAllOrdersHistory);
         }
     }, 100);
+
+    // הצג טבלת הצעות מחיר גם למאשרים
+    const quotesContainer = document.getElementById('quotesTableContainer');
+    if (quotesContainer) {
+        quotesContainer.style.display = 'block';
+        const quotesTitle = quotesContainer.querySelector('.table-title');
+        if (quotesTitle) quotesTitle.textContent = 'הצעות מחיר לאישור';
+    }
+    loadQuotes();
 }
 
         function showMyPendingApprovals() {
@@ -1704,9 +2069,9 @@ function setupApproverUI() {
                 } else if (myApproverType === 'shuli') {
                     return (approvals.emily === 'approved' && (approvals.shuli === 'pending' || approvals.shuli === 'explanation_received'));
                 } else if (myApproverType === 'gadi') {
-                    return order.totalIncludingVat > 9000 && 
-                           approvals.emily === 'approved' && 
-                           approvals.shuli === 'approved' && 
+                    return order.totalIncludingVat > 10000 &&
+                           approvals.emily === 'approved' &&
+                           approvals.shuli === 'approved' &&
                            (approvals.gadi === 'pending' || approvals.gadi === 'explanation_received');
                 }
                 return false;
@@ -1730,7 +2095,30 @@ function setupApproverUI() {
             console.log('Setting up event listeners...');
             themeToggle.addEventListener('click', toggleTheme);
             logoutBtn.addEventListener('click', handleLogout);
-            
+
+            // User info chip dropdown
+            const userInfoChip = document.getElementById('userInfoChip');
+            userInfoChip.addEventListener('click', e => {
+                if (e.target.tagName === 'A') return;
+                userInfoChip.classList.toggle('open');
+            });
+            document.addEventListener('click', e => {
+                if (!userInfoChip.contains(e.target)) userInfoChip.classList.remove('open');
+            });
+
+            // Changelog modal
+            document.getElementById('versionBadgeBtn').addEventListener('click', () => {
+                document.getElementById('changelogModal').classList.add('active');
+            });
+            document.getElementById('closeChangelogModal').addEventListener('click', () => {
+                document.getElementById('changelogModal').classList.remove('active');
+            });
+            document.getElementById('changelogModal').addEventListener('click', (e) => {
+                if (e.target === document.getElementById('changelogModal')) {
+                    document.getElementById('changelogModal').classList.remove('active');
+                }
+            });
+
             // Modal event listeners
             document.getElementById('closeNewOrderModal').addEventListener('click', closeNewOrderModal);
             document.getElementById('closeOrderDetailsModal').addEventListener('click', closeOrderDetailsModal);
@@ -1748,10 +2136,16 @@ function setupApproverUI() {
             document.getElementById('newOrderForm').addEventListener('submit', handleOrderSubmit);
             document.getElementById('addItemBtn').addEventListener('click', addOrderItem);
             document.getElementById('printOrderBtn').addEventListener('click', printOrder);
+            document.getElementById('printQuoteBtn').addEventListener('click', printQuote);
             document.getElementById('sendExplanationBtn').addEventListener('click', sendExplanation);
             document.getElementById('sendReplyBtn').addEventListener('click', sendReply);
             document.getElementById('sendReminderBtn').addEventListener('click', sendReminder);
             
+            // Department "אחר" toggle
+            document.getElementById('department').addEventListener('change', function() {
+                document.getElementById('departmentOtherGroup').style.display = this.value === 'אחר' ? 'block' : 'none';
+            });
+
             // Billing type event listeners
             document.querySelectorAll('input[name="billingType"]').forEach(radio => {
                 radio.addEventListener('change', handleBillingTypeChange);
@@ -1924,8 +2318,8 @@ function setupApproverUI() {
             const approvals = order.approvals || {};
             const emily = approvals.emily || 'pending';
             const shuli = approvals.shuli || 'pending';
-            const gadi = order.totalIncludingVat > 9000 ? (approvals.gadi || 'pending') : 'approved';
-            
+            const gadi = order.totalIncludingVat > 10000 ? (approvals.gadi || 'pending') : 'approved';
+
             return emily !== 'approved' || shuli !== 'approved' || gadi !== 'approved';
         }
 
@@ -2023,6 +2417,9 @@ function setupApproverUI() {
         <td>
             <button class="expand-btn" onclick="openOrderDetails('${order.id}')">פרטים</button>
             ${receiptButton}
+            ${userRole === 'requester' && (order.approvals?.emily || 'pending') === 'pending' ? `
+                <button class="btn btn-danger btn-small" style="font-size:0.75rem; padding:0.2rem 0.6rem; margin-top:0.3rem;" onclick="deleteOrder('${order.id}')">🗑️ מחק</button>
+            ` : ''}
         </td>
     </tr>
 `;
@@ -2033,7 +2430,7 @@ function setupApproverUI() {
             const approvals = order.approvals || {};
             const emily = approvals.emily || 'pending';
             const shuli = approvals.shuli || 'pending';
-            const gadi = order.totalIncludingVat > 9000 ? (approvals.gadi || 'pending') : 'approved';
+            const gadi = order.totalIncludingVat > 10000 ? (approvals.gadi || 'pending') : 'approved';
 
             // Check for explanation needed status
             if (emily === 'explanation_needed' || shuli === 'explanation_needed' || gadi === 'explanation_needed') {
@@ -2045,6 +2442,7 @@ function setupApproverUI() {
             }
 
             if (emily === 'approved' && shuli === 'approved' && gadi === 'approved') {
+                if (hasRejectedItems(order)) return { class: 'partial', text: 'אושר חלקית', canUploadReceipt: false };
                 return { class: 'approved', text: 'מאושר', canUploadReceipt: true };
             }
 
@@ -2072,7 +2470,7 @@ function setupApproverUI() {
                 }
             ];
 
-            if (order.totalIncludingVat > 9000) {
+            if (order.totalIncludingVat > 10000) {
                 result.push({
                     name: 'גדי',
                     key: 'gadi',
@@ -2210,8 +2608,8 @@ function setupApproverUI() {
         }
 
         function updateOrderSummary() {
-            const costInputs = document.querySelectorAll('.cost-input');
-            
+            const costInputs = document.querySelectorAll('#orderItems .cost-input');
+
             let totalIncludingVat = 0;
             let totalExcludingVat = 0;
             
@@ -2223,6 +2621,18 @@ function setupApproverUI() {
             
             document.getElementById('totalExcludingVat').textContent = `₪${totalExcludingVat.toFixed(2)}`;
             document.getElementById('totalIncludingVat').textContent = `₪${totalIncludingVat.toFixed(2)}`;
+
+            const notice = document.getElementById('gadiApprovalNotice');
+            if (notice) {
+                if (totalIncludingVat > 10000) {
+                    notice.style.display = 'block';
+                    notice.style.animation = 'none';
+                    void notice.offsetWidth;
+                    notice.style.animation = 'pulse 0.4s ease';
+                } else {
+                    notice.style.display = 'none';
+                }
+            }
         }
 
         async function handleOrderSubmit(e) {
@@ -2276,11 +2686,16 @@ function setupApproverUI() {
                 const firstBillingDate = document.getElementById('firstBillingDate').value;
                 const billingCount = document.getElementById('billingCount').value;
                 
+                const deptVal = document.getElementById('department').value;
+                const deptOther = document.getElementById('departmentOther').value.trim();
+
                 const order = {
                     requesterEmail: currentUser.email,
                     requesterName: userData.name,
                     orderDate: document.getElementById('orderDate').value,
-                    department: document.getElementById('department').value,
+                    department: deptVal,
+                    departmentDetail: deptVal === 'אחר' && deptOther ? deptOther : null,
+                    orderFor: document.getElementById('orderFor').value,
                     orderNotes: document.getElementById('orderNotes').value,
                     items: items,
                     totalExcludingVat: totalExcludingVat,
@@ -2300,15 +2715,33 @@ function setupApproverUI() {
                     receipts: {}
                 };
                 
-                if (totalIncludingVat > 9000) {
+                if (totalIncludingVat > 10000) {
                     order.approvals.gadi = 'pending';
                 }
                 
                 console.log('Order to save:', order);
                 
                 const ordersRef = ref(database, 'orders');
-                await push(ordersRef, order);
-                
+                const newOrderRef = await push(ordersRef, order);
+
+                // Upload quote file if provided
+                const orderQuoteFileEl = document.getElementById('orderQuoteFile');
+                if (orderQuoteFileEl && orderQuoteFileEl.files[0]) {
+                    try {
+                        const qf = orderQuoteFileEl.files[0];
+                        const ext = qf.name.split('.').pop();
+                        const qRef = storageRef(storage, `quotes/${newOrderRef.key}_quote.${ext}`);
+                        const snap = await uploadBytes(qRef, qf);
+                        const qURL = await getDownloadURL(snap.ref);
+                        await update(ref(database, `orders/${newOrderRef.key}`), {
+                            quoteFileURL: qURL,
+                            quoteFileName: qf.name
+                        });
+                    } catch (uploadErr) {
+                        console.error('Error uploading quote file:', uploadErr);
+                    }
+                }
+
                 // בדיקה אם לשלוח מייל
                 const sendEmail = document.getElementById('sendEmailNotification').checked;
                 if (sendEmail) {
@@ -2317,7 +2750,6 @@ function setupApproverUI() {
                         console.log('Email notifications sent successfully');
                     } catch (error) {
                         console.error('Error sending email notifications:', error);
-                        // לא לעצור את התהליך אם המייל נכשל
                     }
                 }
                 
@@ -2574,7 +3006,7 @@ function setupApproverUI() {
             if ((approvals.shuli || 'pending') !== 'approved') {
                 pendingApprovers.push({key: 'shuli', name: 'שולי ששון', email: approverEmails.shuli});
             }
-            if (order.totalIncludingVat > 9000 && (approvals.gadi || 'pending') !== 'approved') {
+            if (order.totalIncludingVat > 10000 && (approvals.gadi || 'pending') !== 'approved') {
                 pendingApprovers.push({key: 'gadi', name: 'ד"ר גדי מדור', email: approverEmails.gadi});
             }
             
@@ -2700,35 +3132,81 @@ function setupApproverUI() {
         }
 
         async function sendNewOrderEmails(order) {
-            const approversToNotify = [];
-            
-            // אמילי תמיד מקבלת
-            approversToNotify.push({
-                email: approverEmails.emily,
-                name: 'אמילי'
-            });
-            
-            // שולי תמיד מקבלת (אחרי אמילי)
-            approversToNotify.push({
-                email: approverEmails.shuli,
-                name: 'שולי'
-            });
-            
-            // גדי מקבל רק אם הסכום מעל 9000
-            if (order.totalIncludingVat > 9000) {
-                approversToNotify.push({
-                    email: approverEmails.gadi,
-                    name: 'ד"ר גדי'
+            // שולחים רק לאמילי בהתחלה – שולי וגדי יקבלו מייל אוטומטי כשהקודם מאשר
+            await sendNewOrderEmail(approverEmails.emily, 'אמילי', order);
+        }
+
+        async function sendRequesterNotification(recipientEmail, recipientName, status, entity, entityType, approverDisplayName, nextApproverDisplayName) {
+            const label = entityType === 'quote' ? 'הצעת המחיר' : 'ההזמנה';
+            const statusText = status === 'approved' ? 'אושרה במלואה' : status === 'partial' ? 'אושרה חלקית' : 'נדחתה';
+            const nextLine = nextApproverDisplayName ? ` ועוברת לאישור ל${nextApproverDisplayName}` : '';
+            const approvalLine = approverDisplayName
+                ? `${label} ${statusText} על ידי ${approverDisplayName}${nextLine}`
+                : `${label} ${statusText}`;
+            try {
+                await emailjs.send('service_lgb24x4', 'template_069cokp', {
+                    to_email: recipientEmail,
+                    to_name: recipientName,
+                    from_name: 'מערכת ההזמנות',
+                    subject: `${label} מס' ${entity.orderNumber || entity.quoteNumber} ${statusText}${approverDisplayName ? ` — ${approverDisplayName}` : ''}`,
+                    approver_name: approverDisplayName || '',
+                    requester_name: recipientName,
+                    product_name: approvalLine,
+                    order_number: entity.orderNumber || entity.quoteNumber,
+                    total_amount: (entity.totalIncludingVat || 0).toFixed(2),
+                    order_date: formatDate(entity.orderDate || entity.quoteDate),
+                    system_link: 'https://snirsnir.github.io/orders/index.html'
                 });
+            } catch (err) {
+                console.error('Error sending requester notification:', err);
             }
-            
-            for (const approver of approversToNotify) {
-                await sendNewOrderEmail(approver.email, approver.name, order);
+        }
+
+        async function sendAppealNotification(approverEmail, approverName, itemIndex, appealText, entity, entityType) {
+            const label = entityType === 'quote' ? 'הצעת מחיר' : 'הזמנה';
+            try {
+                await emailjs.send('service_lgb24x4', 'template_069cokp', {
+                    to_email: approverEmail,
+                    to_name: approverName,
+                    from_name: 'מערכת ההזמנות',
+                    subject: `ערעור על דחיית פריט ב${label} מס' ${entity.orderNumber || entity.quoteNumber}`,
+                    approver_name: approverName,
+                    requester_name: entity.requesterName,
+                    product_name: `ערעור על פריט #${itemIndex + 1}: ${appealText}`,
+                    order_number: entity.orderNumber || entity.quoteNumber,
+                    total_amount: (entity.totalIncludingVat || 0).toFixed(2),
+                    order_date: formatDate(entity.orderDate || entity.quoteDate),
+                    system_link: 'https://snirsnir.github.io/orders/index.html'
+                });
+            } catch (err) {
+                console.error('Error sending appeal notification:', err);
+            }
+        }
+
+        async function sendAppealResultNotification(recipientEmail, recipientName, itemIndex, accepted, approverDisplayName, entity, entityType) {
+            const label = entityType === 'quote' ? 'הצעת המחיר' : 'ההזמנה';
+            const result = accepted ? 'התקבל — הפריט אושר' : 'לא התקבל — הפריט נשאר דחוי';
+            try {
+                await emailjs.send('service_lgb24x4', 'template_069cokp', {
+                    to_email: recipientEmail,
+                    to_name: recipientName,
+                    from_name: 'מערכת ההזמנות',
+                    subject: `ערעורך על פריט #${itemIndex + 1} ב${label} מס' ${entity.orderNumber || entity.quoteNumber} ${accepted ? 'התקבל' : 'לא התקבל'}`,
+                    approver_name: approverDisplayName,
+                    requester_name: recipientName,
+                    product_name: `ערעורך על פריט #${itemIndex + 1} ${result} (${approverDisplayName})`,
+                    order_number: entity.orderNumber || entity.quoteNumber,
+                    total_amount: (entity.totalIncludingVat || 0).toFixed(2),
+                    order_date: formatDate(entity.orderDate || entity.quoteDate),
+                    system_link: 'https://snirsnir.github.io/orders/index.html'
+                });
+            } catch (err) {
+                console.error('Error sending appeal result notification:', err);
             }
         }
 
         async function sendNewOrderEmail(email, approverName, order) {
-            const firstItem = order.items[0];
+            const firstItem = (order.items || [])[0];
             const productName = firstItem ? firstItem.productName : 'מוצרים שונים';
             
             const templateParams = {
@@ -2762,7 +3240,7 @@ function setupApproverUI() {
             }
 
             const printContent = document.getElementById('printOrderContent');
-            const needsGadi = order.totalIncludingVat > 9000;
+            const needsGadi = order.totalIncludingVat > 10000;
             const approvals = order.approvals || {};
             const billingDisplay = getBillingTypeDisplay(order.billingType, order.recurringType);
             
@@ -2778,7 +3256,7 @@ function setupApproverUI() {
 
             printContent.innerHTML = `
                 <div class="print-section" style="text-align: center; margin-bottom: 15px;">
-                    <h2 style="margin: 0; padding: 0;">טופס הזמנת עבודה או ציוד</h2>
+                    <h2 style="margin: 0; padding: 10px 0; background-color: #bbf7d0; border-radius: 6px;">טופס הזמנת עבודה או ציוד</h2>
                 </div>
                 
                 <div class="print-section">
@@ -2793,6 +3271,10 @@ function setupApproverUI() {
                         <tr>
                             <td style="border: 1px solid #000; padding: 4px; font-weight: bold;">סעיף תקציבי</td>
                             <td style="border: 1px solid #000; padding: 4px;" colspan="3">${order.department}</td>
+                        </tr>
+                        <tr>
+                            <td style="border: 1px solid #000; padding: 4px; font-weight: bold;">עבור</td>
+                            <td style="border: 1px solid #000; padding: 4px;" colspan="3">${order.orderFor || ''}</td>
                         </tr>
                         <tr>
                             <td style="border: 1px solid #000; padding: 4px; font-weight: bold;">סוג חיוב</td>
@@ -2810,64 +3292,62 @@ function setupApproverUI() {
                     <h3 style="text-align: center; margin: 8px 0; background-color: #f0f0f0; padding: 3px;">תיאור המוצר</h3>
                     <table style="width: 100%; border-collapse: collapse; margin-bottom: 12px;">
                         <tr>
-                            <th style="border: 1px solid #000; padding: 3px; background-color: #f0f0f0; font-size: 9px;">שם המוצר תיאור המוצר או העבודה</th>
-                            <th style="border: 1px solid #000; padding: 3px; background-color: #f0f0f0; font-size: 9px;">מטרה- תיאור הצורך</th>
-                            <th style="border: 1px solid #000; padding: 3px; background-color: #f0f0f0; font-size: 9px;">כמות קיימת במלאי</th>
-                            <th style="border: 1px solid #000; padding: 3px; background-color: #f0f0f0; font-size: 9px;">הערות</th>
-                            <th style="border: 1px solid #000; padding: 3px; background-color: #f0f0f0; font-size: 9px;">שם הספק</th>
-                            <th style="border: 1px solid #000; padding: 3px; background-color: #f0f0f0; font-size: 9px;">עלות בש"ח כולל מע"מ</th>
+                            <th style="border: 1px solid #000; padding: 6px; background-color: #e8e8e8;">שם המוצר / תיאור</th>
+                            <th style="border: 1px solid #000; padding: 6px; background-color: #e8e8e8;">מטרה — תיאור הצורך</th>
+                            <th style="border: 1px solid #000; padding: 6px; background-color: #e8e8e8;">כמות במלאי</th>
+                            <th style="border: 1px solid #000; padding: 6px; background-color: #e8e8e8;">הערות</th>
+                            <th style="border: 1px solid #000; padding: 6px; background-color: #e8e8e8;">שם הספק</th>
+                            <th style="border: 1px solid #000; padding: 6px; background-color: #e8e8e8;">עלות כולל מע"מ</th>
                         </tr>
                         ${order.items.map(item => `
                             <tr>
-                                <td style="border: 1px solid #000; padding: 3px; font-size: 9px;">${item.productName}</td>
-                                <td style="border: 1px solid #000; padding: 3px; font-size: 9px;">${item.purpose}</td>
-                                <td style="border: 1px solid #000; padding: 3px; text-align: center; font-size: 9px;">${item.stockQuantity || 0}</td>
-                                <td style="border: 1px solid #000; padding: 3px; text-align: center; font-size: 9px;">-</td>
-                                <td style="border: 1px solid #000; padding: 3px; font-size: 9px;">${item.supplier}</td>
-                                <td style="border: 1px solid #000; padding: 3px; text-align: center; font-size: 9px;">₪${parseFloat(item.cost).toFixed(2)} (כולל מע"מ)</td>
+                                <td style="border: 1px solid #000; padding: 6px;">${item.productName}</td>
+                                <td style="border: 1px solid #000; padding: 6px;">${item.purpose}</td>
+                                <td style="border: 1px solid #000; padding: 6px; text-align: center;">${item.stockQuantity || 0}</td>
+                                <td style="border: 1px solid #000; padding: 6px; text-align: center;">-</td>
+                                <td style="border: 1px solid #000; padding: 6px;">${item.supplier}</td>
+                                <td style="border: 1px solid #000; padding: 6px; text-align: center;">₪${parseFloat(item.cost).toFixed(2)}</td>
                             </tr>
                         `).join('')}
                     </table>
-                    
-                    <div style="text-align: left; margin: 8px 0; font-weight: bold; font-size: 11px;">
-                        <p style="margin: 2px 0;">סה"כ תשלום: ₪${order.totalIncludingVat.toFixed(2)}</p>
-                        <p style="margin: 2px 0;">סוג חיוב: ${billingDisplay.text}</p>
+
+                    <div style="text-align: left; margin: 8px 0; font-weight: bold;">
+                        <p style="margin: 3px 0;">סה"כ תשלום: ₪${order.totalIncludingVat.toFixed(2)}</p>
+                        <p style="margin: 3px 0;">סוג חיוב: ${billingDisplay.text}</p>
                     </div>
                 </div>
 
                 <div class="print-section">
-                    <p style="margin: 10px 0; font-size: 10px;"><strong>במידה וההזמנה כוללת כמות גדולה של פריטים ניתן לצרף את דף ההזמנה</strong></p>
-                    
-                    <h3 style="text-align: center; margin: 8px 0; background-color: #f0f0f0; padding: 3px;">אישור ההזמנה (חתימות)</h3>
+                    <h3 style="text-align: center; margin: 8px 0; background-color: #e8e8e8; padding: 5px;">אישור ההזמנה (חתימות)</h3>
                     <table style="width: 100%; border-collapse: collapse;">
                         <tr>
-                            <th style="border: 1px solid #000; padding: 4px; background-color: #f0f0f0; width: 20%;">שם המאשר</th>
-                            <th style="border: 1px solid #000; padding: 4px; background-color: #f0f0f0; width: 25%;">הערות</th>
-                            <th style="border: 1px solid #000; padding: 4px; background-color: #f0f0f0; width: 15%;">תאריך</th>
-                            <th style="border: 1px solid #000; padding: 4px; background-color: #f0f0f0; width: 20%;">הגבלת הזמנה</th>
-                            <th style="border: 1px solid #000; padding: 4px; background-color: #f0f0f0; width: 20%;">חתימה</th>
+                            <th style="border: 1px solid #000; padding: 8px; background-color: #e8e8e8; width: 20%;">שם המאשר</th>
+                            <th style="border: 1px solid #000; padding: 8px; background-color: #e8e8e8; width: 25%;">הערות</th>
+                            <th style="border: 1px solid #000; padding: 8px; background-color: #e8e8e8; width: 15%;">תאריך</th>
+                            <th style="border: 1px solid #000; padding: 8px; background-color: #e8e8e8; width: 20%;">הגבלת הזמנה</th>
+                            <th style="border: 1px solid #000; padding: 8px; background-color: #e8e8e8; width: 20%;">חתימה</th>
                         </tr>
                         ${needsGadi ? `
                         <tr>
-                            <td style="border: 1px solid #000; padding: 6px; height: 25px;">ד"ר גדי מדור</td>
-                            <td style="border: 1px solid #000; padding: 6px;"></td>
-                            <td style="border: 1px solid #000; padding: 6px;"></td>
-                            <td style="border: 1px solid #000; padding: 6px;"></td>
-                            <td style="border: 1px solid #000; padding: 6px; text-align: center;"><span class="signature-approved">${getSignatureText('gadi')}</span></td>
+                            <td style="border: 1px solid #000; padding: 10px; height: 35px;">ד"ר גדי מדור</td>
+                            <td style="border: 1px solid #000; padding: 10px;"></td>
+                            <td style="border: 1px solid #000; padding: 10px;"></td>
+                            <td style="border: 1px solid #000; padding: 10px;"></td>
+                            <td style="border: 1px solid #000; padding: 10px; text-align: center;"><span class="signature-approved">${getSignatureText('gadi')}</span></td>
                         </tr>` : ''}
                         <tr>
-                            <td style="border: 1px solid #000; padding: 6px; height: 25px;">אמילי גולן</td>
-                            <td style="border: 1px solid #000; padding: 6px;"></td>
-                            <td style="border: 1px solid #000; padding: 6px;"></td>
-                            <td style="border: 1px solid #000; padding: 6px;"></td>
-                            <td style="border: 1px solid #000; padding: 6px; text-align: center;"><span class="signature-approved">${getSignatureText('emily')}</span></td>
+                            <td style="border: 1px solid #000; padding: 10px; height: 35px;">אמילי גולן</td>
+                            <td style="border: 1px solid #000; padding: 10px;"></td>
+                            <td style="border: 1px solid #000; padding: 10px;"></td>
+                            <td style="border: 1px solid #000; padding: 10px;"></td>
+                            <td style="border: 1px solid #000; padding: 10px; text-align: center;"><span class="signature-approved">${getSignatureText('emily')}</span></td>
                         </tr>
                         <tr>
-                            <td style="border: 1px solid #000; padding: 6px; height: 25px;">שולי ששון</td>
-                            <td style="border: 1px solid #000; padding: 6px;"></td>
-                            <td style="border: 1px solid #000; padding: 6px;"></td>
-                            <td style="border: 1px solid #000; padding: 6px;"></td>
-                            <td style="border: 1px solid #000; padding: 6px; text-align: center;"><span class="signature-approved">${getSignatureText('shuli')}</span></td>
+                            <td style="border: 1px solid #000; padding: 10px; height: 35px;">שולי ששון</td>
+                            <td style="border: 1px solid #000; padding: 10px;"></td>
+                            <td style="border: 1px solid #000; padding: 10px;"></td>
+                            <td style="border: 1px solid #000; padding: 10px;"></td>
+                            <td style="border: 1px solid #000; padding: 10px; text-align: center;"><span class="signature-approved">${getSignatureText('shuli')}</span></td>
                         </tr>
                     </table>
                 </div>
@@ -2887,6 +3367,7 @@ function setupApproverUI() {
                 const approvals = getApprovalStatus(order);
                 const status = getOrderStatus(order);
                 const billingDisplay = getBillingTypeDisplay(order.billingType, order.recurringType);
+                const needsGadi = order.totalIncludingVat > 10000;
                 
                 let orderNotesSection = '';
                 if (order.orderNotes) {
@@ -2950,100 +3431,173 @@ function setupApproverUI() {
                     explanationsSection += '</div>';
                 }
                 
+                // Pre-compute compact approval strip and action buttons
+                const myApproverTypeForBtns = userRole === 'approver' ? userData.approverType : null;
+                const myItemApForBtns = ((order.approvals || {})[`${myApproverTypeForBtns}_items`] || {});
+                const hasAnyRejectedByMeOrder = Object.values(myItemApForBtns).some(s => s === 'rejected');
+
+                let compactApprovalHtml = '';
+                let orderActionBtns = '';
+                approvals.forEach(apEntry => {
+                    const expText = order.explanations?.[apEntry.key]?.text
+                        ? `<span style="font-size:0.75rem; color:var(--explanation-needed); margin-right:0.3rem;">— ${order.explanations[apEntry.key].text}</span>`
+                        : '';
+                    compactApprovalHtml += `<div style="display:flex; align-items:center; gap:0.3rem;">
+                        <div class="approval-icon approval-${apEntry.status}" style="width:14px; height:14px;"></div>
+                        <span style="font-size:0.85rem;"><strong>${apEntry.name}:</strong> ${apEntry.statusText}</span>${expText}
+                    </div>`;
+                    if (userRole === 'approver' && isUserApprover(apEntry.name)) {
+                        const approveLabel = hasAnyRejectedByMeOrder ? 'אשר הזמנה חלקית' : 'אשר הזמנה';
+                        const approveBtnStyle = hasAnyRejectedByMeOrder ? 'background:#f59e0b; border-color:#f59e0b; color:#fff;' : '';
+                        if (apEntry.status === 'pending') {
+                            orderActionBtns = `<div style="display:flex; gap:0.5rem; justify-content:flex-end; margin-top:1rem; flex-wrap:wrap;">
+                                <button class="btn btn-success" style="${approveBtnStyle}" onclick="approveOrderWithReasons('${orderId}', '${apEntry.key}')">${approveLabel}</button>
+                                <button class="btn btn-warning" onclick="requestExplanation('${orderId}', '${apEntry.key}')">דרוש הסבר</button>
+                                <button class="btn btn-danger" onclick="rejectOrder('${orderId}', '${apEntry.key}')">דחה הזמנה</button>
+                            </div>`;
+                        } else if (apEntry.status === 'explanation_received') {
+                            orderActionBtns = `<div style="display:flex; gap:0.5rem; justify-content:flex-end; margin-top:1rem; flex-wrap:wrap;">
+                                <button class="btn btn-success" style="${approveBtnStyle}" onclick="approveOrderWithReasons('${orderId}', '${apEntry.key}')">${approveLabel}</button>
+                                <button class="btn btn-danger" onclick="rejectOrder('${orderId}', '${apEntry.key}')">דחה הזמנה</button>
+                            </div>`;
+                        }
+                    } else if (userRole === 'requester' && apEntry.status === 'explanation_needed') {
+                        orderActionBtns = `<div style="display:flex; gap:0.5rem; justify-content:flex-end; margin-top:1rem;">
+                            <button class="btn btn-primary" onclick="replyToExplanation('${orderId}', '${apEntry.key}')">הגב</button>
+                        </div>`;
+                    }
+                });
+
                 document.getElementById('orderDetailsContent').innerHTML = `
-                    <div style="margin-bottom: 2rem;">
-                        <h3>פרטי הזמנה #${order.orderNumber || generateOrderNumber()}</h3>
-                        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; margin: 1rem 0;">
-                            <div><strong>מזמין:</strong> ${order.requesterName.split(' ')[0]}</div>
-                            <div><strong>תאריך יצירה:</strong> ${formatDate(order.createdAt)}</div>
-                            <div><strong>תאריך:</strong> ${formatDate(order.orderDate)}</div>
-                            <div><strong>סעיף תקציבי:</strong> ${order.department}</div>
-                            <div><strong>סוג חיוב:</strong> <span class="billing-badge ${billingDisplay.class}">${billingDisplay.text}</span></div>
-                            <div><strong>סטטוס:</strong> <span class="status-badge status-${status.class}">${status.text}</span></div>
-                        </div>
+                    <div style="padding:0.5rem 0;">
+                    <div style="display:grid; grid-template-columns:1fr 1fr; gap:1rem; margin-bottom:1rem;">
+                        <div><strong>מספר הזמנה:</strong> ${order.orderNumber || ''}</div>
+                        <div><strong>תאריך:</strong> ${formatDate(order.orderDate)}</div>
+                        <div><strong>מזמין:</strong> ${order.requesterName}</div>
+                        <div><strong>סעיף תקציבי:</strong> ${order.department}${order.departmentDetail ? ` — ${order.departmentDetail}` : ''}</div>
+                        ${order.orderFor ? `<div><strong>עבור:</strong> ${order.orderFor}</div>` : ''}
+                        <div><strong>סה"כ כולל מע"מ:</strong> ₪${order.totalIncludingVat.toFixed(2)}</div>
+                        <div><strong>סוג חיוב:</strong> <span class="billing-badge ${billingDisplay.class}">${billingDisplay.text}</span></div>
+                        <div><strong>סטטוס:</strong> <span class="status-badge status-${status.class}">${status.text}</span></div>
                     </div>
-                    
-                    ${orderNotesSection}
-                    ${billingSection}
-                    
-                    <div style="margin-bottom: 2rem;">
-                        <h4>סטטוס אישורים</h4>
-                        <div style="display: flex; flex-direction: column; gap: 0.5rem; margin: 1rem 0;">
-                            ${approvals.map(approval => {
-                                const explanation = order.explanations && order.explanations[approval.key];
-                                const reply = order.replies && order.replies[approval.key];
-                                
-                                let actionButtons = '';
-                                if (userRole === 'approver' && isUserApprover(approval.name)) {
-                                    if (approval.status === 'pending') {
-                                        actionButtons = `
-                                            <div style="margin-right: auto;">
-                                                <button class="btn btn-success" style="font-size: 0.8rem; padding: 0.3rem 0.8rem; margin-left: 0.5rem;" onclick="approveOrder('${orderId}', '${approval.key}')">אשר</button>
-                                                <button class="btn btn-warning" style="font-size: 0.8rem; padding: 0.3rem 0.8rem; margin-left: 0.5rem;" onclick="requestExplanation('${orderId}', '${approval.key}')">דרוש הסבר</button>
-                                                <button class="btn btn-danger" style="font-size: 0.8rem; padding: 0.3rem 0.8rem;" onclick="rejectOrder('${orderId}', '${approval.key}')">דחה</button>
-                                            </div>
-                                        `;
-                                    } else if (approval.status === 'explanation_received') {
-                                        actionButtons = `
-                                            <div style="margin-right: auto;">
-                                                <button class="btn btn-success" style="font-size: 0.8rem; padding: 0.3rem 0.8rem; margin-left: 0.5rem;" onclick="approveOrder('${orderId}', '${approval.key}')">אשר</button>
-                                                <button class="btn btn-danger" style="font-size: 0.8rem; padding: 0.3rem 0.8rem;" onclick="rejectOrder('${orderId}', '${approval.key}')">דחה</button>
-                                            </div>
-                                        `;
-                                    }
-                                } else if (userRole === 'requester' && approval.status === 'explanation_needed') {
-                                    actionButtons = `
-                                        <div style="margin-right: auto;">
-                                            <button class="btn btn-primary" style="font-size: 0.8rem; padding: 0.3rem 0.8rem;" onclick="replyToExplanation('${orderId}', '${approval.key}')">הגב</button>
-                                        </div>
-                                    `;
-                                }
-                                
-                                let explanationText = '';
-                                if (explanation) {
-                                    explanationText = `<br><small style="font-weight: bold; color: var(--explanation-needed);">${explanation.text}</small>`;
-                                }
-                                
-                                return `
-                                    <div style="display: flex; align-items: center; gap: 0.5rem;">
-                                        <div class="approval-icon approval-${approval.status}" style="width: 16px; height: 16px;"></div>
-                                        <span><strong>${approval.name}:</strong> ${approval.statusText}${explanationText}</span>
-                                        ${actionButtons}
-                                    </div>
-                                `;
-                            }).join('')}
-                        </div>
+                    ${order.orderNotes ? `<div style="margin-bottom:1rem;"><strong>הערות:</strong> ${order.orderNotes}</div>` : ''}
+                    ${order.quoteFileURL ? `<div style="margin-bottom:1rem; padding:0.6rem 0.8rem; background:var(--bg-tertiary); border-radius:8px; display:flex; align-items:center; gap:0.5rem;">
+                        <span>📎 <strong>קבצים נלווים:</strong></span>
+                        <a href="${order.quoteFileURL}" target="_blank" rel="noopener noreferrer" style="color:var(--accent-primary); text-decoration:underline;">${order.quoteFileName || 'פתח קובץ'}</a>
+                    </div>` : ''}
+                    <div style="display:flex; gap:0.75rem; flex-wrap:wrap; align-items:center; margin-bottom:1rem; padding:0.6rem 0.8rem; background:var(--bg-tertiary); border-radius:8px;">
+                        ${compactApprovalHtml}
                     </div>
-                    
                     ${explanationsSection}
                     
                     <div style="margin-bottom: 2rem;">
-                        <h4>פריטי ההזמנה</h4>
-                        ${order.items.map((item, index) => `
-                            <div style="background: var(--bg-tertiary); padding: 1rem; border-radius: 8px; margin: 1rem 0;">
-                                <h5>פריט #${index + 1}</h5>
-                                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 0.5rem; margin: 0.5rem 0;">
-                                    <div><strong>מוצר:</strong> ${item.productName}</div>
-                                    <div><strong>ספק:</strong> ${item.supplier}</div>
-                                    <div><strong>עלות:</strong> ₪${parseFloat(item.cost).toFixed(2)} (כולל מע"מ)</div>
-                                </div>
-                                <div style="margin: 0.5rem 0;">
-                                    <strong>מטרה:</strong> ${item.purpose}
-                                </div>
-                                <div>
-                                    <strong>כמות במלאי:</strong> ${item.stockQuantity || 0}
-                                </div>
-                            </div>
-                        `).join('')}
+                        <h4 style="margin:1rem 0 0.5rem;">פריטים:</h4>
+                        <table style="width:100%; border-collapse:collapse; font-size:0.9rem;">
+                            <thead>
+                                <tr style="background:var(--bg-tertiary);">
+                                    <th style="border:1px solid var(--border-color); padding:0.5rem;">מוצר</th>
+                                    <th style="border:1px solid var(--border-color); padding:0.5rem;">תיאור</th>
+                                    <th style="border:1px solid var(--border-color); padding:0.5rem;">ספק</th>
+                                    <th style="border:1px solid var(--border-color); padding:0.5rem;">כמות במלאי</th>
+                                    <th style="border:1px solid var(--border-color); padding:0.5rem;">עלות</th>
+                                    <th style="border:1px solid var(--border-color); padding:0.5rem;">אישור פריט</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                        ${order.items.map((item, index) => {
+                            const myApproverType = userRole === 'approver' ? userData.approverType : null;
+                            const myItemAp = ((order.approvals || {})[`${myApproverType}_items`] || {});
+                            const itemRejected = myItemAp[index] === 'rejected';
+                            const allRejectedByAny = ['emily','shuli','gadi'].some(at =>
+                                ((order.approvals || {})[`${at}_items`] || {})[index] === 'rejected'
+                            );
+                            const appeal = (order.itemAppeals || {})[index];
+                            const rejectionReasonData = (order.itemRejectionReasons || {})[index];
+                            const rejectionReason = rejectionReasonData?.reason;
+                            const myRejectionReason = rejectionReasonData?.approverType === myApproverType ? rejectionReasonData?.reason : null;
+
+                            const canApproveOrder = userRole === 'approver' && isUserApprover(approvals.find(a => a.key === myApproverType)?.name || '') &&
+                                (approvals.find(a => a.key === myApproverType)?.status === 'pending' || approvals.find(a => a.key === myApproverType)?.status === 'explanation_received');
+
+                            const orderApprovedOrPartial = status.class === 'approved' || status.class === 'partial';
+                            const myApproverAlreadyApproved = userRole === 'approver' && myApproverType &&
+                                (order.approvals || {})[myApproverType] === 'approved';
+                            const showApproved = (orderApprovedOrPartial || myApproverAlreadyApproved) && !allRejectedByAny;
+                            const canRespondToOrderAppeal = userRole === 'approver' && myApproverType && itemRejected && !!appeal;
+
+                            let itemAction = '';
+                            if (canApproveOrder || canRespondToOrderAppeal) {
+                                if (itemRejected) {
+                                    itemAction = `<div style="display:flex; align-items:center; gap:0.4rem; flex-wrap:wrap;">
+                                            <span style="color:var(--error); font-weight:bold;">✗ נדחה</span>
+                                            ${canApproveOrder ? `<button class="btn btn-small" style="font-size:0.75rem; padding:0.2rem 0.6rem; background:var(--bg-tertiary); border:1px solid var(--border-color); cursor:pointer; border-radius:4px;" onclick="undoOrderItemRejection('${orderId}', '${myApproverType}', ${index})">↩ בטל דחייה</button>` : ''}
+                                        </div>
+                                        ${canApproveOrder && !myRejectionReason ? `<div style="margin-top:0.4rem;">
+                                            <textarea id="rejectReasonOrder_${index}" placeholder="סיבת הדחייה (תשלח למזמין עם האישור)..." style="width:100%; padding:0.3rem 0.5rem; border-radius:4px; border:1px solid var(--border-color); font-size:0.75rem; resize:vertical; background:var(--bg-secondary); color:var(--text-primary);" rows="2"></textarea>
+                                        </div>` : ''}
+                                        ${myRejectionReason ? `<div style="margin-top:0.3rem; font-size:0.8rem; color:var(--text-secondary);">סיבה: ${myRejectionReason}</div>` : ''}
+                                        ${appeal ? `<div style="margin-top:0.4rem; padding:0.4rem; background:#fef9c3; border-radius:4px; font-size:0.85rem; border:1px solid #fde047;"><strong>ערעור מהמזמין:</strong> ${appeal.text}</div>
+                                            <div style="display:flex; gap:0.4rem; margin-top:0.4rem; flex-wrap:wrap;">
+                                                <button class="btn btn-success btn-small" style="font-size:0.75rem;" onclick="approveRejectedOrderItem('${orderId}', '${myApproverType}', ${index})">✓ אשר פריט</button>
+                                                <button class="btn btn-danger btn-small" style="font-size:0.75rem;" onclick="const el=document.getElementById('keepRejOrderReason_${index}'); el.style.display=el.style.display==='none'?'block':'none';">✗ שמור דחייה</button>
+                                            </div>
+                                            <div id="keepRejOrderReason_${index}" style="display:none; margin-top:0.4rem;">
+                                                <textarea id="keepRejOrderReasonText_${index}" placeholder="סיבת שמירת הדחייה..." style="width:100%; padding:0.3rem 0.5rem; border-radius:4px; border:1px solid var(--border-color); font-size:0.75rem; resize:vertical; background:var(--bg-secondary); color:var(--text-primary);" rows="2"></textarea>
+                                                <button class="btn btn-danger btn-small" style="margin-top:0.3rem; font-size:0.75rem;" onclick="keepOrderItemRejected('${orderId}', '${myApproverType}', ${index}, document.getElementById('keepRejOrderReasonText_${index}').value.trim())">✗ אשר שמירת דחייה</button>
+                                            </div>` : ''}`;
+                                } else if (canApproveOrder) {
+                                    itemAction = `<button class="btn btn-danger btn-small" style="font-size:0.75rem;" onclick="setOrderItemApproval('${orderId}','${myApproverType}',${index},'rejected')">דחה פריט</button>`;
+                                }
+                            } else if (userRole === 'requester') {
+                                const approversForItem = [
+                                    { key: 'emily', name: 'אמילי' },
+                                    { key: 'shuli', name: 'שולי' },
+                                    ...(needsGadi ? [{ key: 'gadi', name: 'גדי' }] : [])
+                                ];
+                                const dotsHtml = approversForItem.map(apv => {
+                                    const apvStatus = ((order.approvals || {})[`${apv.key}_items`] || {})[index];
+                                    const apvOverall = (order.approvals || {})[apv.key];
+                                    let dotColor;
+                                    if (apvStatus === 'rejected') dotColor = 'var(--error)';
+                                    else if (apvStatus === 'approved' || apvOverall === 'approved') dotColor = 'var(--success)';
+                                    else dotColor = '#94a3b8';
+                                    const isRej = apvStatus === 'rejected';
+                                    return `<span style="display:inline-flex; align-items:center; gap:0.2rem; margin-left:0.5rem; cursor:${isRej ? 'pointer' : 'default'};"
+                                        ${isRej ? `onclick="const el=document.getElementById('orderItemAppeal_${index}'); if(el) el.style.display=el.style.display==='none'?'block':'none';"` : ''}>
+                                        <span style="width:8px; height:8px; border-radius:50%; background:${dotColor}; display:inline-block;"></span>
+                                        <span style="font-size:0.8rem; color:${isRej ? 'var(--error)' : 'var(--text-secondary)'}; ${isRej ? 'text-decoration:underline;' : ''}">${apv.name}</span>
+                                    </span>`;
+                                }).join('');
+                                const hasAnyRejectedItem = approversForItem.some(apv => ((order.approvals || {})[`${apv.key}_items`] || {})[index] === 'rejected');
+                                itemAction = `<div>
+                                    <div style="display:flex; flex-wrap:wrap; align-items:center;">${dotsHtml}</div>
+                                    ${hasAnyRejectedItem ? `<div id="orderItemAppeal_${index}" style="display:none; margin-top:0.4rem; padding:0.5rem; background:#fee2e2; border-radius:6px; border:1px solid #fca5a5;">
+                                        ${rejectionReason ? `<div style="font-size:0.8rem; color:var(--text-secondary); margin-bottom:0.4rem;"><strong>סיבת הדחייה:</strong> ${rejectionReason}</div>` : ''}
+                                        ${appeal ? `<span style="color:var(--warning); font-size:0.8rem;">⏳ ערעור נשלח</span>` :
+                                        `<textarea id="orderAppeal_${index}" placeholder="כתב ערעור..." style="width:100%; padding:0.4rem; border-radius:4px; border:1px solid var(--border-color); font-size:0.8rem; resize:vertical;" rows="2"></textarea>
+                                        <button class="btn btn-primary btn-small" style="margin-top:0.3rem; font-size:0.75rem;" onclick="submitOrderItemAppeal('${orderId}', ${index})">שלח ערעור</button>`}
+                                    </div>` : ''}
+                                </div>`;
+                            } else if (showApproved) {
+                                itemAction = `<span style="color:var(--success); font-weight:bold;">✓ אושר</span>`;
+                            }
+
+                            const rowBg = allRejectedByAny ? 'background:#fee2e2;' : showApproved ? 'background:#dcfce7;' : '';
+                            return `
+                            <tr style="${rowBg}">
+                                <td style="border:1px solid var(--border-color); padding:0.5rem;">${item.productName}</td>
+                                <td style="border:1px solid var(--border-color); padding:0.5rem;">${item.purpose}</td>
+                                <td style="border:1px solid var(--border-color); padding:0.5rem;">${item.supplier}</td>
+                                <td style="border:1px solid var(--border-color); padding:0.5rem; text-align:center;">${item.stockQuantity || 0}</td>
+                                <td style="border:1px solid var(--border-color); padding:0.5rem; text-align:center;">₪${parseFloat(item.cost).toFixed(2)}</td>
+                                <td style="border:1px solid var(--border-color); padding:0.5rem;">${itemAction || ''}</td>
+                            </tr>`;
+                        }).join('')}
+                            </tbody>
+                        </table>
                     </div>
                     
-                    <div style="background: var(--bg-tertiary); padding: 1rem; border-radius: 8px;">
-                        <h4>סיכום כספי</h4>
-                        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; margin: 1rem 0;">
-                            <div><strong>סה"כ לא כולל מע"מ:</strong> ₪${order.totalExcludingVat.toFixed(2)}</div>
-                            <div><strong>סה"כ כולל מע"מ:</strong> ₪${order.totalIncludingVat.toFixed(2)}</div>
-                            <div><strong>סוג חיוב:</strong> <span class="billing-badge ${billingDisplay.class}">${billingDisplay.text}</span></div>
-                        </div>
+                    ${orderActionBtns}
                     </div>
                 `;
                 
@@ -3071,8 +3625,41 @@ function setupApproverUI() {
         window.approveOrder = async function(orderId, approver) {
             if (confirm(`האם אתה בטוח שברצונך לאשר הזמנה זו?`)) {
                 try {
+                    const order = orders.find(o => o.id === orderId);
                     const orderRef = ref(database, `orders/${orderId}/approvals/${approver}`);
                     await set(orderRef, 'approved');
+
+                    if (order) {
+                        const approverDisplayNames = { emily: 'אמילי', shuli: 'שולי', gadi: 'גדי' };
+                        const approverDisplayName = approverDisplayNames[approver];
+                        const nextApproverName = approver === 'emily' ? 'שולי'
+                            : (approver === 'shuli' && order.totalIncludingVat > 10000) ? 'גדי'
+                            : null;
+
+                        // שרשרת מאשרים
+                        try {
+                            if (approver === 'emily') {
+                                await sendNewOrderEmail(approverEmails.shuli, 'שולי', order);
+                            } else if (approver === 'shuli' && order.totalIncludingVat > 10000) {
+                                await sendNewOrderEmail(approverEmails.gadi, 'ד"ר גדי', order);
+                            }
+                        } catch (emailErr) {
+                            console.error('Error sending chain email:', emailErr);
+                        }
+
+                        // מייל למזמין בכל שלב
+                        if (order.requesterEmail) {
+                            try {
+                                const myItemAp = (order.approvals || {})[`${approver}_items`] || {};
+                                const hasRejectedByMe = Object.values(myItemAp).some(s => s === 'rejected');
+                                const approvalType = hasRejectedByMe ? 'partial' : 'approved';
+                                await sendRequesterNotification(order.requesterEmail, order.requesterName, approvalType, order, 'order', approverDisplayName, nextApproverName);
+                            } catch (emailErr) {
+                                console.error('Error sending requester email:', emailErr);
+                            }
+                        }
+                    }
+
                     alert('ההזמנה אושרה בהצלחה!');
                     closeOrderDetailsModal();
                 } catch (error) {
@@ -3087,6 +3674,10 @@ function setupApproverUI() {
                 try {
                     const orderRef = ref(database, `orders/${orderId}/approvals/${approver}`);
                     await set(orderRef, 'rejected');
+                    const order = orders.find(o => o.id === orderId);
+                    if (order?.requesterEmail) {
+                        await sendRequesterNotification(order.requesterEmail, order.requesterName, 'rejected', order, 'order');
+                    }
                     alert('ההזמנה נדחתה');
                     closeOrderDetailsModal();
                 } catch (error) {
@@ -3324,7 +3915,1046 @@ function setupApproverUI() {
         window.removeOrderItem = removeOrderItem;
         window.viewReceipt = viewReceipt;
         window.downloadReceipt = downloadReceipt;
-        
+
+        // ===== QUOTES FEATURE =====
+
+        let quotes = [];
+        let quoteItemCounter = 0;
+
+        const newQuoteModal = document.getElementById('newQuoteModal');
+        const quoteDetailsModal = document.getElementById('quoteDetailsModal');
+
+        function openNewQuoteModal() {
+            newQuoteModal.classList.add('active');
+            if (!document.getElementById('quoteRequesterName').value)
+                document.getElementById('quoteRequesterName').value = userData ? userData.name : '';
+            if (!document.getElementById('quoteDate').value)
+                document.getElementById('quoteDate').value = new Date().toISOString().split('T')[0];
+        }
+
+        function resetNewQuoteForm() {
+            document.getElementById('newQuoteForm').reset();
+            quoteItemCounter = 0;
+            const quoteItemsDiv = document.getElementById('quoteItems');
+            quoteItemsDiv.querySelectorAll('.order-item:not([data-item="0"])').forEach(el => el.remove());
+            document.getElementById('quoteDocFileName').textContent = '';
+            document.getElementById('quoteTotalIncludingVat').textContent = '₪0';
+        }
+
+        function closeNewQuoteModal() {
+            newQuoteModal.classList.remove('active');
+        }
+
+        function closeQuoteDetailsModal() {
+            quoteDetailsModal.classList.remove('active');
+        }
+
+        function updateQuoteSummary() {
+            const quoteItemsDiv = document.getElementById('quoteItems');
+            const costInputs = quoteItemsDiv.querySelectorAll('.quote-cost-input');
+            const qtyInputs = quoteItemsDiv.querySelectorAll('[name="quantity"]');
+            let total = 0;
+            costInputs.forEach((inp, i) => {
+                const cost = parseFloat(inp.value) || 0;
+                const qty = parseFloat(qtyInputs[i]?.value) || 1;
+                total += cost * qty;
+            });
+            document.getElementById('quoteTotalIncludingVat').textContent = `₪${total.toFixed(2)}`;
+            document.getElementById('quoteTotalExcludingVat').textContent = `₪${(total / 1.18).toFixed(2)}`;
+
+            const notice = document.getElementById('gadiApprovalNoticeQuote');
+            if (notice) {
+                if (total > 10000) {
+                    notice.style.display = 'block';
+                    notice.style.animation = 'none';
+                    void notice.offsetWidth;
+                    notice.style.animation = 'pulse 0.4s ease';
+                } else {
+                    notice.style.display = 'none';
+                }
+            }
+        }
+
+        document.getElementById('addQuoteItemBtn')?.addEventListener('click', () => {
+            quoteItemCounter++;
+            const quoteItemsDiv = document.getElementById('quoteItems');
+            const newItem = document.createElement('div');
+            newItem.className = 'order-item';
+            newItem.dataset.item = quoteItemCounter;
+            newItem.innerHTML = `
+                <button type="button" class="btn btn-danger btn-small" style="float: left; margin-bottom: 0.5rem;"
+                    onclick="this.closest('.order-item').remove(); updateQuoteSummary();">✕ הסר</button>
+                <div class="form-group">
+                    <label class="form-label">שם המוצר / שירות</label>
+                    <input type="text" class="form-input" name="productName" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">תיאור ומטרה</label>
+                    <textarea class="form-textarea" name="purpose" required></textarea>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">כמות</label>
+                    <input type="number" class="form-input" name="quantity" min="1" value="1">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">מחיר יחידה בש"ח (כולל מע"מ)</label>
+                    <input type="number" class="form-input quote-cost-input" name="unitCost" step="0.01" min="0" required>
+                </div>
+            `;
+            quoteItemsDiv.appendChild(newItem);
+            newItem.querySelectorAll('.quote-cost-input, [name="quantity"]').forEach(inp => {
+                inp.addEventListener('input', updateQuoteSummary);
+            });
+        });
+
+        document.getElementById('quoteDocFile')?.addEventListener('change', (e) => {
+            const file = e.target.files[0];
+            document.getElementById('quoteDocFileName').textContent = file ? file.name : '';
+        });
+
+        document.getElementById('orderQuoteFile')?.addEventListener('change', (e) => {
+            const file = e.target.files[0];
+            document.getElementById('orderQuoteFileName').textContent = file ? file.name : '';
+        });
+
+        document.querySelectorAll('#quoteItems .quote-cost-input, #quoteItems [name="quantity"]').forEach(inp => {
+            inp.addEventListener('input', updateQuoteSummary);
+        });
+
+        document.getElementById('cancelQuoteBtn')?.addEventListener('click', closeNewQuoteModal);
+        document.getElementById('closeNewQuoteModal')?.addEventListener('click', closeNewQuoteModal);
+        document.getElementById('closeQuoteDetailsModal')?.addEventListener('click', closeQuoteDetailsModal);
+
+        window.addEventListener('click', (e) => {
+            if (e.target === newQuoteModal) closeNewQuoteModal();
+            if (e.target === quoteDetailsModal) closeQuoteDetailsModal();
+        });
+
+        document.getElementById('newQuoteForm')?.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const submitBtn = document.getElementById('submitQuoteBtn');
+            submitBtn.disabled = true;
+            submitBtn.querySelector('span').style.display = 'none';
+            submitBtn.querySelector('.loading').style.display = 'inline-block';
+
+            try {
+                const quoteItemsDiv = document.getElementById('quoteItems');
+                const items = [];
+                quoteItemsDiv.querySelectorAll('.order-item').forEach(itemDiv => {
+                    const data = {};
+                    itemDiv.querySelectorAll('input, textarea').forEach(inp => {
+                        if (inp.name) data[inp.name] = inp.value;
+                    });
+                    if (data.productName) {
+                        const qty = parseInt(data.quantity) || 1;
+                        const unitCost = parseFloat(data.unitCost) || 0;
+                        items.push({
+                            productName: data.productName,
+                            purpose: data.purpose || '',
+                            quantity: qty,
+                            unitCost: unitCost,
+                            totalCost: qty * unitCost
+                        });
+                    }
+                });
+
+                if (items.length === 0) {
+                    alert('אנא הוסף לפחות פריט אחד');
+                    return;
+                }
+
+                const totalIncludingVat = items.reduce((sum, item) => sum + item.totalCost, 0);
+
+                const quote = {
+                    requesterEmail: currentUser.email,
+                    requesterName: userData.name,
+                    quoteDate: document.getElementById('quoteDate').value,
+                    department: document.getElementById('quoteDepartment').value,
+                    quoteFor: document.getElementById('quoteFor').value,
+                    supplier: document.getElementById('quoteSupplier').value,
+                    items: items,
+                    totalIncludingVat: totalIncludingVat,
+                    quoteNotes: document.getElementById('quoteNotes').value,
+                    status: 'pending',
+                    approvals: { emily: 'pending', shuli: 'pending' },
+                    createdAt: new Date().toISOString(),
+                    quoteNumber: Math.floor(100000 + Math.random() * 900000),
+                    quoteDocURL: null,
+                    quoteDocFileName: null
+                };
+
+                if (totalIncludingVat > 10000) {
+                    quote.approvals.gadi = 'pending';
+                }
+
+                const quotesRef = ref(database, 'quotes');
+                const newQuoteRef = await push(quotesRef, quote);
+
+                const docFile = document.getElementById('quoteDocFile').files[0];
+                if (docFile) {
+                    try {
+                        const ext = docFile.name.split('.').pop();
+                        const docRef = storageRef(storage, `quotes/${newQuoteRef.key}_doc.${ext}`);
+                        const snap = await uploadBytes(docRef, docFile);
+                        const docURL = await getDownloadURL(snap.ref);
+                        await update(ref(database, `quotes/${newQuoteRef.key}`), {
+                            quoteDocURL: docURL,
+                            quoteDocFileName: docFile.name
+                        });
+                    } catch (upErr) {
+                        console.error('Error uploading quote doc:', upErr);
+                    }
+                }
+
+                const sendQuoteEmail = document.getElementById('sendQuoteEmailNotification').checked;
+                if (sendQuoteEmail) {
+                    try {
+                        await sendNewOrderEmail(approverEmails.emily, 'אמילי', {
+                            orderNumber: quote.quoteNumber,
+                            orderDate: quote.quoteDate,
+                            requesterName: quote.requesterName,
+                            items: items,
+                            totalIncludingVat: totalIncludingVat
+                        });
+                    } catch (emailErr) {
+                        console.error('Error sending quote email:', emailErr);
+                    }
+                }
+
+                alert('הצעת המחיר נשלחה בהצלחה לאישור!');
+                closeNewQuoteModal();
+                resetNewQuoteForm();
+                loadQuotes();
+            } catch (error) {
+                console.error('Error submitting quote:', error);
+                alert('שגיאה בשליחת הצעת המחיר: ' + error.message);
+            } finally {
+                submitBtn.disabled = false;
+                submitBtn.querySelector('span').style.display = 'inline';
+                submitBtn.querySelector('.loading').style.display = 'none';
+            }
+        });
+
+        async function loadQuotes() {
+            try {
+                const quotesRef = ref(database, 'quotes');
+                const snapshot = await get(quotesRef);
+                if (snapshot.exists()) {
+                    let all = Object.entries(snapshot.val()).map(([id, data]) => ({ id, ...data }));
+                    all.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+                    if (userData && userData.role === 'requester') {
+                        quotes = all.filter(q => q.requesterEmail === currentUser.email);
+                    } else {
+                        quotes = all;
+                    }
+                } else {
+                    quotes = [];
+                }
+                renderQuotesTable();
+            } catch (err) {
+                console.error('Error loading quotes:', err);
+            }
+        }
+
+        function hasRejectedItems(entity) {
+            const ap = entity.approvals || {};
+            for (const key of Object.keys(ap)) {
+                if (key.endsWith('_items')) {
+                    if (Object.values(ap[key]).some(s => s === 'rejected')) return true;
+                }
+            }
+            return false;
+        }
+
+        function getQuoteStatus(quote) {
+            const approvals = quote.approvals || {};
+            const emily = approvals.emily || 'pending';
+            const shuli = approvals.shuli || 'pending';
+            const gadi = quote.totalIncludingVat > 10000 ? (approvals.gadi || 'pending') : 'approved';
+
+            if (emily === 'rejected' || shuli === 'rejected' || gadi === 'rejected') {
+                return { class: 'rejected', text: 'נדחה' };
+            }
+            if (emily === 'approved' && shuli === 'approved' && gadi === 'approved') {
+                if (hasRejectedItems(quote)) return { class: 'partial', text: 'הצעת מחיר אושרה חלקית' };
+                return { class: 'approved', text: 'מאושר' };
+            }
+            return { class: 'pending', text: 'ממתין לאישור' };
+        }
+
+        function renderQuotesTable() {
+            const tbody = document.getElementById('quotesTableBody');
+            const emptyEl = document.getElementById('quotesEmptyState');
+            if (!tbody) return;
+
+            if (quotes.length === 0) {
+                tbody.innerHTML = '';
+                if (emptyEl) emptyEl.style.display = 'block';
+                return;
+            }
+            if (emptyEl) emptyEl.style.display = 'none';
+
+            tbody.innerHTML = quotes.map(quote => {
+                const st = getQuoteStatus(quote);
+                const ap = quote.approvals || {};
+                const needsGadi = quote.totalIncludingVat > 10000;
+
+                const quotePartial = hasRejectedItems(quote);
+                const approverIconClass = (status) => {
+                    if (status === 'approved' && quotePartial) return 'partial';
+                    return status || 'pending';
+                };
+                const approverText = (status) => {
+                    if (status === 'approved' && quotePartial) return 'אושר חלקית';
+                    return getStatusText(status || 'pending');
+                };
+
+                let approvalsHtml = `
+                    <div class="approval-item"><div class="approval-icon approval-${approverIconClass(ap.emily)}"></div><span>אמילי - ${approverText(ap.emily)}</span></div>
+                    <div class="approval-item"><div class="approval-icon approval-${approverIconClass(ap.shuli)}"></div><span>שולי - ${approverText(ap.shuli)}</span></div>
+                `;
+                if (needsGadi) {
+                    approvalsHtml += `<div class="approval-item"><div class="approval-icon approval-${approverIconClass(ap.gadi)}"></div><span>גדי - ${approverText(ap.gadi)}</span></div>`;
+                }
+
+                const canConvert = st.class === 'approved';
+
+                return `
+                    <tr>
+                        <td>${formatDate(quote.quoteDate)}</td>
+                        <td>${quote.quoteNumber}</td>
+                        <td>${quote.department}</td>
+                        <td>${quote.quoteFor || '-'}</td>
+                        <td>${quote.supplier || '-'}</td>
+                        <td>₪${parseFloat(quote.totalIncludingVat).toFixed(2)}</td>
+                        <td><span class="status-badge status-${st.class}">${st.text}</span></td>
+                        <td>${approvalsHtml}</td>
+                        <td>
+                            <button class="btn btn-secondary btn-small" onclick="openQuoteDetails('${quote.id}')">פרטים</button>
+                            ${canConvert ? `<button class="btn btn-primary btn-small" style="margin-right:0.3rem;" onclick="convertQuoteToOrder('${quote.id}')">המר להזמנה</button>` : ''}
+                            ${(quote.approvals?.emily || 'pending') === 'pending' ? `<button class="btn btn-danger btn-small" style="font-size:0.75rem; padding:0.2rem 0.6rem; margin-right:0.3rem;" onclick="deleteQuote('${quote.id}')">🗑️ מחק</button>` : ''}
+                        </td>
+                    </tr>
+                `;
+            }).join('');
+        }
+
+        window.openQuoteDetails = async function(quoteId) {
+            const quote = quotes.find(q => q.id === quoteId);
+            if (!quote) return;
+
+            const ap = quote.approvals || {};
+            const st = getQuoteStatus(quote);
+            const needsGadi = quote.totalIncludingVat > 10000;
+            const isApprover = userData && userData.role === 'approver';
+            const myType = userData ? userData.approverType : null;
+
+            let canApprove = false;
+            if (isApprover && myType) {
+                if (myType === 'emily') canApprove = (ap.emily === 'pending');
+                else if (myType === 'shuli') canApprove = (ap.emily === 'approved' && ap.shuli === 'pending');
+                else if (myType === 'gadi') canApprove = needsGadi && ap.emily === 'approved' && ap.shuli === 'approved' && ap.gadi === 'pending';
+            }
+
+            const isRequester = userData && userData.role === 'requester';
+            const allApproverTypes = ['emily', 'shuli', 'gadi'];
+
+            // Collect all rejected item indices across all approvers
+            const rejectedByAny = {};
+            allApproverTypes.forEach(at => {
+                const itemAp = ap[`${at}_items`] || {};
+                Object.entries(itemAp).forEach(([i, s]) => {
+                    if (s === 'rejected') rejectedByAny[i] = true;
+                });
+            });
+
+            const itemsHtml = (quote.items || []).map((item, idx) => {
+                const myItemApprovals = ap[`${myType}_items`] || {};
+                const itemStatus = myItemApprovals[idx];
+                const isRejected = rejectedByAny[idx];
+                const appeal = (quote.itemAppeals || {})[idx];
+                const myItemRejected = itemStatus === 'rejected';
+                const canRespondToAppeal = isApprover && myType && myItemRejected && !!appeal;
+                const rejectionReasonData = (quote.itemRejectionReasons || {})[idx];
+                const rejectionReason = rejectionReasonData?.reason;
+                const myRejectionReason = rejectionReasonData?.approverType === myType ? rejectionReasonData?.reason : null;
+                let itemActHtml = '';
+
+                if (canApprove || canRespondToAppeal) {
+                    if (myItemRejected) {
+                        itemActHtml = `<div style="display:flex; align-items:center; gap:0.4rem; flex-wrap:wrap;">
+                                <span style="color:var(--error); font-weight:bold;">✗ נדחה</span>
+                                ${canApprove ? `<button class="btn btn-small" style="font-size:0.75rem; padding:0.2rem 0.6rem; background:var(--bg-tertiary); border:1px solid var(--border-color); cursor:pointer; border-radius:4px;" onclick="undoQuoteItemRejection('${quoteId}', '${myType}', ${idx})">↩ בטל דחייה</button>` : ''}
+                            </div>
+                            ${canApprove && !myRejectionReason ? `<div style="margin-top:0.4rem;">
+                                <textarea id="rejectReasonQuote_${idx}" placeholder="סיבת הדחייה (תשלח למזמין עם האישור)..." style="width:100%; padding:0.3rem 0.5rem; border-radius:4px; border:1px solid var(--border-color); font-size:0.75rem; resize:vertical; background:var(--bg-secondary); color:var(--text-primary);" rows="2"></textarea>
+                            </div>` : ''}
+                            ${myRejectionReason ? `<div style="margin-top:0.3rem; font-size:0.8rem; color:var(--text-secondary);">סיבה: ${myRejectionReason}</div>` : ''}
+                            ${appeal ? `<div style="margin-top:0.4rem; padding:0.4rem; background:#fef9c3; border-radius:4px; font-size:0.85rem; border:1px solid #fde047;"><strong>ערעור מהמזמין:</strong> ${appeal.text}</div>
+                                <div style="display:flex; gap:0.4rem; margin-top:0.4rem; flex-wrap:wrap;">
+                                    <button class="btn btn-success btn-small" style="font-size:0.75rem;" onclick="approveRejectedQuoteItem('${quoteId}', '${myType}', ${idx})">✓ אשר פריט</button>
+                                    <button class="btn btn-danger btn-small" style="font-size:0.75rem;" onclick="const el=document.getElementById('keepRejQuoteReason_${idx}'); el.style.display=el.style.display==='none'?'block':'none';">✗ שמור דחייה</button>
+                                </div>
+                                <div id="keepRejQuoteReason_${idx}" style="display:none; margin-top:0.4rem;">
+                                    <textarea id="keepRejQuoteReasonText_${idx}" placeholder="סיבת שמירת הדחייה..." style="width:100%; padding:0.3rem 0.5rem; border-radius:4px; border:1px solid var(--border-color); font-size:0.75rem; resize:vertical; background:var(--bg-secondary); color:var(--text-primary);" rows="2"></textarea>
+                                    <button class="btn btn-danger btn-small" style="margin-top:0.3rem; font-size:0.75rem;" onclick="keepQuoteItemRejected('${quoteId}', '${myType}', ${idx}, document.getElementById('keepRejQuoteReasonText_${idx}').value.trim())">✗ אשר שמירת דחייה</button>
+                                </div>` : ''}`;
+                    } else if (canApprove) {
+                        itemActHtml = `<button class="btn btn-danger btn-small" style="font-size:0.75rem;" onclick="setQuoteItemApproval('${quoteId}','${myType}',${idx},'rejected')">דחה פריט</button>`;
+                    }
+                } else if (isRequester) {
+                    const approversForQuoteItem = [
+                        { key: 'emily', name: 'אמילי' },
+                        { key: 'shuli', name: 'שולי' },
+                        ...(needsGadi ? [{ key: 'gadi', name: 'גדי' }] : [])
+                    ];
+                    const dotsHtmlQ = approversForQuoteItem.map(apv => {
+                        const apvStatus = (ap[`${apv.key}_items`] || {})[idx];
+                        const apvOverall = ap[apv.key];
+                        let dotColor;
+                        if (apvStatus === 'rejected') dotColor = 'var(--error)';
+                        else if (apvStatus === 'approved' || apvOverall === 'approved') dotColor = 'var(--success)';
+                        else dotColor = '#94a3b8';
+                        const isRej = apvStatus === 'rejected';
+                        return `<span style="display:inline-flex; align-items:center; gap:0.2rem; margin-left:0.5rem; cursor:${isRej ? 'pointer' : 'default'};"
+                            ${isRej ? `onclick="const el=document.getElementById('quoteItemAppeal_${idx}'); if(el) el.style.display=el.style.display==='none'?'block':'none';"` : ''}>
+                            <span style="width:8px; height:8px; border-radius:50%; background:${dotColor}; display:inline-block;"></span>
+                            <span style="font-size:0.8rem; color:${isRej ? 'var(--error)' : 'var(--text-secondary)'}; ${isRej ? 'text-decoration:underline;' : ''}">${apv.name}</span>
+                        </span>`;
+                    }).join('');
+                    const hasAnyRejectedQuoteItem = approversForQuoteItem.some(apv => (ap[`${apv.key}_items`] || {})[idx] === 'rejected');
+                    itemActHtml = `<div>
+                        <div style="display:flex; flex-wrap:wrap; align-items:center;">${dotsHtmlQ}</div>
+                        ${hasAnyRejectedQuoteItem ? `<div id="quoteItemAppeal_${idx}" style="display:none; margin-top:0.4rem; padding:0.5rem; background:#fee2e2; border-radius:6px; border:1px solid #fca5a5;">
+                            ${rejectionReason ? `<div style="font-size:0.8rem; color:var(--text-secondary); margin-bottom:0.4rem;"><strong>סיבת הדחייה:</strong> ${rejectionReason}</div>` : ''}
+                            ${appeal ? `<span style="color:var(--warning); font-size:0.8rem;">⏳ ערעור נשלח</span>` :
+                            `<textarea id="quoteAppeal_${idx}" placeholder="כתב ערעור..." style="width:100%; padding:0.4rem; border-radius:4px; border:1px solid var(--border-color); font-size:0.8rem; resize:vertical;" rows="2"></textarea>
+                            <button class="btn btn-primary btn-small" style="margin-top:0.3rem; font-size:0.75rem;" onclick="submitQuoteItemAppeal('${quoteId}', ${idx})">שלח ערעור</button>`}
+                        </div>` : ''}
+                    </div>`;
+                } else if (((st.class === 'approved' || st.class === 'partial') || (myType && ap[myType] === 'approved')) && !isRejected) {
+                    itemActHtml = `<span style="color:var(--success); font-weight:bold;">✓ אושר</span>`;
+                } else if (itemStatus === 'rejected') {
+                    itemActHtml = `<span style="color:var(--error);">✗ נדחה</span>`;
+                }
+
+                const isApprovedItem = !isRejected && ((st.class === 'approved' || st.class === 'partial') || (myType && ap[myType] === 'approved'));
+                const rowBg = isRejected ? 'background:#fee2e2;' : isApprovedItem ? 'background:#dcfce7;' : '';
+                return `
+                    <tr style="${rowBg}">
+                        <td style="border:1px solid var(--border-color); padding:0.5rem;">${item.productName}</td>
+                        <td style="border:1px solid var(--border-color); padding:0.5rem;">${item.purpose}</td>
+                        <td style="border:1px solid var(--border-color); padding:0.5rem; text-align:center;">${item.quantity}</td>
+                        <td style="border:1px solid var(--border-color); padding:0.5rem; text-align:center;">₪${parseFloat(item.unitCost).toFixed(2)}</td>
+                        <td style="border:1px solid var(--border-color); padding:0.5rem; text-align:center;">₪${parseFloat(item.totalCost).toFixed(2)}</td>
+                        <td style="border:1px solid var(--border-color); padding:0.5rem;">${itemActHtml}</td>
+                    </tr>
+                `;
+            }).join('');
+
+            const myItemApprovalMap = ap[`${myType}_items`] || {};
+            const hasAnyRejectedByMe = Object.values(myItemApprovalMap).some(s => s === 'rejected');
+
+            let approvalBtns = '';
+            if (canApprove) {
+                const approveLabel = hasAnyRejectedByMe ? 'אשר הצעה חלקית' : 'אשר הצעה';
+                const approveBtnStyle = hasAnyRejectedByMe
+                    ? 'background:#f59e0b; border-color:#f59e0b; color:#fff;'
+                    : '';
+                approvalBtns = `
+                    <div style="margin-top:1rem; display:flex; gap:0.5rem; justify-content:flex-end;">
+                        <button class="btn btn-success" style="${approveBtnStyle}" onclick="approveQuoteWithReasons('${quoteId}', '${myType}')">${approveLabel}</button>
+                        <button class="btn btn-danger" onclick="rejectQuote('${quoteId}', '${myType}')">דחה הצעה</button>
+                    </div>
+                `;
+            }
+
+            let docSection = '';
+            if (quote.quoteDocURL) {
+                docSection = `
+                    <div style="margin:1rem 0; padding:1rem; background:var(--bg-tertiary); border-radius:8px;">
+                        <strong>מסמך הצעת מחיר:</strong>
+                        <a href="${quote.quoteDocURL}" target="_blank" style="margin-right:0.5rem;">📄 ${quote.quoteDocFileName || 'פתח מסמך'}</a>
+                    </div>
+                `;
+            }
+
+            document.getElementById('quoteDetailsContent').innerHTML = `
+                <div style="padding:0.5rem 0;">
+                    <div style="display:grid; grid-template-columns:1fr 1fr; gap:1rem; margin-bottom:1rem;">
+                        <div><strong>מספר הצעה:</strong> ${quote.quoteNumber}</div>
+                        <div><strong>תאריך:</strong> ${formatDate(quote.quoteDate)}</div>
+                        <div><strong>מזמין:</strong> ${quote.requesterName}</div>
+                        <div><strong>ספק:</strong> ${quote.supplier}</div>
+                        <div><strong>סעיף תקציבי:</strong> ${quote.department}</div>
+                        <div><strong>עבור:</strong> ${quote.quoteFor || '-'}</div>
+                        <div><strong>סה"כ:</strong> ₪${parseFloat(quote.totalIncludingVat).toFixed(2)}</div>
+                        <div><strong>סטטוס:</strong> <span class="status-badge status-${st.class}">${st.text}</span></div>
+                    </div>
+                    ${quote.quoteNotes ? `<div style="margin-bottom:1rem;"><strong>הערות:</strong> ${quote.quoteNotes}</div>` : ''}
+                    ${docSection}
+                    <h4 style="margin:1rem 0 0.5rem;">פריטים:</h4>
+                    <table style="width:100%; border-collapse:collapse; font-size:0.9rem;">
+                        <thead>
+                            <tr style="background:var(--bg-tertiary);">
+                                <th style="border:1px solid var(--border-color); padding:0.5rem;">מוצר</th>
+                                <th style="border:1px solid var(--border-color); padding:0.5rem;">תיאור</th>
+                                <th style="border:1px solid var(--border-color); padding:0.5rem;">כמות</th>
+                                <th style="border:1px solid var(--border-color); padding:0.5rem;">מחיר יחידה</th>
+                                <th style="border:1px solid var(--border-color); padding:0.5rem;">סה"כ</th>
+                                <th style="border:1px solid var(--border-color); padding:0.5rem;">אישור פריט</th>
+                            </tr>
+                        </thead>
+                        <tbody>${itemsHtml}</tbody>
+                    </table>
+                    ${approvalBtns}
+                </div>
+            `;
+            window.currentQuoteForPrint = quote;
+            quoteDetailsModal.classList.add('active');
+        };
+
+        function printQuote() {
+            const quote = window.currentQuoteForPrint;
+            if (!quote) { alert('אין הצעת מחיר להדפסה'); return; }
+            const needsGadi = quote.totalIncludingVat > 10000;
+            const ap = quote.approvals || {};
+            function getSigText(key) {
+                if (ap[key] === 'approved') return 'נחתם דיגיטלית';
+                if (ap[key] === 'rejected') return 'נדחה';
+                return '';
+            }
+            document.getElementById('printQuoteContent').innerHTML = `
+                <div class="print-section" style="text-align:center; margin-bottom:15px;">
+                    <h2 style="margin:0; padding:10px 0; background-color:#fef08a; border-radius:6px;">הצעת מחיר</h2>
+                </div>
+                <div class="print-section">
+                    <h3>פרטי הצעת המחיר</h3>
+                    <table>
+                        <tr>
+                            <td style="border:1px solid #000; padding:4px; width:25%; font-weight:bold;">מספר הצעה</td>
+                            <td style="border:1px solid #000; padding:4px; width:25%;">${quote.quoteNumber}</td>
+                            <td style="border:1px solid #000; padding:4px; width:25%; font-weight:bold;">תאריך</td>
+                            <td style="border:1px solid #000; padding:4px; width:25%;">${formatDate(quote.quoteDate)}</td>
+                        </tr>
+                        <tr>
+                            <td style="border:1px solid #000; padding:4px; font-weight:bold;">מזמין</td>
+                            <td style="border:1px solid #000; padding:4px;">${quote.requesterName}</td>
+                            <td style="border:1px solid #000; padding:4px; font-weight:bold;">ספק</td>
+                            <td style="border:1px solid #000; padding:4px;">${quote.supplier || ''}</td>
+                        </tr>
+                        <tr>
+                            <td style="border:1px solid #000; padding:4px; font-weight:bold;">סעיף תקציבי</td>
+                            <td style="border:1px solid #000; padding:4px;" colspan="3">${quote.department}</td>
+                        </tr>
+                        ${quote.quoteFor ? `<tr>
+                            <td style="border:1px solid #000; padding:4px; font-weight:bold;">עבור</td>
+                            <td style="border:1px solid #000; padding:4px;" colspan="3">${quote.quoteFor}</td>
+                        </tr>` : ''}
+                        ${quote.quoteNotes ? `<tr>
+                            <td style="border:1px solid #000; padding:4px; font-weight:bold;">הערות</td>
+                            <td style="border:1px solid #000; padding:4px;" colspan="3">${quote.quoteNotes}</td>
+                        </tr>` : ''}
+                    </table>
+                </div>
+                <div class="print-section">
+                    <h3>פריטים</h3>
+                    <table>
+                        <tr>
+                            <th>מוצר</th>
+                            <th>תיאור</th>
+                            <th>כמות</th>
+                            <th>מחיר יחידה</th>
+                            <th>סה"כ</th>
+                        </tr>
+                        ${(quote.items || []).map(item => `
+                            <tr>
+                                <td>${item.productName}</td>
+                                <td>${item.purpose || ''}</td>
+                                <td style="text-align:center;">${item.quantity}</td>
+                                <td style="text-align:center;">₪${parseFloat(item.unitCost).toFixed(2)}</td>
+                                <td style="text-align:center;">₪${parseFloat(item.totalCost).toFixed(2)}</td>
+                            </tr>
+                        `).join('')}
+                        <tr>
+                            <td colspan="4" style="text-align:left; font-weight:bold;">סה"כ כולל מע"מ</td>
+                            <td style="text-align:center; font-weight:bold;">₪${parseFloat(quote.totalIncludingVat).toFixed(2)}</td>
+                        </tr>
+                    </table>
+                </div>
+                <div class="print-section">
+                    <h3>אישור הצעת המחיר (חתימות)</h3>
+                    <table>
+                        <tr>
+                            <th style="width:25%;">שם המאשר</th>
+                            <th style="width:35%;">הערות</th>
+                            <th style="width:20%;">תאריך</th>
+                            <th style="width:20%;">חתימה</th>
+                        </tr>
+                        ${needsGadi ? `<tr>
+                            <td style="padding:10px; height:35px;">ד"ר גדי מדור</td>
+                            <td></td><td></td>
+                            <td style="text-align:center;"><span class="signature-approved">${getSigText('gadi')}</span></td>
+                        </tr>` : ''}
+                        <tr>
+                            <td style="padding:10px; height:35px;">אמילי גולן</td>
+                            <td></td><td></td>
+                            <td style="text-align:center;"><span class="signature-approved">${getSigText('emily')}</span></td>
+                        </tr>
+                        <tr>
+                            <td style="padding:10px; height:35px;">שולי ששון</td>
+                            <td></td><td></td>
+                            <td style="text-align:center;"><span class="signature-approved">${getSigText('shuli')}</span></td>
+                        </tr>
+                    </table>
+                </div>
+            `;
+            setTimeout(() => window.print(), 200);
+        }
+
+        window.setQuoteItemApproval = async function(quoteId, approverType, itemIndex, status) {
+            try {
+                await set(ref(database, `quotes/${quoteId}/approvals/${approverType}_items/${itemIndex}`), status);
+                await loadQuotes();
+                openQuoteDetails(quoteId);
+            } catch (err) {
+                console.error('Error setting item approval:', err);
+            }
+        };
+
+        window.setOrderItemApproval = async function(orderId, approverType, itemIndex, status) {
+            try {
+                await set(ref(database, `orders/${orderId}/approvals/${approverType}_items/${itemIndex}`), status);
+            } catch (err) {
+                console.error('Error setting order item approval:', err);
+            }
+            openOrderDetails(orderId);
+        };
+
+        window.submitQuoteItemAppeal = async function(quoteId, itemIndex) {
+            const text = document.getElementById(`quoteAppeal_${itemIndex}`)?.value?.trim();
+            if (!text) { alert('אנא כתב את הערעור'); return; }
+            try {
+                await set(ref(database, `quotes/${quoteId}/itemAppeals/${itemIndex}`), {
+                    text, timestamp: new Date().toISOString(), requesterName: userData.name
+                });
+                const quote = quotes.find(q => q.id === quoteId);
+                // מצא איזה מאשר דחה את הפריט הספציפי
+                const ap = quote?.approvals || {};
+                const rejectingApprover = ['emily', 'shuli', 'gadi'].find(at =>
+                    (ap[`${at}_items`] || {})[itemIndex] === 'rejected'
+                );
+                const approverKey = rejectingApprover || 'emily';
+                const approverNames = { emily: 'אמילי', shuli: 'שולי', gadi: 'ד"ר גדי' };
+                await sendAppealNotification(approverEmails[approverKey], approverNames[approverKey], itemIndex, text, { ...quote, orderNumber: quote?.quoteNumber, orderDate: quote?.quoteDate }, 'quote');
+                alert('הערעור נשלח בהצלחה');
+                await loadQuotes();
+                openQuoteDetails(quoteId);
+            } catch (err) {
+                console.error('Error submitting appeal:', err);
+                alert('שגיאה בשליחת הערעור');
+            }
+        };
+
+        window.submitOrderItemAppeal = async function(orderId, itemIndex) {
+            const text = document.getElementById(`orderAppeal_${itemIndex}`)?.value?.trim();
+            if (!text) { alert('אנא כתב את הערעור'); return; }
+            try {
+                await set(ref(database, `orders/${orderId}/itemAppeals/${itemIndex}`), {
+                    text, timestamp: new Date().toISOString(), requesterName: userData.name
+                });
+                const order = orders.find(o => o.id === orderId);
+                // מצא איזה מאשר דחה את הפריט הספציפי
+                const ap = order?.approvals || {};
+                const rejectingApprover = ['emily', 'shuli', 'gadi'].find(at =>
+                    (ap[`${at}_items`] || {})[itemIndex] === 'rejected'
+                );
+                const approverKey = rejectingApprover || 'emily';
+                const approverNames = { emily: 'אמילי', shuli: 'שולי', gadi: 'ד"ר גדי' };
+                await sendAppealNotification(approverEmails[approverKey], approverNames[approverKey], itemIndex, text, order, 'order');
+                alert('הערעור נשלח בהצלחה');
+                openOrderDetails(orderId);
+            } catch (err) {
+                console.error('Error submitting order appeal:', err);
+                alert('שגיאה בשליחת הערעור');
+            }
+        };
+
+        window.approveRejectedQuoteItem = async function(quoteId, approverType, itemIndex) {
+            const quote = quotes.find(q => q.id === quoteId);
+            try {
+                await set(ref(database, `quotes/${quoteId}/approvals/${approverType}_items/${itemIndex}`), 'approved');
+                await set(ref(database, `quotes/${quoteId}/itemAppeals/${itemIndex}`), null);
+                if (quote?.requesterEmail) {
+                    const names = { emily: 'אמילי', shuli: 'שולי', gadi: 'גדי' };
+                    await sendAppealResultNotification(quote.requesterEmail, quote.requesterName, itemIndex, true, names[approverType] || approverType, { ...quote, orderNumber: quote.quoteNumber, orderDate: quote.quoteDate }, 'quote');
+                }
+                await loadQuotes();
+                openQuoteDetails(quoteId);
+            } catch (err) {
+                console.error('Error approving rejected item:', err);
+            }
+        };
+
+        window.approveRejectedOrderItem = async function(orderId, approverType, itemIndex) {
+            const order = orders.find(o => o.id === orderId);
+            try {
+                await set(ref(database, `orders/${orderId}/approvals/${approverType}_items/${itemIndex}`), 'approved');
+                await set(ref(database, `orders/${orderId}/itemAppeals/${itemIndex}`), null);
+                if (order?.requesterEmail) {
+                    const names = { emily: 'אמילי', shuli: 'שולי', gadi: 'גדי' };
+                    await sendAppealResultNotification(order.requesterEmail, order.requesterName, itemIndex, true, names[approverType] || approverType, order, 'order');
+                }
+                openOrderDetails(orderId);
+            } catch (err) {
+                console.error('Error approving rejected order item:', err);
+            }
+        };
+
+        window.rejectOrderItemWithReason = async function(orderId, approverType, itemIndex) {
+            const reason = document.getElementById(`rejectReasonOrder_${itemIndex}`)?.value?.trim() || '';
+            try {
+                await set(ref(database, `orders/${orderId}/approvals/${approverType}_items/${itemIndex}`), 'rejected');
+                if (reason) {
+                    await set(ref(database, `orders/${orderId}/itemRejectionReasons/${itemIndex}`), {
+                        reason, approverType, timestamp: new Date().toISOString()
+                    });
+                }
+                openOrderDetails(orderId);
+            } catch (err) {
+                console.error('Error rejecting order item with reason:', err);
+            }
+        };
+
+        window.rejectQuoteItemWithReason = async function(quoteId, approverType, itemIndex) {
+            const reason = document.getElementById(`rejectReasonQuote_${itemIndex}`)?.value?.trim() || '';
+            try {
+                await set(ref(database, `quotes/${quoteId}/approvals/${approverType}_items/${itemIndex}`), 'rejected');
+                if (reason) {
+                    await set(ref(database, `quotes/${quoteId}/itemRejectionReasons/${itemIndex}`), {
+                        reason, approverType, timestamp: new Date().toISOString()
+                    });
+                }
+                await loadQuotes();
+                openQuoteDetails(quoteId);
+            } catch (err) {
+                console.error('Error rejecting quote item with reason:', err);
+            }
+        };
+
+        window.undoOrderItemRejection = async function(orderId, approverType, itemIndex) {
+            const reason = document.getElementById(`undoReasonOrder_${itemIndex}`)?.value?.trim() || '';
+            try {
+                await set(ref(database, `orders/${orderId}/approvals/${approverType}_items/${itemIndex}`), null);
+                if (reason) {
+                    await set(ref(database, `orders/${orderId}/undoRejectionReasons/${itemIndex}`), {
+                        reason, approverType, timestamp: new Date().toISOString()
+                    });
+                }
+                openOrderDetails(orderId);
+            } catch (err) {
+                console.error('Error undoing order item rejection:', err);
+            }
+        };
+
+        window.undoQuoteItemRejection = async function(quoteId, approverType, itemIndex) {
+            const reason = document.getElementById(`undoReasonQuote_${itemIndex}`)?.value?.trim() || '';
+            try {
+                await set(ref(database, `quotes/${quoteId}/approvals/${approverType}_items/${itemIndex}`), null);
+                if (reason) {
+                    await set(ref(database, `quotes/${quoteId}/undoRejectionReasons/${itemIndex}`), {
+                        reason, approverType, timestamp: new Date().toISOString()
+                    });
+                }
+                await loadQuotes();
+                openQuoteDetails(quoteId);
+            } catch (err) {
+                console.error('Error undoing quote item rejection:', err);
+            }
+        };
+
+        window.saveOrderItemRejectionReason = async function(orderId, approverType, itemIndex) {
+            const reason = document.getElementById(`rejectReasonOrder_${itemIndex}`)?.value?.trim() || '';
+            if (!reason) { alert('אנא כתב סיבת דחייה'); return; }
+            try {
+                await set(ref(database, `orders/${orderId}/itemRejectionReasons/${itemIndex}`), {
+                    reason, approverType, timestamp: new Date().toISOString()
+                });
+                const order = orders.find(o => o.id === orderId);
+                if (order?.requesterEmail) {
+                    const approverNames = { emily: 'אמילי', shuli: 'שולי', gadi: 'ד"ר גדי' };
+                    await emailjs.send('service_lgb24x4', 'template_069cokp', {
+                        to_email: order.requesterEmail,
+                        to_name: order.requesterName,
+                        from_name: 'מערכת ההזמנות',
+                        subject: `פריט #${itemIndex + 1} בהזמנה ${order.orderNumber} נדחה`,
+                        approver_name: approverNames[approverType] || approverType,
+                        requester_name: order.requesterName,
+                        product_name: `פריט #${itemIndex + 1} נדחה — סיבה: ${reason}`,
+                        order_number: order.orderNumber,
+                        total_amount: (order.totalIncludingVat || 0).toFixed(2),
+                        order_date: formatDate(order.orderDate),
+                        system_link: 'https://snirsnir.github.io/orders/index.html'
+                    });
+                }
+                alert('הסיבה נשלחה למזמין');
+                openOrderDetails(orderId);
+            } catch (err) {
+                console.error('Error saving order rejection reason:', err);
+            }
+        };
+
+        window.saveQuoteItemRejectionReason = async function(quoteId, approverType, itemIndex) {
+            const reason = document.getElementById(`rejectReasonQuote_${itemIndex}`)?.value?.trim() || '';
+            if (!reason) { alert('אנא כתב סיבת דחייה'); return; }
+            try {
+                await set(ref(database, `quotes/${quoteId}/itemRejectionReasons/${itemIndex}`), {
+                    reason, approverType, timestamp: new Date().toISOString()
+                });
+                const quote = quotes.find(q => q.id === quoteId);
+                if (quote?.requesterEmail) {
+                    const approverNames = { emily: 'אמילי', shuli: 'שולי', gadi: 'ד"ר גדי' };
+                    await emailjs.send('service_lgb24x4', 'template_069cokp', {
+                        to_email: quote.requesterEmail,
+                        to_name: quote.requesterName,
+                        from_name: 'מערכת ההזמנות',
+                        subject: `פריט #${itemIndex + 1} בהצעת מחיר ${quote.quoteNumber} נדחה`,
+                        approver_name: approverNames[approverType] || approverType,
+                        requester_name: quote.requesterName,
+                        product_name: `פריט #${itemIndex + 1} נדחה — סיבה: ${reason}`,
+                        order_number: quote.quoteNumber,
+                        total_amount: (quote.totalIncludingVat || 0).toFixed(2),
+                        order_date: formatDate(quote.quoteDate),
+                        system_link: 'https://snirsnir.github.io/orders/index.html'
+                    });
+                }
+                alert('הסיבה נשלחה למזמין');
+                await loadQuotes();
+                openQuoteDetails(quoteId);
+            } catch (err) {
+                console.error('Error saving quote rejection reason:', err);
+            }
+        };
+
+        window.keepQuoteItemRejected = async function(quoteId, approverType, itemIndex, reason) {
+            const quote = quotes.find(q => q.id === quoteId);
+            try {
+                if (reason) {
+                    await set(ref(database, `quotes/${quoteId}/itemRejectionReasons/${itemIndex}`), {
+                        reason, approverType, timestamp: new Date().toISOString()
+                    });
+                }
+                await set(ref(database, `quotes/${quoteId}/itemAppeals/${itemIndex}`), null);
+                if (quote?.requesterEmail) {
+                    const names = { emily: 'אמילי', shuli: 'שולי', gadi: 'גדי' };
+                    await sendAppealResultNotification(quote.requesterEmail, quote.requesterName, itemIndex, false, names[approverType] || approverType, { ...quote, orderNumber: quote.quoteNumber, orderDate: quote.quoteDate }, 'quote');
+                }
+                await loadQuotes();
+                openQuoteDetails(quoteId);
+            } catch (err) {
+                console.error('Error keeping quote item rejected:', err);
+            }
+        };
+
+        window.keepOrderItemRejected = async function(orderId, approverType, itemIndex, reason) {
+            const order = orders.find(o => o.id === orderId);
+            try {
+                if (reason) {
+                    await set(ref(database, `orders/${orderId}/itemRejectionReasons/${itemIndex}`), {
+                        reason, approverType, timestamp: new Date().toISOString()
+                    });
+                }
+                await set(ref(database, `orders/${orderId}/itemAppeals/${itemIndex}`), null);
+                if (order?.requesterEmail) {
+                    const names = { emily: 'אמילי', shuli: 'שולי', gadi: 'גדי' };
+                    await sendAppealResultNotification(order.requesterEmail, order.requesterName, itemIndex, false, names[approverType] || approverType, order, 'order');
+                }
+                openOrderDetails(orderId);
+            } catch (err) {
+                console.error('Error keeping order item rejected:', err);
+            }
+        };
+
+        window.approveQuoteWithReasons = async function(quoteId, approverType) {
+            const quote = quotes.find(q => q.id === quoteId);
+            if (!quote) return;
+            const items = quote.items || [];
+            for (let i = 0; i < items.length; i++) {
+                const ta = document.getElementById(`rejectReasonQuote_${i}`);
+                const reason = ta?.value?.trim() || '';
+                if (reason) {
+                    await set(ref(database, `quotes/${quoteId}/itemRejectionReasons/${i}`), {
+                        reason, approverType, timestamp: new Date().toISOString()
+                    });
+                }
+            }
+            await approveQuote(quoteId, approverType);
+        };
+
+        window.approveOrderWithReasons = async function(orderId, approverType) {
+            const order = orders.find(o => o.id === orderId);
+            if (!order) return;
+            const items = order.items || [];
+            for (let i = 0; i < items.length; i++) {
+                const ta = document.getElementById(`rejectReasonOrder_${i}`);
+                const reason = ta?.value?.trim() || '';
+                if (reason) {
+                    await set(ref(database, `orders/${orderId}/itemRejectionReasons/${i}`), {
+                        reason, approverType, timestamp: new Date().toISOString()
+                    });
+                }
+            }
+            await approveOrder(orderId, approverType);
+        };
+
+        window.approveQuote = async function(quoteId, approver) {
+            if (confirm('האם אתה בטוח שברצונך לאשר הצעת מחיר זו?')) {
+                try {
+                    const quote = quotes.find(q => q.id === quoteId);
+                    await set(ref(database, `quotes/${quoteId}/approvals/${approver}`), 'approved');
+                    if (quote) {
+                        const approverDisplayNames = { emily: 'אמילי', shuli: 'שולי', gadi: 'גדי' };
+                        const approverDisplayName = approverDisplayNames[approver];
+                        const nextApproverName = approver === 'emily' ? 'שולי'
+                            : (approver === 'shuli' && quote.totalIncludingVat > 10000) ? 'גדי'
+                            : null;
+
+                        // שרשרת מאשרים
+                        try {
+                            if (approver === 'emily') {
+                                await sendNewOrderEmail(approverEmails.shuli, 'שולי', {
+                                    orderNumber: quote.quoteNumber, orderDate: quote.quoteDate,
+                                    requesterName: quote.requesterName, items: quote.items,
+                                    totalIncludingVat: quote.totalIncludingVat
+                                });
+                            } else if (approver === 'shuli' && quote.totalIncludingVat > 10000) {
+                                await sendNewOrderEmail(approverEmails.gadi, 'ד"ר גדי', {
+                                    orderNumber: quote.quoteNumber, orderDate: quote.quoteDate,
+                                    requesterName: quote.requesterName, items: quote.items,
+                                    totalIncludingVat: quote.totalIncludingVat
+                                });
+                            }
+                        } catch (emailErr) {
+                            console.error('Error sending chain email for quote:', emailErr);
+                        }
+
+                        // מייל למזמין בכל שלב
+                        if (quote.requesterEmail) {
+                            try {
+                                const myItemAp = (quote.approvals || {})[`${approver}_items`] || {};
+                                const hasRejectedByMe = Object.values(myItemAp).some(s => s === 'rejected');
+                                const approvalType = hasRejectedByMe ? 'partial' : 'approved';
+                                await sendRequesterNotification(quote.requesterEmail, quote.requesterName, approvalType, { ...quote, orderNumber: quote.quoteNumber, orderDate: quote.quoteDate }, 'quote', approverDisplayName, nextApproverName);
+                            } catch (emailErr) {
+                                console.error('Error sending requester email for quote:', emailErr);
+                            }
+                        }
+                    }
+                    alert('הצעת המחיר אושרה!');
+                    closeQuoteDetailsModal();
+                    loadQuotes();
+                } catch (err) {
+                    console.error('Error approving quote:', err);
+                    alert('שגיאה באישור הצעת המחיר');
+                }
+            }
+        };
+
+        window.rejectQuote = async function(quoteId, approver) {
+            if (confirm('האם אתה בטוח שברצונך לדחות הצעת מחיר זו?')) {
+                try {
+                    await set(ref(database, `quotes/${quoteId}/approvals/${approver}`), 'rejected');
+                    const quote = quotes.find(q => q.id === quoteId);
+                    if (quote?.requesterEmail) {
+                        await sendRequesterNotification(quote.requesterEmail, quote.requesterName, 'rejected', { ...quote, orderNumber: quote.quoteNumber, orderDate: quote.quoteDate }, 'quote');
+                    }
+                    alert('הצעת המחיר נדחתה');
+                    closeQuoteDetailsModal();
+                    loadQuotes();
+                } catch (err) {
+                    console.error('Error rejecting quote:', err);
+                    alert('שגיאה בדחיית הצעת המחיר');
+                }
+            }
+        };
+
+        window.convertQuoteToOrder = function(quoteId) {
+            const quote = quotes.find(q => q.id === quoteId);
+            if (!quote) return;
+
+            openNewOrderModal();
+
+            setTimeout(() => {
+                // Reset items to initial state before filling
+                itemCounter = 0;
+                const orderItemsContainer = document.getElementById('orderItems');
+                orderItemsContainer.querySelectorAll('.order-item:not([data-item="0"])').forEach(el => el.remove());
+                const firstItemDiv = orderItemsContainer.querySelector('.order-item[data-item="0"]');
+                if (firstItemDiv) {
+                    firstItemDiv.querySelectorAll('input, textarea').forEach(el => el.value = '');
+                }
+
+                document.getElementById('orderDate').value = new Date().toISOString().split('T')[0];
+                document.getElementById('department').value = quote.department;
+                document.getElementById('orderFor').value = quote.quoteFor || '';
+                document.getElementById('orderNotes').value = `המרה מהצעת מחיר מס' ${quote.quoteNumber}`;
+
+                const itemDivs = document.querySelectorAll('#orderItems .order-item');
+                const firstItem = itemDivs[0];
+                if (firstItem && quote.items && quote.items.length > 0) {
+                    firstItem.querySelector('[name="productName"]').value = quote.items[0].productName;
+                    firstItem.querySelector('[name="purpose"]').value = quote.items[0].purpose || '';
+                    firstItem.querySelector('[name="supplier"]').value = quote.supplier || '';
+                    firstItem.querySelector('[name="cost"]').value = quote.items[0].totalCost || quote.items[0].unitCost || 0;
+                }
+
+                for (let i = 1; i < quote.items.length; i++) {
+                    document.getElementById('addItemBtn').click();
+                    const updatedDivs = document.querySelectorAll('#orderItems .order-item');
+                    const newItem = updatedDivs[updatedDivs.length - 1];
+                    if (newItem) {
+                        newItem.querySelector('[name="productName"]').value = quote.items[i].productName;
+                        newItem.querySelector('[name="purpose"]').value = quote.items[i].purpose || '';
+                        newItem.querySelector('[name="supplier"]').value = quote.supplier || '';
+                        newItem.querySelector('[name="cost"]').value = quote.items[i].totalCost || quote.items[i].unitCost || 0;
+                    }
+                }
+
+                updateOrderSummary();
+            }, 200);
+        };
+
+        window.deleteOrder = async function(orderId) {
+            if (!confirm('האם אתה בטוח שברצונך למחוק הזמנה זו? פעולה זו אינה הפיכה.')) return;
+            try {
+                await set(ref(database, `orders/${orderId}`), null);
+                alert('ההזמנה נמחקה בהצלחה');
+            } catch (err) {
+                console.error('Error deleting order:', err);
+                alert('שגיאה במחיקת ההזמנה');
+            }
+        };
+
+        window.deleteQuote = async function(quoteId) {
+            if (!confirm('האם אתה בטוח שברצונך למחוק הצעת מחיר זו? פעולה זו אינה הפיכה.')) return;
+            try {
+                await set(ref(database, `quotes/${quoteId}`), null);
+                alert('הצעת המחיר נמחקה בהצלחה');
+                loadQuotes();
+            } catch (err) {
+                console.error('Error deleting quote:', err);
+                alert('שגיאה במחיקת הצעת המחיר');
+            }
+        };
+
+        function initQuotesForRequester() {
+            const container = document.getElementById('quotesTableContainer');
+            if (container) container.style.display = 'block';
+            loadQuotes();
+        }
+
+        window.updateQuoteSummary = updateQuoteSummary;
+
     </script>
 </body>
 </html>

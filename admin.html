@@ -1,0 +1,1008 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ממשק ניהול — מערכת הזמנות</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        :root {
+            --bg-primary: #f8fafc;
+            --bg-secondary: #ffffff;
+            --bg-tertiary: #f1f5f9;
+            --text-primary: #1e293b;
+            --text-secondary: #64748b;
+            --accent-primary: #3b82f6;
+            --accent-hover: #2563eb;
+            --border-color: #e2e8f0;
+            --shadow: 0 10px 15px -3px rgba(0,0,0,0.1);
+            --gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            --success: #10b981;
+            --error: #ef4444;
+            --warning: #f59e0b;
+        }
+
+        [data-theme="dark"] {
+            --bg-primary: #0f172a;
+            --bg-secondary: #1e293b;
+            --bg-tertiary: #334155;
+            --text-primary: #f1f5f9;
+            --text-secondary: #94a3b8;
+            --accent-primary: #60a5fa;
+            --accent-hover: #3b82f6;
+            --border-color: #334155;
+            --shadow: 0 10px 15px -3px rgba(0,0,0,0.3);
+            --gradient: linear-gradient(135deg, #1e3a8a 0%, #3730a3 100%);
+            --success: #059669;
+            --error: #dc2626;
+            --warning: #d97706;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            min-height: 100vh;
+            transition: all 0.3s ease;
+        }
+
+        /* ── Login ── */
+        #loginScreen {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+        }
+
+        .login-box {
+            background: var(--bg-secondary);
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: var(--shadow);
+            width: 100%;
+            max-width: 400px;
+            text-align: center;
+            border: 1px solid var(--border-color);
+        }
+
+        .login-icon {
+            width: 80px; height: 80px;
+            background: var(--gradient);
+            border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            margin: 0 auto 20px;
+            font-size: 2rem; color: white;
+        }
+
+        .login-title {
+            font-size: 1.8rem; font-weight: 700; margin-bottom: 8px;
+            background: var(--gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .login-subtitle { color: var(--text-secondary); margin-bottom: 30px; }
+
+        .admin-badge {
+            display: inline-block;
+            background: #fef3c7; color: #92400e;
+            border: 1px solid #fde68a;
+            padding: 4px 12px; border-radius: 20px;
+            font-size: 0.8rem; font-weight: 600;
+            margin-bottom: 24px;
+        }
+
+        .google-btn {
+            background: var(--bg-secondary);
+            border: 2px solid var(--border-color);
+            color: var(--text-primary);
+            padding: 14px 24px;
+            border-radius: 12px; font-size: 1rem;
+            cursor: pointer; transition: all 0.3s ease;
+            width: 100%;
+            display: flex; align-items: center; justify-content: center; gap: 12px;
+        }
+
+        .google-btn:hover { border-color: var(--accent-primary); transform: translateY(-2px); }
+
+        .google-icon { width: 22px; height: 22px; }
+
+        .error-msg {
+            background: #fef2f2; color: #dc2626;
+            padding: 12px; border-radius: 8px;
+            margin-top: 16px; border: 1px solid #fecaca;
+            display: none; font-size: 0.9rem;
+        }
+
+        /* ── App ── */
+        #appScreen { display: none; }
+
+        .header {
+            background: var(--bg-secondary);
+            border-bottom: 1px solid var(--border-color);
+            padding: 1rem 2rem;
+            display: flex; align-items: center; justify-content: space-between;
+            position: sticky; top: 0; z-index: 100;
+        }
+
+        .header-logo { display: flex; align-items: center; gap: 0.8rem; }
+
+        .header-logo-icon {
+            width: 38px; height: 38px;
+            background: var(--gradient);
+            border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 1.1rem; color: white;
+        }
+
+        .header-logo h1 { font-size: 1.3rem; font-weight: 700; }
+        .header-logo p { font-size: 0.8rem; color: var(--text-secondary); }
+
+        .header-actions { display: flex; align-items: center; gap: 1rem; }
+
+        .user-chip {
+            display: flex; align-items: center; gap: 0.5rem;
+            background: var(--bg-tertiary);
+            padding: 6px 14px; border-radius: 20px;
+            font-size: 0.85rem;
+            cursor: pointer; position: relative;
+            border: 1px solid transparent;
+            transition: border-color 0.2s;
+            user-select: none;
+        }
+        .user-chip:hover { border-color: var(--accent-primary); }
+        .user-chip.open { border-color: var(--accent-primary); }
+
+        .chip-arrow {
+            font-size: 0.65rem;
+            color: var(--text-secondary);
+            transition: transform 0.2s;
+        }
+        .user-chip.open .chip-arrow { transform: rotate(180deg); }
+
+        .goto-orders {
+            position: absolute; top: calc(100% + 8px); left: 50%; transform: translateX(-50%);
+            background: var(--accent-primary); color: white;
+            padding: 8px 18px; border-radius: 10px;
+            font-size: 0.85rem; font-weight: 600;
+            white-space: nowrap; text-decoration: none;
+            display: none;
+            z-index: 100;
+            box-shadow: 0 4px 16px rgba(0,0,0,0.18);
+        }
+        .goto-orders:hover { opacity: 0.88; }
+        .user-chip.open .goto-orders { display: block; }
+
+        .theme-btn {
+            background: var(--bg-tertiary);
+            border: 1px solid var(--border-color);
+            border-radius: 50%;
+            width: 38px; height: 38px;
+            display: flex; align-items: center; justify-content: center;
+            cursor: pointer; font-size: 1rem; transition: all 0.2s;
+        }
+
+        .theme-btn:hover { border-color: var(--accent-primary); }
+
+        .logout-btn {
+            background: var(--error); color: white;
+            border: none; padding: 8px 16px;
+            border-radius: 8px; cursor: pointer;
+            font-size: 0.85rem; transition: all 0.2s;
+        }
+
+        .logout-btn:hover { opacity: 0.85; }
+
+        /* ── Main ── */
+        .main { max-width: 1100px; margin: 2rem auto; padding: 0 1.5rem; }
+
+        .page-header {
+            display: flex; align-items: center; justify-content: space-between;
+            margin-bottom: 1.5rem; flex-wrap: wrap; gap: 1rem;
+        }
+
+        .page-title { font-size: 1.5rem; font-weight: 700; }
+        .page-subtitle { color: var(--text-secondary); font-size: 0.9rem; margin-top: 2px; }
+
+        .add-btn {
+            background: var(--gradient); color: white;
+            border: none; padding: 10px 22px;
+            border-radius: 10px; cursor: pointer;
+            font-size: 0.95rem; font-weight: 600;
+            display: flex; align-items: center; gap: 0.4rem;
+            transition: opacity 0.2s;
+        }
+
+        .add-btn:hover { opacity: 0.88; }
+
+        /* ── Init Banner ── */
+        .init-banner {
+            background: #fef3c7; border: 1px solid #fde68a;
+            border-radius: 12px; padding: 1.2rem 1.5rem;
+            margin-bottom: 1.5rem;
+            display: flex; align-items: center; justify-content: space-between;
+            gap: 1rem; flex-wrap: wrap;
+        }
+
+        .init-banner p { color: #92400e; font-size: 0.95rem; }
+
+        .init-btn {
+            background: #f59e0b; color: white;
+            border: none; padding: 8px 18px;
+            border-radius: 8px; cursor: pointer;
+            font-weight: 600; font-size: 0.9rem;
+            transition: opacity 0.2s; white-space: nowrap;
+        }
+
+        .init-btn:hover { opacity: 0.85; }
+
+        /* ── Stats ── */
+        .stats-row {
+            display: grid; grid-template-columns: repeat(3, 1fr);
+            gap: 1rem; margin-bottom: 1.5rem;
+        }
+
+        .stat-card {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 12px; padding: 1.2rem;
+            text-align: center;
+        }
+
+        .stat-number { font-size: 2rem; font-weight: 700; }
+        .stat-label { color: var(--text-secondary); font-size: 0.85rem; margin-top: 4px; }
+
+        /* ── Table ── */
+        .table-card {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 16px; overflow: hidden;
+        }
+
+        .table-search {
+            padding: 1rem 1.5rem;
+            border-bottom: 1px solid var(--border-color);
+            display: flex; gap: 1rem; align-items: center;
+        }
+
+        .search-input {
+            flex: 1; padding: 8px 14px;
+            border: 1px solid var(--border-color);
+            border-radius: 8px; font-size: 0.9rem;
+            background: var(--bg-primary); color: var(--text-primary);
+            outline: none;
+        }
+
+        .search-input:focus { border-color: var(--accent-primary); }
+
+        .filter-select {
+            padding: 8px 14px;
+            border: 1px solid var(--border-color);
+            border-radius: 8px; font-size: 0.9rem;
+            background: var(--bg-primary); color: var(--text-primary);
+            outline: none; cursor: pointer;
+        }
+
+        table { width: 100%; border-collapse: collapse; }
+
+        thead tr { background: var(--bg-tertiary); }
+
+        th {
+            padding: 12px 16px; text-align: right;
+            font-size: 0.85rem; font-weight: 600;
+            color: var(--text-secondary);
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        td {
+            padding: 14px 16px;
+            border-bottom: 1px solid var(--border-color);
+            font-size: 0.9rem; vertical-align: middle;
+        }
+
+        tr:last-child td { border-bottom: none; }
+        tr:hover td { background: var(--bg-tertiary); }
+
+        .role-badge {
+            display: inline-block; padding: 3px 10px;
+            border-radius: 20px; font-size: 0.78rem; font-weight: 600;
+        }
+
+        .role-requester { background: #dbeafe; color: #1e40af; }
+        .role-approver  { background: #dcfce7; color: #166534; }
+
+        [data-theme="dark"] .role-requester { background: #1e3a5f; color: #93c5fd; }
+        [data-theme="dark"] .role-approver  { background: #14532d; color: #86efac; }
+
+        .approver-type-badge {
+            display: inline-block; padding: 2px 8px;
+            border-radius: 6px; font-size: 0.75rem;
+            background: var(--bg-tertiary);
+            color: var(--text-secondary);
+            margin-right: 6px;
+        }
+
+        .action-btns { display: flex; gap: 0.4rem; }
+
+        .btn-edit, .btn-delete {
+            border: none; border-radius: 7px;
+            padding: 6px 12px; cursor: pointer;
+            font-size: 0.82rem; font-weight: 600;
+            transition: opacity 0.2s;
+        }
+
+        .btn-edit   { background: #dbeafe; color: #1e40af; }
+        .btn-delete { background: #fee2e2; color: #991b1b; }
+
+        [data-theme="dark"] .btn-edit   { background: #1e3a5f; color: #93c5fd; }
+        [data-theme="dark"] .btn-delete { background: #450a0a; color: #fca5a5; }
+
+        .btn-edit:hover, .btn-delete:hover { opacity: 0.75; }
+
+        .empty-state {
+            text-align: center; padding: 3rem;
+            color: var(--text-secondary);
+        }
+
+        .empty-state div { font-size: 2.5rem; margin-bottom: 0.5rem; }
+
+        /* ── Modal ── */
+        .modal {
+            display: none;
+            position: fixed; inset: 0;
+            background: rgba(0,0,0,0.5);
+            z-index: 1000;
+            align-items: center; justify-content: center;
+        }
+
+        .modal.active { display: flex; }
+
+        .modal-box {
+            background: var(--bg-secondary);
+            border-radius: 16px; padding: 2rem;
+            width: 100%; max-width: 480px;
+            box-shadow: var(--shadow);
+            max-height: 90vh; overflow-y: auto;
+        }
+
+        .modal-header {
+            display: flex; align-items: center; justify-content: space-between;
+            margin-bottom: 1.5rem;
+            background: var(--gradient);
+            margin: -2rem -2rem 1.5rem;
+            padding: 1.2rem 1.5rem;
+            border-radius: 14px 14px 0 0;
+        }
+
+        .modal-header h3 { color: white; font-size: 1.1rem; }
+
+        .modal-close {
+            background: none; border: none;
+            color: white; font-size: 1.5rem;
+            cursor: pointer; line-height: 1;
+        }
+
+        .form-group { margin-bottom: 1.1rem; }
+
+        .form-label {
+            display: block; font-size: 0.85rem;
+            font-weight: 600; margin-bottom: 5px;
+            color: var(--text-secondary);
+        }
+
+        .form-input, .form-select {
+            width: 100%; padding: 10px 14px;
+            border: 1px solid var(--border-color);
+            border-radius: 8px; font-size: 0.92rem;
+            background: var(--bg-primary); color: var(--text-primary);
+            outline: none; transition: border-color 0.2s;
+        }
+
+        .form-input:focus, .form-select:focus { border-color: var(--accent-primary); }
+
+        .form-actions {
+            display: flex; gap: 0.7rem; justify-content: flex-end;
+            margin-top: 1.5rem;
+        }
+
+        .btn-save {
+            background: var(--gradient); color: white;
+            border: none; padding: 10px 24px;
+            border-radius: 8px; cursor: pointer;
+            font-weight: 600; font-size: 0.9rem;
+        }
+
+        .btn-cancel {
+            background: var(--bg-tertiary); color: var(--text-primary);
+            border: 1px solid var(--border-color);
+            padding: 10px 18px; border-radius: 8px;
+            cursor: pointer; font-size: 0.9rem;
+        }
+
+        .btn-cancel:hover { border-color: var(--accent-primary); }
+
+        /* ── Delete Confirm ── */
+        .confirm-box {
+            background: var(--bg-secondary);
+            border-radius: 16px; padding: 2rem;
+            width: 100%; max-width: 380px;
+            box-shadow: var(--shadow); text-align: center;
+        }
+
+        .confirm-icon { font-size: 3rem; margin-bottom: 1rem; }
+        .confirm-title { font-size: 1.1rem; font-weight: 700; margin-bottom: 0.5rem; }
+        .confirm-sub { color: var(--text-secondary); font-size: 0.9rem; margin-bottom: 1.5rem; }
+
+        .confirm-actions { display: flex; gap: 0.7rem; justify-content: center; }
+
+        .btn-confirm-delete {
+            background: var(--error); color: white;
+            border: none; padding: 10px 22px;
+            border-radius: 8px; cursor: pointer; font-weight: 600;
+        }
+
+        /* ── Toast ── */
+        .toast {
+            position: fixed; bottom: 2rem; left: 50%; transform: translateX(-50%);
+            background: #1e293b; color: white;
+            padding: 12px 24px; border-radius: 10px;
+            font-size: 0.9rem; z-index: 9999;
+            opacity: 0; pointer-events: none;
+            transition: opacity 0.3s;
+        }
+
+        .toast.show { opacity: 1; }
+
+        /* ── Changelog ── */
+        .version-badge {
+            display: inline-flex; align-items: center;
+            padding: 0.2rem 0.6rem;
+            background: var(--gradient); color: white;
+            border-radius: 20px; font-size: 0.72rem; font-weight: 700;
+            cursor: pointer; border: none; transition: opacity 0.2s;
+            white-space: nowrap;
+        }
+        .version-badge:hover { opacity: 0.85; }
+
+        .changelog-version { display: flex; align-items: center; gap: 0.5rem; margin-bottom: 1.2rem; }
+        .changelog-version-tag { background: var(--gradient); color: white; border-radius: 20px; padding: 0.2rem 0.7rem; font-size: 0.8rem; font-weight: 700; }
+        .changelog-date { color: var(--text-secondary); font-size: 0.85rem; }
+
+        .changelog-list { list-style: none; padding: 0; margin: 0; }
+        .changelog-list li { padding: 0.45rem 0; border-bottom: 1px solid var(--border-color); font-size: 0.9rem; display: flex; align-items: flex-start; gap: 0.5rem; }
+        .changelog-list li:last-child { border-bottom: none; }
+        .changelog-list li::before { content: '✦'; color: var(--accent-primary); font-size: 0.7rem; margin-top: 0.2rem; flex-shrink: 0; }
+
+        .changelog-category { display: inline-block; font-size: 0.7rem; font-weight: 700; padding: 0.1rem 0.4rem; border-radius: 4px; margin-left: 0.3rem; flex-shrink: 0; }
+        .cat-new { background: #dcfce7; color: #166534; }
+        .cat-fix { background: #fee2e2; color: #991b1b; }
+        .cat-ui  { background: #eff6ff; color: #1e40af; }
+        [data-theme="dark"] .cat-new { background: #14532d; color: #86efac; }
+        [data-theme="dark"] .cat-fix { background: #450a0a; color: #fca5a5; }
+        [data-theme="dark"] .cat-ui  { background: #1e3a5f; color: #93c5fd; }
+
+        @media (max-width: 600px) {
+            .stats-row { grid-template-columns: repeat(2, 1fr); }
+            .main { padding: 0 1rem; }
+            .header { padding: 1rem; }
+            th:nth-child(3), td:nth-child(3) { display: none; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Login Screen -->
+    <div id="loginScreen">
+        <div class="login-box">
+            <div class="login-icon">⚙️</div>
+            <h1 class="login-title">ממשק ניהול</h1>
+            <p class="login-subtitle">מערכת הזמנות</p>
+            <div class="admin-badge">🔒 גישה למנהלים בלבד</div>
+
+            <button class="google-btn" id="loginBtn">
+                <svg class="google-icon" viewBox="0 0 24 24">
+                    <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
+                    <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
+                    <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
+                    <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
+                </svg>
+                כניסה עם Google
+            </button>
+
+            <div class="error-msg" id="errorMsg"></div>
+        </div>
+    </div>
+
+    <!-- App Screen -->
+    <div id="appScreen">
+        <header class="header">
+            <div class="header-logo">
+                <div class="header-logo-icon">⚙️</div>
+                <div>
+                    <h1>ממשק ניהול</h1>
+                    <p>מערכת הזמנות</p>
+                </div>
+                <button class="version-badge" id="changelogBtn">גרסה 1.2</button>
+            </div>
+            <div class="header-actions">
+                <button class="theme-btn" id="themeBtn">🌙</button>
+                <div class="user-chip" id="userChip">
+                    <span>👤</span>
+                    <span id="adminName">מנהל</span>
+                    <span class="chip-arrow">▾</span>
+                    <a class="goto-orders" href="orders.html">← מעבר למערכת הזמנות</a>
+                </div>
+                <button class="logout-btn" id="logoutBtn">יציאה</button>
+            </div>
+        </header>
+
+        <main class="main">
+            <div class="page-header">
+                <div>
+                    <h2 class="page-title">ניהול משתמשים</h2>
+                    <p class="page-subtitle">הוספה, עריכה ומחיקה של מזמינים ומאשרים</p>
+                </div>
+                <button class="add-btn" id="addUserBtn">＋ הוסף משתמש</button>
+            </div>
+
+            <!-- Init Banner (shown if no users in DB) -->
+            <div class="init-banner" id="initBanner" style="display:none;">
+                <p>⚠️ לא נמצאו משתמשים ב-Firebase. לחץ לאתחול המשתמשים הנוכחיים מהמערכת.</p>
+                <button class="init-btn" id="initBtn">אתחל משתמשים ברירת מחדל</button>
+            </div>
+
+            <!-- Stats -->
+            <div class="stats-row">
+                <div class="stat-card">
+                    <div class="stat-number" id="statTotal">0</div>
+                    <div class="stat-label">סה"כ משתמשים</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number" id="statRequesters">0</div>
+                    <div class="stat-label">מזמינים</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number" id="statApprovers">0</div>
+                    <div class="stat-label">מאשרים</div>
+                </div>
+            </div>
+
+            <!-- Table -->
+            <div class="table-card">
+                <div class="table-search">
+                    <input class="search-input" id="searchInput" placeholder="חפש לפי שם או מייל...">
+                    <select class="filter-select" id="roleFilter">
+                        <option value="">כל התפקידים</option>
+                        <option value="requester">מזמינים</option>
+                        <option value="approver">מאשרים</option>
+                    </select>
+                </div>
+                <table id="usersTable">
+                    <thead>
+                        <tr>
+                            <th>שם</th>
+                            <th>מייל</th>
+                            <th>מחלקה</th>
+                            <th>תפקיד</th>
+                            <th>פעולות</th>
+                        </tr>
+                    </thead>
+                    <tbody id="usersBody">
+                        <tr><td colspan="5" class="empty-state"><div>⏳</div>טוען...</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </main>
+    </div>
+
+    <!-- Add/Edit Modal -->
+    <div class="modal" id="userModal">
+        <div class="modal-box">
+            <div class="modal-header">
+                <h3 id="modalTitle">הוסף משתמש</h3>
+                <button class="modal-close" id="closeModal">&times;</button>
+            </div>
+            <form id="userForm">
+                <div class="form-group">
+                    <label class="form-label">שם מלא</label>
+                    <input class="form-input" id="fieldName" placeholder="שם מלא" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">כתובת מייל</label>
+                    <input class="form-input" id="fieldEmail" type="email" placeholder="user@gmail.com" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">תפקיד</label>
+                    <select class="form-select" id="fieldRole" required>
+                        <option value="">בחר תפקיד</option>
+                        <option value="requester">מזמין</option>
+                        <option value="approver">מאשר</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">מחלקה / סעיף תקציבי</label>
+                    <select class="form-select" id="fieldDepartment" required>
+                        <option value="">בחר מחלקה</option>
+                        <option value="תכנית בוקר">תכנית בוקר</option>
+                        <option value="מחוננים">מחוננים</option>
+                        <option value="ניהול">ניהול</option>
+                        <option value="IT">מחלקת מחשבים</option>
+                        <option value="תחזוקה">תחזוקה</option>
+                        <option value="שיווק">שיווק</option>
+                        <option value="אחר">אחר</option>
+                    </select>
+                </div>
+                <div class="form-group" id="approverTypeGroup" style="display:none;">
+                    <label class="form-label">סוג מאשר (היררכיה)</label>
+                    <select class="form-select" id="fieldApproverType">
+                        <option value="">בחר סוג</option>
+                        <option value="emily">מאשר ראשון (אמילי)</option>
+                        <option value="shuli">מאשר שני (שולי)</option>
+                        <option value="gadi">מאשר שלישי — מעל 10,000 ₪ (גדי)</option>
+                    </select>
+                </div>
+                <div class="form-actions">
+                    <button type="button" class="btn-cancel" id="cancelModal">ביטול</button>
+                    <button type="submit" class="btn-save">💾 שמור</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Delete Confirm Modal -->
+    <div class="modal" id="deleteModal">
+        <div class="confirm-box">
+            <div class="confirm-icon">🗑️</div>
+            <div class="confirm-title">מחיקת משתמש</div>
+            <div class="confirm-sub" id="deleteConfirmText">האם למחוק את המשתמש?</div>
+            <div class="confirm-actions">
+                <button class="btn-cancel" id="cancelDelete">ביטול</button>
+                <button class="btn-confirm-delete" id="confirmDelete">מחק</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Changelog Modal -->
+    <div class="modal" id="changelogModal">
+        <div class="modal-box" style="max-width:560px;">
+            <div class="modal-header">
+                <h3>יומן עדכונים</h3>
+                <button class="modal-close" id="closeChangelog">&times;</button>
+            </div>
+            <div class="changelog-version">
+                <span class="changelog-version-tag">גרסה 1.2</span>
+                <span class="changelog-date">יוני 2026</span>
+            </div>
+            <ul class="changelog-list">
+                <li><span class="changelog-category cat-new">חדש</span>ממשק ניהול (admin.html) — הוספה, עריכה ומחיקה של משתמשים דינמית מ-Firebase ללא נגיעה בקוד</li>
+                <li><span class="changelog-category cat-new">חדש</span>תזכורות אוטומטיות — מייל נשלח אחרי 48 שעות ללא פעולה דרך Firebase Cloud Functions</li>
+                <li><span class="changelog-category cat-new">חדש</span>הוספת אופציית הצעת מחיר — יצירה, אישור והמרה להזמנה</li>
+                <li><span class="changelog-category cat-new">חדש</span>הצגת סטטוס אישור לפי מאשר — נקודות צבעוניות לכל מאשר בנפרד עבור המזמין</li>
+                <li><span class="changelog-category cat-new">חדש</span>שדה סיבת דחייה נפתח בעת שמירת דחיית פריט על ידי מאשר</li>
+                <li><span class="changelog-category cat-new">חדש</span>שליחת מייל למזמין בכל שלב אישור — מי אישר ומי הבא בתור</li>
+                <li><span class="changelog-category cat-new">חדש</span>שליחת מייל למזמין כשערעור על פריט התקבל או נדחה</li>
+                <li><span class="changelog-category cat-new">חדש</span>הצגת קבצים נלווים בפרטי ההזמנה — גם למאשר וגם למזמין</li>
+                <li><span class="changelog-category cat-new">חדש</span>שדה "פרט..." בסעיף תקציבי כשבוחרים "אחר"</li>
+                <li><span class="changelog-category cat-new">חדש</span>הדפסה בהצעת מחיר עם כותרת צהובה, הדפסת הזמנה עם כותרת ירוקה</li>
+                <li><span class="changelog-category cat-ui">עיצוב</span>חלון פרטי הזמנה ופרטי הצעת מחיר מעוצב כטבלה תמציתית</li>
+                <li><span class="changelog-category cat-ui">עיצוב</span>כותרת צהובה לחלון הצעת מחיר, ירוקה לחלון הזמנה</li>
+                <li><span class="changelog-category cat-fix">תיקון</span>שליחת מייל לשולי כאשר אמילי מאשרת — תוקנה בעיית race condition</li>
+                <li><span class="changelog-category cat-fix">תיקון</span>סיבת דחייה מופרדת לכל מאשר</li>
+                <li><span class="changelog-category cat-fix">תיקון</span>המרת הצעת מחיר להזמנה ללא כפילות פריטים</li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- Toast -->
+    <div class="toast" id="toast"></div>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-app.js";
+        import { getAuth, signInWithPopup, GoogleAuthProvider, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-auth.js";
+        import { getDatabase, ref, set, get, remove, onValue } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-database.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyDpsIEhz1DExRgvzx3on3RMxtY9stIA4us",
+            authDomain: "oreders-ef40d.firebaseapp.com",
+            databaseURL: "https://oreders-ef40d-default-rtdb.firebaseio.com/",
+            projectId: "oreders-ef40d",
+            storageBucket: "oreders-ef40d.firebasestorage.app",
+            messagingSenderId: "313770368508",
+            appId: "1:313770368508:web:f1445553df848f59a32679"
+        };
+
+        const app      = initializeApp(firebaseConfig);
+        const auth     = getAuth(app);
+        const db       = getDatabase(app);
+        const provider = new GoogleAuthProvider();
+
+        // רק מיילים אלה יכולים להיכנס לממשק הניהול
+        const ADMIN_EMAILS = ['papasnir@gmail.com', 'emilygolan1@gmail.com'];
+
+        // משתמשי ברירת מחדל לאתחול ראשוני
+        const DEFAULT_USERS = [
+            { email: 'papasnir@gmail.com',       name: 'שניר דואני',    role: 'requester', department: 'תכנית בוקר', approverType: null },
+            { email: 'pratimo123@gmail.com',      name: 'לירון אהרן',    role: 'requester', department: 'תכנית בוקר', approverType: null },
+            { email: 'kerenbaileydahan@gmail.com',name: 'קרן ביילי דהן', role: 'requester', department: 'שיווק',      approverType: null },
+            { email: 'emilygolan1@gmail.com',     name: 'אמילי גולן',    role: 'approver',  department: 'ניהול',      approverType: 'emily' },
+            { email: 'shulisason@gmail.com',      name: 'שולי ששון',     role: 'approver',  department: 'ניהול',      approverType: 'shuli' },
+            { email: 'gadimador@gmail.com',       name: 'ד"ר גדי מדור',  role: 'approver',  department: 'ניהול',      approverType: 'gadi'  }
+        ];
+
+        // המרת מייל למפתח Firebase (ללא תווים אסורים)
+        function emailToKey(email) {
+            return email.replace(/\./g, '-dot-').replace(/@/g, '-at-');
+        }
+
+        // ── State ──
+        let allUsers    = [];
+        let editingKey  = null;
+        let deleteKey   = null;
+
+        // ── Theme ──
+        function initTheme() {
+            const t = localStorage.getItem('adminTheme') || 'light';
+            document.documentElement.setAttribute('data-theme', t);
+            document.getElementById('themeBtn').textContent = t === 'dark' ? '☀️' : '🌙';
+        }
+
+        document.getElementById('themeBtn').addEventListener('click', () => {
+            const cur = document.documentElement.getAttribute('data-theme');
+            const next = cur === 'dark' ? 'light' : 'dark';
+            document.documentElement.setAttribute('data-theme', next);
+            localStorage.setItem('adminTheme', next);
+            document.getElementById('themeBtn').textContent = next === 'dark' ? '☀️' : '🌙';
+        });
+
+        // ── Toast ──
+        function showToast(msg) {
+            const t = document.getElementById('toast');
+            t.textContent = msg;
+            t.classList.add('show');
+            setTimeout(() => t.classList.remove('show'), 2800);
+        }
+
+        // ── Error on login ──
+        function showError(msg) {
+            const el = document.getElementById('errorMsg');
+            el.textContent = msg;
+            el.style.display = 'block';
+            setTimeout(() => el.style.display = 'none', 4000);
+        }
+
+        // ── Auth ──
+        document.getElementById('loginBtn').addEventListener('click', async () => {
+            try {
+                const result = await signInWithPopup(auth, provider);
+                if (!ADMIN_EMAILS.includes(result.user.email)) {
+                    await signOut(auth);
+                    showError('אין לך הרשאת גישה לממשק הניהול');
+                }
+            } catch (e) {
+                if (e.code !== 'auth/popup-closed-by-user') showError('שגיאה בהתחברות');
+            }
+        });
+
+        document.getElementById('logoutBtn').addEventListener('click', () => signOut(auth));
+
+        onAuthStateChanged(auth, user => {
+            if (user && ADMIN_EMAILS.includes(user.email)) {
+                document.getElementById('loginScreen').style.display = 'none';
+                document.getElementById('appScreen').style.display = 'block';
+                document.getElementById('adminName').textContent = user.displayName || user.email;
+                loadUsers();
+            } else {
+                document.getElementById('loginScreen').style.display = 'flex';
+                document.getElementById('appScreen').style.display = 'none';
+            }
+        });
+
+        // ── Load Users ──
+        function loadUsers() {
+            onValue(ref(db, 'userRoles'), snap => {
+                const data = snap.val() || {};
+                allUsers = Object.entries(data).map(([key, val]) => ({ key, ...val }));
+
+                document.getElementById('initBanner').style.display =
+                    allUsers.length === 0 ? 'flex' : 'none';
+
+                updateStats();
+                renderTable(allUsers);
+            });
+        }
+
+        function updateStats() {
+            const requesters = allUsers.filter(u => u.role === 'requester').length;
+            const approvers  = allUsers.filter(u => u.role === 'approver').length;
+            document.getElementById('statTotal').textContent     = allUsers.length;
+            document.getElementById('statRequesters').textContent = requesters;
+            document.getElementById('statApprovers').textContent  = approvers;
+        }
+
+        // ── Render Table ──
+        function renderTable(users) {
+            const tbody = document.getElementById('usersBody');
+            if (users.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="5" class="empty-state"><div>👤</div>לא נמצאו משתמשים</td></tr>`;
+                return;
+            }
+
+            const approverLabels = { emily: 'ראשון', shuli: 'שני', gadi: 'שלישי' };
+
+            tbody.innerHTML = users.map(u => `
+                <tr>
+                    <td><strong>${u.name}</strong></td>
+                    <td style="direction:ltr; text-align:right; color:var(--text-secondary); font-size:0.85rem;">${u.email}</td>
+                    <td>${u.department || '—'}</td>
+                    <td>
+                        <span class="role-badge role-${u.role}">${u.role === 'requester' ? 'מזמין' : 'מאשר'}</span>
+                        ${u.approverType ? `<span class="approver-type-badge">${approverLabels[u.approverType] || u.approverType}</span>` : ''}
+                    </td>
+                    <td>
+                        <div class="action-btns">
+                            <button class="btn-edit"   onclick="openEdit('${u.key}')">✏️ ערוך</button>
+                            <button class="btn-delete" onclick="openDelete('${u.key}', '${u.name}')">🗑️ מחק</button>
+                        </div>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        // ── Search & Filter ──
+        document.getElementById('searchInput').addEventListener('input', filterTable);
+        document.getElementById('roleFilter').addEventListener('change', filterTable);
+
+        function filterTable() {
+            const q    = document.getElementById('searchInput').value.trim().toLowerCase();
+            const role = document.getElementById('roleFilter').value;
+            const filtered = allUsers.filter(u => {
+                const matchText = !q || u.name.toLowerCase().includes(q) || u.email.toLowerCase().includes(q);
+                const matchRole = !role || u.role === role;
+                return matchText && matchRole;
+            });
+            renderTable(filtered);
+        }
+
+        // ── Modal Open/Close ──
+        function openModal(title) {
+            document.getElementById('modalTitle').textContent = title;
+            document.getElementById('userModal').classList.add('active');
+        }
+
+        function closeModal() {
+            document.getElementById('userModal').classList.remove('active');
+            document.getElementById('userForm').reset();
+            document.getElementById('approverTypeGroup').style.display = 'none';
+            editingKey = null;
+        }
+
+        document.getElementById('closeModal').addEventListener('click', closeModal);
+        document.getElementById('cancelModal').addEventListener('click', closeModal);
+        document.getElementById('userModal').addEventListener('click', e => {
+            if (e.target === document.getElementById('userModal')) closeModal();
+        });
+
+        // Toggle approverType field
+        document.getElementById('fieldRole').addEventListener('change', function() {
+            document.getElementById('approverTypeGroup').style.display =
+                this.value === 'approver' ? 'block' : 'none';
+        });
+
+        // ── Add User ──
+        document.getElementById('addUserBtn').addEventListener('click', () => {
+            editingKey = null;
+            openModal('הוסף משתמש חדש');
+        });
+
+        // ── Edit User ──
+        window.openEdit = function(key) {
+            const user = allUsers.find(u => u.key === key);
+            if (!user) return;
+            editingKey = key;
+
+            document.getElementById('fieldName').value       = user.name       || '';
+            document.getElementById('fieldEmail').value      = user.email      || '';
+            document.getElementById('fieldRole').value       = user.role       || '';
+            document.getElementById('fieldDepartment').value = user.department || '';
+            document.getElementById('fieldApproverType').value = user.approverType || '';
+            document.getElementById('approverTypeGroup').style.display =
+                user.role === 'approver' ? 'block' : 'none';
+
+            openModal('ערוך משתמש');
+        };
+
+        // ── Save User ──
+        document.getElementById('userForm').addEventListener('submit', async e => {
+            e.preventDefault();
+
+            const email        = document.getElementById('fieldEmail').value.trim().toLowerCase();
+            const name         = document.getElementById('fieldName').value.trim();
+            const role         = document.getElementById('fieldRole').value;
+            const department   = document.getElementById('fieldDepartment').value;
+            const approverType = document.getElementById('fieldApproverType').value || null;
+
+            if (!email || !name || !role || !department) return;
+            if (role === 'approver' && !approverType) {
+                alert('יש לבחור סוג מאשר');
+                return;
+            }
+
+            const key     = editingKey || emailToKey(email);
+            const userData = { email, name, role, department, approverType: role === 'approver' ? approverType : null };
+
+            try {
+                await set(ref(db, `userRoles/${key}`), userData);
+                showToast(editingKey ? '✅ המשתמש עודכן בהצלחה' : '✅ המשתמש נוסף בהצלחה');
+                closeModal();
+            } catch (err) {
+                console.error(err);
+                alert('שגיאה בשמירה');
+            }
+        });
+
+        // ── Delete User ──
+        window.openDelete = function(key, name) {
+            deleteKey = key;
+            document.getElementById('deleteConfirmText').textContent = `האם למחוק את "${name}"?`;
+            document.getElementById('deleteModal').classList.add('active');
+        };
+
+        document.getElementById('cancelDelete').addEventListener('click', () => {
+            document.getElementById('deleteModal').classList.remove('active');
+            deleteKey = null;
+        });
+
+        document.getElementById('confirmDelete').addEventListener('click', async () => {
+            if (!deleteKey) return;
+            try {
+                await remove(ref(db, `userRoles/${deleteKey}`));
+                showToast('🗑️ המשתמש נמחק');
+            } catch (err) {
+                alert('שגיאה במחיקה');
+            }
+            document.getElementById('deleteModal').classList.remove('active');
+            deleteKey = null;
+        });
+
+        // ── Init Default Users ──
+        document.getElementById('initBtn').addEventListener('click', async () => {
+            try {
+                for (const user of DEFAULT_USERS) {
+                    const key = emailToKey(user.email);
+                    await set(ref(db, `userRoles/${key}`), user);
+                }
+                showToast('✅ משתמשי ברירת מחדל נוספו בהצלחה');
+            } catch (err) {
+                alert('שגיאה באתחול');
+            }
+        });
+
+        // ── User chip dropdown ──
+        const userChip = document.getElementById('userChip');
+        userChip.addEventListener('click', e => {
+            if (e.target.tagName === 'A') return; // allow link click
+            userChip.classList.toggle('open');
+        });
+        document.addEventListener('click', e => {
+            if (!userChip.contains(e.target)) userChip.classList.remove('open');
+        });
+
+        // ── Changelog ──
+        document.getElementById('changelogBtn').addEventListener('click', () => {
+            document.getElementById('changelogModal').classList.add('active');
+        });
+        document.getElementById('closeChangelog').addEventListener('click', () => {
+            document.getElementById('changelogModal').classList.remove('active');
+        });
+        document.getElementById('changelogModal').addEventListener('click', e => {
+            if (e.target === document.getElementById('changelogModal'))
+                document.getElementById('changelogModal').classList.remove('active');
+        });
+
+        // ── Init ──
+        initTheme();
+    </script>
+</body>
+</html>
