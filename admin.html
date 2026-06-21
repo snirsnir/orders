@@ -583,7 +583,8 @@
                     <thead>
                         <tr>
                             <th>שם</th>
-                            <th>מייל</th>
+                            <th>מייל כניסה</th>
+                            <th>מייל ארגוני</th>
                             <th>מחלקה</th>
                             <th>תפקיד</th>
                             <th>פעולות</th>
@@ -610,8 +611,13 @@
                     <input class="form-input" id="fieldName" placeholder="שם מלא" required>
                 </div>
                 <div class="form-group">
-                    <label class="form-label">כתובת מייל</label>
+                    <label class="form-label">כתובת מייל (לכניסה)</label>
                     <input class="form-input" id="fieldEmail" type="email" placeholder="user@gmail.com" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">מייל ארגוני לקבלת התראות (אופציונלי)</label>
+                    <input class="form-input" id="fieldOrgEmail" type="email" placeholder="user@organization.co.il">
+                    <small style="color:var(--text-secondary); font-size:0.78rem; margin-top:4px; display:block;">אם מולא — כל מיילי המערכת יישלחו לכתובת זו</small>
                 </div>
                 <div class="form-group">
                     <label class="form-label">תפקיד</label>
@@ -826,7 +832,7 @@
         function renderTable(users) {
             const tbody = document.getElementById('usersBody');
             if (users.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="5" class="empty-state"><div>👤</div>לא נמצאו משתמשים</td></tr>`;
+                tbody.innerHTML = `<tr><td colspan="6" class="empty-state"><div>👤</div>לא נמצאו משתמשים</td></tr>`;
                 return;
             }
 
@@ -836,6 +842,11 @@
                 <tr>
                     <td><strong>${u.name}</strong></td>
                     <td style="direction:ltr; text-align:right; color:var(--text-secondary); font-size:0.85rem;">${u.email}</td>
+                    <td style="direction:ltr; text-align:right; font-size:0.85rem;">
+                        ${u.orgEmail
+                            ? `<span style="color:var(--success);">✓</span> ${u.orgEmail}`
+                            : `<span style="color:var(--text-secondary); font-size:0.8rem;">—</span>`}
+                    </td>
                     <td>${u.department || '—'}</td>
                     <td>
                         <span class="role-badge role-${u.role}">${u.role === 'requester' ? 'מזמין' : 'מאשר'}</span>
@@ -903,10 +914,11 @@
             if (!user) return;
             editingKey = key;
 
-            document.getElementById('fieldName').value       = user.name       || '';
-            document.getElementById('fieldEmail').value      = user.email      || '';
-            document.getElementById('fieldRole').value       = user.role       || '';
-            document.getElementById('fieldDepartment').value = user.department || '';
+            document.getElementById('fieldName').value         = user.name         || '';
+            document.getElementById('fieldEmail').value        = user.email        || '';
+            document.getElementById('fieldOrgEmail').value     = user.orgEmail     || '';
+            document.getElementById('fieldRole').value         = user.role         || '';
+            document.getElementById('fieldDepartment').value   = user.department   || '';
             document.getElementById('fieldApproverType').value = user.approverType || '';
             document.getElementById('approverTypeGroup').style.display =
                 user.role === 'approver' ? 'block' : 'none';
@@ -923,6 +935,7 @@
             const role         = document.getElementById('fieldRole').value;
             const department   = document.getElementById('fieldDepartment').value;
             const approverType = document.getElementById('fieldApproverType').value || null;
+            const orgEmail     = document.getElementById('fieldOrgEmail').value.trim().toLowerCase() || null;
 
             if (!email || !name || !role || !department) return;
             if (role === 'approver' && !approverType) {
@@ -931,7 +944,7 @@
             }
 
             const key     = editingKey || emailToKey(email);
-            const userData = { email, name, role, department, approverType: role === 'approver' ? approverType : null };
+            const userData = { email, name, role, department, approverType: role === 'approver' ? approverType : null, orgEmail: orgEmail || null };
 
             try {
                 await set(ref(db, `userRoles/${key}`), userData);

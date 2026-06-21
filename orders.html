@@ -1948,7 +1948,7 @@
                     const allRoles  = rolesSnap.val() || {};
                     Object.values(allRoles).forEach(u => {
                         if (u.role === 'approver' && u.approverType && u.email) {
-                            approverEmails[u.approverType] = u.email;
+                            approverEmails[u.approverType] = u.orgEmail || u.email;
                         }
                     });
                 } else {
@@ -2692,6 +2692,7 @@ function setupApproverUI() {
 
                 const order = {
                     requesterEmail: currentUser.email,
+                    requesterOrgEmail: userData.orgEmail || null,
                     requesterName: userData.name,
                     orderDate: document.getElementById('orderDate').value,
                     department: deptVal,
@@ -3654,7 +3655,7 @@ function setupApproverUI() {
                                 const myItemAp = (order.approvals || {})[`${approver}_items`] || {};
                                 const hasRejectedByMe = Object.values(myItemAp).some(s => s === 'rejected');
                                 const approvalType = hasRejectedByMe ? 'partial' : 'approved';
-                                await sendRequesterNotification(order.requesterEmail, order.requesterName, approvalType, order, 'order', approverDisplayName, nextApproverName);
+                                await sendRequesterNotification(order.requesterOrgEmail || order.requesterEmail, order.requesterName, approvalType, order, 'order', approverDisplayName, nextApproverName);
                             } catch (emailErr) {
                                 console.error('Error sending requester email:', emailErr);
                             }
@@ -3677,7 +3678,7 @@ function setupApproverUI() {
                     await set(orderRef, 'rejected');
                     const order = orders.find(o => o.id === orderId);
                     if (order?.requesterEmail) {
-                        await sendRequesterNotification(order.requesterEmail, order.requesterName, 'rejected', order, 'order');
+                        await sendRequesterNotification(order.requesterOrgEmail || order.requesterEmail, order.requesterName, 'rejected', order, 'order');
                     }
                     alert('ההזמנה נדחתה');
                     closeOrderDetailsModal();
@@ -4068,6 +4069,7 @@ function setupApproverUI() {
 
                 const quote = {
                     requesterEmail: currentUser.email,
+                    requesterOrgEmail: userData.orgEmail || null,
                     requesterName: userData.name,
                     quoteDate: document.getElementById('quoteDate').value,
                     department: document.getElementById('quoteDepartment').value,
@@ -4588,7 +4590,7 @@ function setupApproverUI() {
                 await set(ref(database, `quotes/${quoteId}/itemAppeals/${itemIndex}`), null);
                 if (quote?.requesterEmail) {
                     const names = { emily: 'אמילי', shuli: 'שולי', gadi: 'גדי' };
-                    await sendAppealResultNotification(quote.requesterEmail, quote.requesterName, itemIndex, true, names[approverType] || approverType, { ...quote, orderNumber: quote.quoteNumber, orderDate: quote.quoteDate }, 'quote');
+                    await sendAppealResultNotification(quote.requesterOrgEmail || quote.requesterEmail, quote.requesterName, itemIndex, true, names[approverType] || approverType, { ...quote, orderNumber: quote.quoteNumber, orderDate: quote.quoteDate }, 'quote');
                 }
                 await loadQuotes();
                 openQuoteDetails(quoteId);
@@ -4604,7 +4606,7 @@ function setupApproverUI() {
                 await set(ref(database, `orders/${orderId}/itemAppeals/${itemIndex}`), null);
                 if (order?.requesterEmail) {
                     const names = { emily: 'אמילי', shuli: 'שולי', gadi: 'גדי' };
-                    await sendAppealResultNotification(order.requesterEmail, order.requesterName, itemIndex, true, names[approverType] || approverType, order, 'order');
+                    await sendAppealResultNotification(order.requesterOrgEmail || order.requesterEmail, order.requesterName, itemIndex, true, names[approverType] || approverType, order, 'order');
                 }
                 openOrderDetails(orderId);
             } catch (err) {
@@ -4685,7 +4687,7 @@ function setupApproverUI() {
                 if (order?.requesterEmail) {
                     const approverNames = { emily: 'אמילי', shuli: 'שולי', gadi: 'ד"ר גדי' };
                     await emailjs.send('service_lgb24x4', 'template_069cokp', {
-                        to_email: order.requesterEmail,
+                        to_email: order.requesterOrgEmail || order.requesterEmail,
                         to_name: order.requesterName,
                         from_name: 'מערכת ההזמנות',
                         subject: `פריט #${itemIndex + 1} בהזמנה ${order.orderNumber} נדחה`,
@@ -4716,7 +4718,7 @@ function setupApproverUI() {
                 if (quote?.requesterEmail) {
                     const approverNames = { emily: 'אמילי', shuli: 'שולי', gadi: 'ד"ר גדי' };
                     await emailjs.send('service_lgb24x4', 'template_069cokp', {
-                        to_email: quote.requesterEmail,
+                        to_email: quote.requesterOrgEmail || quote.requesterEmail,
                         to_name: quote.requesterName,
                         from_name: 'מערכת ההזמנות',
                         subject: `פריט #${itemIndex + 1} בהצעת מחיר ${quote.quoteNumber} נדחה`,
@@ -4748,7 +4750,7 @@ function setupApproverUI() {
                 await set(ref(database, `quotes/${quoteId}/itemAppeals/${itemIndex}`), null);
                 if (quote?.requesterEmail) {
                     const names = { emily: 'אמילי', shuli: 'שולי', gadi: 'גדי' };
-                    await sendAppealResultNotification(quote.requesterEmail, quote.requesterName, itemIndex, false, names[approverType] || approverType, { ...quote, orderNumber: quote.quoteNumber, orderDate: quote.quoteDate }, 'quote');
+                    await sendAppealResultNotification(quote.requesterOrgEmail || quote.requesterEmail, quote.requesterName, itemIndex, false, names[approverType] || approverType, { ...quote, orderNumber: quote.quoteNumber, orderDate: quote.quoteDate }, 'quote');
                 }
                 await loadQuotes();
                 openQuoteDetails(quoteId);
@@ -4768,7 +4770,7 @@ function setupApproverUI() {
                 await set(ref(database, `orders/${orderId}/itemAppeals/${itemIndex}`), null);
                 if (order?.requesterEmail) {
                     const names = { emily: 'אמילי', shuli: 'שולי', gadi: 'גדי' };
-                    await sendAppealResultNotification(order.requesterEmail, order.requesterName, itemIndex, false, names[approverType] || approverType, order, 'order');
+                    await sendAppealResultNotification(order.requesterOrgEmail || order.requesterEmail, order.requesterName, itemIndex, false, names[approverType] || approverType, order, 'order');
                 }
                 openOrderDetails(orderId);
             } catch (err) {
@@ -4845,7 +4847,7 @@ function setupApproverUI() {
                                 const myItemAp = (quote.approvals || {})[`${approver}_items`] || {};
                                 const hasRejectedByMe = Object.values(myItemAp).some(s => s === 'rejected');
                                 const approvalType = hasRejectedByMe ? 'partial' : 'approved';
-                                await sendRequesterNotification(quote.requesterEmail, quote.requesterName, approvalType, { ...quote, orderNumber: quote.quoteNumber, orderDate: quote.quoteDate }, 'quote', approverDisplayName, nextApproverName);
+                                await sendRequesterNotification(quote.requesterOrgEmail || quote.requesterEmail, quote.requesterName, approvalType, { ...quote, orderNumber: quote.quoteNumber, orderDate: quote.quoteDate }, 'quote', approverDisplayName, nextApproverName);
                             } catch (emailErr) {
                                 console.error('Error sending requester email for quote:', emailErr);
                             }
@@ -4867,7 +4869,7 @@ function setupApproverUI() {
                     await set(ref(database, `quotes/${quoteId}/approvals/${approver}`), 'rejected');
                     const quote = quotes.find(q => q.id === quoteId);
                     if (quote?.requesterEmail) {
-                        await sendRequesterNotification(quote.requesterEmail, quote.requesterName, 'rejected', { ...quote, orderNumber: quote.quoteNumber, orderDate: quote.quoteDate }, 'quote');
+                        await sendRequesterNotification(quote.requesterOrgEmail || quote.requesterEmail, quote.requesterName, 'rejected', { ...quote, orderNumber: quote.quoteNumber, orderDate: quote.quoteDate }, 'quote');
                     }
                     alert('הצעת המחיר נדחתה');
                     closeQuoteDetailsModal();
