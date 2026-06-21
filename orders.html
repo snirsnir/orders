@@ -2345,6 +2345,9 @@ function setupApproverUI() {
             if (userRole === 'requester') {
                 userOrders = ordersToRender.filter(order => order.requesterEmail === currentUser.email);
             }
+            if (userRole === 'approver' && userData?.approverType === 'gadi') {
+                userOrders = userOrders.filter(order => (order.totalIncludingVat || 0) > 10000);
+            }
 
             if (userOrders.length === 0) {
                 tbody.innerHTML = '';
@@ -4190,14 +4193,19 @@ function setupApproverUI() {
             const emptyEl = document.getElementById('quotesEmptyState');
             if (!tbody) return;
 
-            if (quotes.length === 0) {
+            let visibleQuotes = quotes;
+            if (userRole === 'approver' && userData?.approverType === 'gadi') {
+                visibleQuotes = quotes.filter(q => (q.totalIncludingVat || 0) > 10000);
+            }
+
+            if (visibleQuotes.length === 0) {
                 tbody.innerHTML = '';
                 if (emptyEl) emptyEl.style.display = 'block';
                 return;
             }
             if (emptyEl) emptyEl.style.display = 'none';
 
-            tbody.innerHTML = quotes.map(quote => {
+            tbody.innerHTML = visibleQuotes.map(quote => {
                 const st = getQuoteStatus(quote);
                 const ap = quote.approvals || {};
                 const needsGadi = quote.totalIncludingVat > 10000;
