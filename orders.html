@@ -303,7 +303,73 @@
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
             gap: 1rem;
-            margin-bottom: 2rem;
+            margin-bottom: 1.25rem;
+        }
+
+        /* ── Global free-text search ── */
+        .global-search-section {
+            margin-bottom: 1.5rem;
+        }
+
+        .global-search-wrapper {
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+            background: var(--bg-secondary);
+            border: 1.5px solid var(--border-color);
+            border-radius: 12px;
+            padding: 0.5rem 0.85rem;
+            transition: border-color 0.2s, box-shadow 0.2s;
+        }
+
+        .global-search-wrapper:focus-within {
+            border-color: var(--accent-primary);
+            box-shadow: 0 0 0 3px rgba(59,130,246,0.15);
+        }
+
+        .global-search-icon {
+            font-size: 1.1rem;
+            flex-shrink: 0;
+            color: var(--text-secondary);
+        }
+
+        .global-search-input {
+            flex: 1;
+            border: none;
+            outline: none;
+            background: transparent;
+            font-size: 1rem;
+            color: var(--text-primary);
+            font-family: inherit;
+            min-width: 0;
+        }
+
+        .global-search-input::placeholder {
+            color: var(--text-secondary);
+        }
+
+        .global-search-clear {
+            background: none;
+            border: none;
+            cursor: pointer;
+            color: var(--text-secondary);
+            font-size: 1rem;
+            padding: 0.1rem 0.25rem;
+            border-radius: 4px;
+            line-height: 1;
+            transition: color 0.2s;
+            flex-shrink: 0;
+        }
+
+        .global-search-clear:hover {
+            color: var(--text-primary);
+        }
+
+        .global-search-count {
+            font-size: 0.78rem;
+            color: var(--text-secondary);
+            white-space: nowrap;
+            flex-shrink: 0;
         }
 
         .action-card {
@@ -1298,6 +1364,8 @@
             .logo-text h1 { font-size: 0.92rem; }
             .user-info #userName { display: none; }
             .orders-table td::before { min-width: 65px; font-size: 0.72rem; }
+            .global-search-input { font-size: 16px; }
+            .global-search-count { display: none; }
         }
 
         .fade-in {
@@ -1340,7 +1408,7 @@
                     <h1>מערכת הזמנות</h1>
                     <p id="userRole">טוען...</p>
                 </div>
-                <button class="version-badge" id="versionBadgeBtn">גרסה 1.2</button>
+                <button class="version-badge" id="versionBadgeBtn">גרסה 1.3</button>
                 <div class="signature-policy" style="margin-right: 1.5rem; padding: 0.3rem 0.8rem; background: var(--bg-tertiary); border-radius: 8px; font-size: 0.75rem; color: var(--text-secondary); border: 1px solid var(--border-color); line-height: 1.6;">
                     <strong style="color: var(--text-primary);">נוהל חתימות:</strong>
                     אמילי — כל סכום &nbsp;|&nbsp; שולי — כל סכום &nbsp;|&nbsp; גדי — מ-10,000 ש"ח
@@ -1368,6 +1436,16 @@
         </section>
 
         <section class="action-buttons fade-in" id="actionButtons">
+        </section>
+
+        <section class="global-search-section fade-in" id="globalSearchSection" style="display:none;">
+            <div class="global-search-wrapper">
+                <span class="global-search-icon">🔍</span>
+                <input type="text" id="globalSearchInput" class="global-search-input"
+                    placeholder="חפש לפי שם מוצר, מספר הזמנה, מחלקה, ספק..." autocomplete="off">
+                <span class="global-search-count" id="globalSearchCount"></span>
+                <button id="clearGlobalSearch" class="global-search-clear" style="display:none;" title="נקה חיפוש">✕</button>
+            </div>
         </section>
 
         <section class="orders-table-container fade-in" id="ordersTableContainer">
@@ -1898,6 +1976,17 @@
             </div>
 
             <div class="changelog-version">
+                <span class="changelog-version-tag">גרסה 1.3</span>
+                <span class="changelog-date">יוני 2026</span>
+            </div>
+            <ul class="changelog-list">
+                <li><span class="changelog-category cat-ui">עיצוב</span>ממשק מותאם מלא לסמארטפון — טבלאות הפכות לכרטיסיות, מודאלים נפתחים מלמטה (bottom sheet), כפתורים ושדות מוגדלים למגע</li>
+                <li><span class="changelog-category cat-new">חדש</span>סרגל חיפוש חופשי — חיפוש בזמן אמת לפי שם מוצר, מספר הזמנה, מחלקה, ספק ועוד, בהזמנות ובהצעות המחיר גם יחד</li>
+                <li><span class="changelog-category cat-new">חדש</span>מייל ארגוני (orgEmail) — ניתן להגדיר מייל ארגוני נפרד למשתמש; כל התראות המערכת יישלחו אליו</li>
+                <li><span class="changelog-category cat-ui">עיצוב</span>מאשר גדי — רואה רק הזמנות והצעות מחיר מעל 10,000 ש"ח (שבהן הוא נדרש לאשר)</li>
+            </ul>
+
+            <div class="changelog-version" style="margin-top: 1.5rem; padding-top: 1.2rem; border-top: 1px solid var(--border-color);">
                 <span class="changelog-version-tag">גרסה 1.2</span>
                 <span class="changelog-date">יוני 2026</span>
             </div>
@@ -1962,6 +2051,7 @@
         let currentOrderId = null;
         let currentApproverKey = null;
         let currentReminderOrderId = null;
+        let globalSearchText = '';
 
         // מערך המיילים של המאשרים — יתמלא דינמית מ-Firebase ב-loadUserData
         const approverEmails = {};
@@ -2101,6 +2191,32 @@
             }
         }
 
+        function matchesSearch(entity, term) {
+            if (!term) return true;
+            const fields = [
+                String(entity.orderNumber || entity.quoteNumber || ''),
+                entity.department || '',
+                entity.requesterName || '',
+                entity.supplier || '',
+                entity.quoteFor || '',
+            ].join(' ').toLowerCase();
+            if (fields.includes(term)) return true;
+            return (entity.items || []).some(item =>
+                (item.productName || '').toLowerCase().includes(term) ||
+                (item.description || '').toLowerCase().includes(term)
+            );
+        }
+
+        function updateGlobalSearchCount() {
+            const el = document.getElementById('globalSearchCount');
+            if (!el) return;
+            if (!globalSearchText) { el.textContent = ''; return; }
+            const orderRows = document.querySelectorAll('#ordersTableBody tr').length;
+            const quoteRows = document.querySelectorAll('#quotesTableBody tr').length;
+            const total = orderRows + quoteRows;
+            el.textContent = total > 0 ? `נמצאו ${total} תוצאות` : 'לא נמצאו תוצאות';
+        }
+
         function setupUI() {
             console.log('Setting up UI for role:', userRole);
             if (userRole === 'requester') {
@@ -2108,6 +2224,7 @@
             } else if (userRole === 'approver') {
                 setupApproverUI();
             }
+            document.getElementById('globalSearchSection').style.display = 'block';
         }
 
         function setupRequesterUI() {
@@ -2317,6 +2434,26 @@ function setupApproverUI() {
             document.getElementById('newMultipleReceiptFile').addEventListener('change', handleMultipleReceiptFileSelect);
             document.getElementById('addReceiptBtn').addEventListener('click', addNewReceipt);
 
+            // Global free-text search
+            const globalSearchInput = document.getElementById('globalSearchInput');
+            const clearGlobalSearch = document.getElementById('clearGlobalSearch');
+            globalSearchInput.addEventListener('input', () => {
+                globalSearchText = globalSearchInput.value.trim().toLowerCase();
+                clearGlobalSearch.style.display = globalSearchText ? 'inline-block' : 'none';
+                renderOrders();
+                renderQuotesTable();
+                updateGlobalSearchCount();
+            });
+            clearGlobalSearch.addEventListener('click', () => {
+                globalSearchInput.value = '';
+                globalSearchText = '';
+                clearGlobalSearch.style.display = 'none';
+                renderOrders();
+                renderQuotesTable();
+                updateGlobalSearchCount();
+                globalSearchInput.focus();
+            });
+
             // Window click events for modal closing
             window.addEventListener('click', (e) => {
                 if (e.target === newOrderModal) closeNewOrderModal();
@@ -2486,6 +2623,9 @@ function setupApproverUI() {
             }
             if (userRole === 'approver' && userData?.approverType === 'gadi') {
                 userOrders = userOrders.filter(order => (order.totalIncludingVat || 0) > 10000);
+            }
+            if (globalSearchText) {
+                userOrders = userOrders.filter(order => matchesSearch(order, globalSearchText));
             }
 
             if (userOrders.length === 0) {
@@ -4335,6 +4475,9 @@ function setupApproverUI() {
             let visibleQuotes = quotes;
             if (userRole === 'approver' && userData?.approverType === 'gadi') {
                 visibleQuotes = quotes.filter(q => (q.totalIncludingVat || 0) > 10000);
+            }
+            if (globalSearchText) {
+                visibleQuotes = visibleQuotes.filter(q => matchesSearch(q, globalSearchText));
             }
 
             if (visibleQuotes.length === 0) {
