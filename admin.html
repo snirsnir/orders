@@ -483,11 +483,91 @@
         [data-theme="dark"] .cat-fix { background: #450a0a; color: #fca5a5; }
         [data-theme="dark"] .cat-ui  { background: #1e3a5f; color: #93c5fd; }
 
-        @media (max-width: 600px) {
-            .stats-row { grid-template-columns: repeat(2, 1fr); }
-            .main { padding: 0 1rem; }
-            .header { padding: 1rem; }
-            th:nth-child(3), td:nth-child(3) { display: none; }
+        /* ── Mobile Responsive ── */
+        @media (max-width: 768px) {
+
+            /* Header */
+            .header { padding: 0.6rem 1rem; }
+            .header-logo h1 { font-size: 1.05rem; }
+            .header-logo p  { display: none; }
+            .header-logo-icon { width: 32px; height: 32px; font-size: 0.95rem; }
+            .logout-btn { padding: 6px 12px; font-size: 0.8rem; }
+            .theme-btn  { width: 34px; height: 34px; font-size: 0.9rem; }
+
+            /* Main */
+            .main { padding: 0 0.75rem; margin: 1rem auto; }
+            .page-header { flex-direction: column; align-items: flex-start; gap: 0.75rem; }
+            .page-title  { font-size: 1.2rem; }
+            .add-btn     { width: 100%; justify-content: center; min-height: 44px; }
+
+            /* Stats */
+            .stats-row { grid-template-columns: repeat(2, 1fr); gap: 0.6rem; }
+            .stat-number { font-size: 1.5rem; }
+            .stat-card   { padding: 0.85rem; }
+
+            /* Search */
+            .table-search { flex-direction: column; gap: 0.5rem; padding: 0.75rem 1rem; }
+            .search-input, .filter-select { width: 100%; min-height: 44px; font-size: 16px; }
+
+            /* Table → Cards */
+            table  { display: block; }
+            thead  { display: none; }
+            tbody  { display: flex; flex-direction: column; gap: 0.65rem; }
+            tr     {
+                display: block;
+                background: var(--bg-secondary);
+                border: 1px solid var(--border-color);
+                border-radius: 12px;
+                padding: 0.85rem;
+                box-shadow: 0 1px 4px rgba(0,0,0,0.07);
+            }
+            td {
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                padding: 0.35rem 0;
+                border-bottom: 1px solid var(--border-color);
+                font-size: 0.88rem;
+                white-space: normal;
+                gap: 0.5rem;
+            }
+            tr:last-child td, td:last-child { border-bottom: none; }
+            td::before {
+                content: attr(data-label);
+                font-weight: 600;
+                color: var(--text-secondary);
+                font-size: 0.76rem;
+                flex-shrink: 0;
+                min-width: 80px;
+            }
+            td[data-label="פעולות"] {
+                padding-top: 0.6rem;
+                flex-wrap: wrap;
+                gap: 0.5rem;
+                justify-content: flex-start;
+            }
+            td[data-label="פעולות"]::before { display: none; }
+            .btn-edit, .btn-delete { min-height: 38px; font-size: 0.85rem; padding: 6px 14px; }
+
+            /* Modal → Bottom Sheet */
+            .modal { align-items: flex-end !important; }
+            .modal-box {
+                width: 100% !important;
+                max-width: 100% !important;
+                max-height: 92dvh !important;
+                border-radius: 20px 20px 0 0 !important;
+                margin: 0 !important;
+                padding-bottom: env(safe-area-inset-bottom, 0);
+            }
+
+            /* Form inputs */
+            .form-input, .form-select { min-height: 48px; font-size: 16px; }
+            .form-label { font-size: 0.85rem; }
+        }
+
+        @media (max-width: 480px) {
+            .stats-row { grid-template-columns: 1fr 1fr; }
+            .header-logo h1 { font-size: 0.95rem; }
         }
     </style>
 </head>
@@ -840,19 +920,19 @@
 
             tbody.innerHTML = users.map(u => `
                 <tr>
-                    <td><strong>${u.name}</strong></td>
-                    <td style="direction:ltr; text-align:right; color:var(--text-secondary); font-size:0.85rem;">${u.email}</td>
-                    <td style="direction:ltr; text-align:right; font-size:0.85rem;">
+                    <td data-label="שם"><strong>${u.name}</strong></td>
+                    <td data-label="מייל כניסה" style="direction:ltr; text-align:right; color:var(--text-secondary); font-size:0.85rem;">${u.email}</td>
+                    <td data-label="מייל ארגוני" style="direction:ltr; text-align:right; font-size:0.85rem;">
                         ${u.orgEmail
                             ? `<span style="color:var(--success);">✓</span> ${u.orgEmail}`
                             : `<span style="color:var(--text-secondary); font-size:0.8rem;">—</span>`}
                     </td>
-                    <td>${u.department || '—'}</td>
-                    <td>
+                    <td data-label="מחלקה">${u.department || '—'}</td>
+                    <td data-label="תפקיד">
                         <span class="role-badge role-${u.role}">${u.role === 'requester' ? 'מזמין' : 'מאשר'}</span>
                         ${u.approverType ? `<span class="approver-type-badge">${approverLabels[u.approverType] || u.approverType}</span>` : ''}
                     </td>
-                    <td>
+                    <td data-label="פעולות">
                         <div class="action-btns">
                             <button class="btn-edit"   onclick="openEdit('${u.key}')">✏️ ערוך</button>
                             <button class="btn-delete" onclick="openDelete('${u.key}', '${u.name}')">🗑️ מחק</button>
